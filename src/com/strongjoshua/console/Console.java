@@ -6,7 +6,6 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -52,6 +51,8 @@ public class Console implements InputProcessor, Disposable {
 	private boolean hidden = true;
 	private InputProcessor appInput;
 	private InputMultiplexer multiplexer;
+	private Matrix4 consoleMatrix;
+	private SpriteBatch batch;
 
 	/**
 	 * Creates the console.
@@ -73,6 +74,15 @@ public class Console implements InputProcessor, Disposable {
 		}
 		else
 			Gdx.input.setInputProcessor(this);
+		
+		int width = Gdx.graphics.getWidth(), height = Gdx.graphics.getHeight();
+		OrthographicCamera tmp = new OrthographicCamera(width, height);
+		tmp.position.set(tmp.viewportWidth / 2, tmp.viewportHeight / 2, 0);
+		tmp.update();
+		consoleMatrix = tmp.combined;
+		batch = new SpriteBatch();
+		batch.setProjectionMatrix(consoleMatrix);
+		display.setPosition(width - display.getWidth(), height - display.getHeight());
 	}
 	
 	/**
@@ -88,19 +98,7 @@ public class Console implements InputProcessor, Disposable {
 	public void draw() {
 		if(disabled || hidden) return;
 		
-		SpriteBatch batch = new SpriteBatch();
-		
-		Matrix4 consoleMatrix;
-		int width = Gdx.graphics.getWidth(), height = Gdx.graphics.getHeight();
-		OrthographicCamera tmp = new OrthographicCamera(width, height);
-		tmp.position.set(tmp.viewportWidth / 2, tmp.viewportHeight / 2, 0);
-		consoleMatrix = tmp.combined;
-
-		batch.setProjectionMatrix(consoleMatrix);
-		
 		batch.begin();
-		display.setPosition(width - display.getWidth(), height - display.getHeight());
-		System.out.printf("%.1f, %.1f : %.1f x %.1f \n", display.getX(), display.getY(), display.getWidth(), display.getHeight());
 		display.draw(batch, 1);
 		batch.end();
 	}
@@ -215,5 +213,6 @@ public class Console implements InputProcessor, Disposable {
 
 	public void dispose() {
 		Gdx.input.setInputProcessor(appInput);
+		batch.dispose();
 	}
 }
