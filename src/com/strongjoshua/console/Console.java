@@ -1,4 +1,22 @@
+/**
+ * Copyright 2015 StrongJoshua (swampert_555@yahoo.com)
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions
+ * and limitations under the License.
+ */
+
 package com.strongjoshua.console;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
+import java.text.NumberFormat;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -15,6 +33,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldListener;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
@@ -27,13 +46,20 @@ public class Console implements Disposable {
 	 */
 	public enum LogLevel {
 		/**
-		 * The default log level. Prints in white to the console and has no special indicator in the log file.
+		 * The default log level. Prints in white to the console and has no special indicator in the log file.<br>
+		 * Intentional Use: debugging.
 		 */
 		DEFAULT(new Color(1, 1, 1, 1)),
 		/**
-		 * Use to print errors. Prints in red to the console and has the '<i>ERROR</i>' marking in the log file.
+		 * Use to print errors. Prints in red to the console and has the '<i>ERROR</i>' marking in the log file.<br>
+		 * Intentional Use: printing internal console errors; debugging.
 		 */
-		ERROR(new Color(1, 0, 0, 1));
+		ERROR(new Color(1, 0, 0, 1)),
+		/**
+		 * Prints in white with "> " prepended to the command. Has that prepended text as the indicator in the log file.
+		 * Intentional Use: To be used by the console, alone.
+		 */
+		COMMAND(new Color(1, 1, 1, 1));
 
 		private Color color;
 
@@ -57,6 +83,7 @@ public class Console implements Disposable {
 	private InputMultiplexer multiplexer;
 	private OrthographicCamera consoleCamera;
 	private Stage stage;
+	private CommandExecutor exec;
 
 	/**
 	 * Creates the console.<br>
@@ -129,6 +156,8 @@ public class Console implements Disposable {
 	 */
 	public void log(String msg, LogLevel level) {
 		log.addEntry(msg, level);
+		if(level.equals(LogLevel.COMMAND))
+			msg = "> " + msg;
 		logArea.appendText(msg + "\n");
 	}
 
@@ -136,6 +165,7 @@ public class Console implements Disposable {
 	 * Logs a new entry to the console using {@link LogLevel#DEFAULT}.
 	 * @param msg The message to be logged.
 	 * @see LogLevel
+	 * @see Console#log(String, LogLevel)
 	 */
 	public void log(String msg) {
 		this.log(msg, LogLevel.DEFAULT);
@@ -182,6 +212,105 @@ public class Console implements Disposable {
 	public void setKeyID(int keyID) {
 		this.keyID = keyID;
 	}
+	
+	/**
+	 * Sets this consoles {@link CommandExecutor}. Its methods are the methods that are referenced within the console.
+	 * Can be set to null, but this will result in no commands being fired.
+	 * @param commandExec
+	 */
+	public void setCommandExecutor(CommandExecutor commandExec) {
+		exec = commandExec;
+	}
+	
+	private void execCommand(String command) {
+		log(command, LogLevel.COMMAND);
+		
+		String[] parts = command.split(" ");
+		String methodName = parts[0];
+		String[] sArgs = null;
+		if(parts.length > 1) {
+			sArgs = new String[parts.length - 1];
+			for(int i = 1; i < parts.length; i++) {
+				sArgs[i - 1] = parts[i];
+			}
+		}
+		
+		//attempt to convert arguments to numbers. If the conversion does not work, keep the argument as a string
+		Object[] args = null;
+		if(sArgs != null) {
+			args = new Object[sArgs.length];
+			for(int i = 0; i < sArgs.length; i++) {
+				String s = sArgs[i];
+				try {
+					int j = Integer.parseInt(s);
+					args[i] = j;
+				} catch(NumberFormatException e) {
+					try {
+						float f = Float.parseFloat(s);
+						args[i] = f;
+					} catch(NumberFormatException e2) {
+						args[i] = s;
+					}
+				}
+			}
+		}
+		
+		Class<? extends CommandExecutor> clazz = exec.getClass();
+		Method[] methods = clazz.getMethods();
+		Array<Integer> possible = new Array<Integer>();
+		for(int i = 0; i < methods.length; i++) {
+			if(methods[i].getName().equals(methodName)) possible.add(i);
+		}
+		if(possible.size <= 0) {
+			log("No such method found.", LogLevel.ERROR);
+			return;
+		}
+		int size = possible.size;
+		for(int i = 0; i < size; i++) {
+			Method m = methods[possible.get(i)];
+			Parameter[] params = m.getParameters();
+			if(args == null && params.length == 0) {
+				//try to invoke
+				try {
+					m.invoke(exec, null);
+					return;
+				} catch(Exception e) {
+					String msg = e.getMessage();
+					if(msg == null || msg.length() <= 0 || msg.equals(""))
+						msg = "Unknown Error";
+					log(msg, LogLevel.ERROR);
+					return;
+				}
+			}
+			else if((args == null && params.length > 0) || (args.length != params.length))
+				continue;
+			else {
+				//loop through parameters until match
+				boolean match = true;
+				for(int j = 0; j < params.length; j++) {
+					Parameter p = params[j];
+					Object arg = args[i];
+					if(!p.getClass().equals(arg.getClass())) {
+						match = false;
+						break;
+					}
+				}
+				if(match) {
+					try {
+						m.invoke(exec, args);
+						return;
+					} catch(IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+						String msg = e.getMessage();
+						if(msg == null || msg.length() <= 0 || msg.equals(""))
+							msg = "Unknown Error";
+						log(msg, LogLevel.ERROR);
+						return;
+					}
+				}
+			}
+		}
+		log("Bad parameters. Check your code.", LogLevel.ERROR);
+	}
 
 	private class ConsoleDisplay extends Table {
 		public ConsoleDisplay(Skin skin, float w) {
@@ -212,7 +341,11 @@ public class Console implements Disposable {
 				String s = input.getText();
 				if(s.length() == 0 || s.equals(""))
 					return false;
-				log(input.getText());
+				if(exec != null) {
+					execCommand(input.getText());
+				}
+				else
+					log("No command executor has been set. Please call setCommandExecutor for this console in your code and restart.", LogLevel.ERROR);
 				input.setText("");
 				return true;
 			}
