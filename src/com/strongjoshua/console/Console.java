@@ -2,16 +2,20 @@ package com.strongjoshua.console;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.utils.Disposable;
 
-public class Console {
+public class Console implements InputProcessor, Disposable {
 	/**
 	 * Specifies the 'level' of a log entry. The level affects the color of the entry in the console and is also displayed next to the entry
 	 * when the log entries are printed to a file with {@link Console#printLogToFile(String)}.
@@ -45,6 +49,9 @@ public class Console {
 	private TextField input;
 	private TextArea logArea;
 	private ConsoleDisplay display;
+	private boolean hidden = true;
+	private InputProcessor appInput;
+	private InputMultiplexer multiplexer;
 
 	/**
 	 * Creates the console.
@@ -56,32 +63,46 @@ public class Console {
 		logArea = new TextArea("", skin);
 		logArea.setPrefRows(20);
 		display = new ConsoleDisplay(skin);
+		display.pack();
+		appInput = Gdx.input.getInputProcessor();
+		if(appInput != null) {
+			multiplexer = new InputMultiplexer();
+			multiplexer.addProcessor(this);
+			multiplexer.addProcessor(appInput);
+			Gdx.input.setInputProcessor(multiplexer);
+		}
+		else
+			Gdx.input.setInputProcessor(this);
 	}
 	
 	/**
 	 * Creates the console using the default skin.
 	 */
 	public Console() {
-		this(new Skin());
+		this(new Skin(Gdx.files.classpath("default_skin/uiskin.json")));
 	}
 
 	/**
 	 * Draws the console.
-	 * @param b The batch to draw to. Assumes {@link Batch#begin()} has been called and {@link Batch#end()} will be called sometime after
-	 *            this method completes.
 	 */
-	public void draw(Batch b) {
-		Matrix4 orig = b.getProjectionMatrix();
+	public void draw() {
+		if(disabled || hidden) return;
+		
+		SpriteBatch batch = new SpriteBatch();
+		
 		Matrix4 consoleMatrix;
-		OrthographicCamera tmp = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		int width = Gdx.graphics.getWidth(), height = Gdx.graphics.getHeight();
+		OrthographicCamera tmp = new OrthographicCamera(width, height);
 		tmp.position.set(tmp.viewportWidth / 2, tmp.viewportHeight / 2, 0);
 		consoleMatrix = tmp.combined;
 
-		b.setProjectionMatrix(consoleMatrix);
+		batch.setProjectionMatrix(consoleMatrix);
 		
-		display.draw(b, 1);
-		
-		b.setProjectionMatrix(orig);
+		batch.begin();
+		display.setPosition(width - display.getWidth(), height - display.getHeight());
+		System.out.printf("%.1f, %.1f : %.1f x %.1f \n", display.getX(), display.getY(), display.getWidth(), display.getHeight());
+		display.draw(batch, 1);
+		batch.end();
 	}
 
 	/**
@@ -148,10 +169,51 @@ public class Console {
 	private class ConsoleDisplay extends Table {
 		public ConsoleDisplay(Skin skin) {
 			super(skin);
-			this.addActor(logArea);
-			this.addActor(input);
-			this.setHeight(this.getPrefHeight());
-			this.setWidth(this.getPrefWidth());
+			this.clear();
+			this.pad(0);
+			this.add(logArea).expand().fill().row();
+			this.add(input).expand().fill();
+			this.setSize(this.getPrefWidth(), this.getPrefHeight());
 		}
+	}
+
+	public boolean keyDown(int keycode) {
+		return false;
+	}
+
+	public boolean keyUp(int keycode) {
+		if(keycode == keyID) {
+			hidden = !hidden;
+			return true;
+		}
+		return false;
+	}
+
+	public boolean keyTyped(char character) {
+		return false;
+	}
+
+	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+		return false;
+	}
+
+	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+		return false;
+	}
+
+	public boolean touchDragged(int screenX, int screenY, int pointer) {
+		return false;
+	}
+
+	public boolean mouseMoved(int screenX, int screenY) {
+		return false;
+	}
+
+	public boolean scrolled(int amount) {
+		return false;
+	}
+
+	public void dispose() {
+		Gdx.input.setInputProcessor(appInput);
 	}
 }
