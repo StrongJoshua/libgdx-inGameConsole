@@ -66,7 +66,8 @@ public class Console implements InputProcessor, Disposable {
 		input = new TextField("", skin);
 		logArea = new TextArea("", skin);
 		logArea.setPrefRows(20);
-		display = new ConsoleDisplay(skin);
+		int width = Gdx.graphics.getWidth(), height = Gdx.graphics.getHeight();
+		display = new ConsoleDisplay(skin, width / 2);
 		display.pack();
 		appInput = Gdx.input.getInputProcessor();
 		if(appInput != null) {
@@ -78,7 +79,6 @@ public class Console implements InputProcessor, Disposable {
 		else
 			Gdx.input.setInputProcessor(this);
 
-		int width = Gdx.graphics.getWidth(), height = Gdx.graphics.getHeight();
 		OrthographicCamera tmp = new OrthographicCamera(width, height);
 		tmp.position.set(tmp.viewportWidth / 2, tmp.viewportHeight / 2, 0);
 		tmp.update();
@@ -172,12 +172,12 @@ public class Console implements InputProcessor, Disposable {
 	}
 
 	private class ConsoleDisplay extends Table {
-		public ConsoleDisplay(Skin skin) {
+		public ConsoleDisplay(Skin skin, float w) {
 			super(skin);
 			this.clear();
 			this.pad(0);
-			this.add(logArea).expand().fill().row();
-			this.add(input).expand().fill();
+			this.add(logArea).expand().fill().width(w).row();
+			this.add(input).expand().fill().width(w);
 			this.setSize(this.getPrefWidth(), this.getPrefHeight());
 		}
 	}
