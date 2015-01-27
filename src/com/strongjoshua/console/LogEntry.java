@@ -23,4 +23,9 @@ class LogEntry {
 		this.text = msg;
 		this.level = level;
 	}
+	
+	@Override
+	public String toString() {
+		return level.getIdentifier() + text;
+	}
 }
