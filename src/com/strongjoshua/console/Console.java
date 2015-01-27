@@ -55,8 +55,11 @@ public class Console implements InputProcessor, Disposable {
 	private SpriteBatch batch;
 
 	/**
-	 * Creates the console.
+	 * Creates the console.<br>
+	 * <b>***IMPORTANT***</b> Call {@link Console#dispose()} to make your {@link InputProcessor} the default processor again (this console
+	 * uses a multiplexer to override it).
 	 * @param skin Uses skins for TextField, TextArea, and Table.
+	 * @see Console#dispose()
 	 */
 	public Console(Skin skin) {
 		log = new Log();
@@ -74,7 +77,7 @@ public class Console implements InputProcessor, Disposable {
 		}
 		else
 			Gdx.input.setInputProcessor(this);
-		
+
 		int width = Gdx.graphics.getWidth(), height = Gdx.graphics.getHeight();
 		OrthographicCamera tmp = new OrthographicCamera(width, height);
 		tmp.position.set(tmp.viewportWidth / 2, tmp.viewportHeight / 2, 0);
@@ -84,9 +87,12 @@ public class Console implements InputProcessor, Disposable {
 		batch.setProjectionMatrix(consoleMatrix);
 		display.setPosition(width - display.getWidth(), height - display.getHeight());
 	}
-	
+
 	/**
-	 * Creates the console using the default skin.
+	 * Creates the console using the default skin.<br>
+	 * <b>***IMPORTANT***</b> Call {@link Console#dispose()} to make your {@link InputProcessor} the default processor again (this console
+	 * uses a multiplexer to override it).
+	 * @see Console#dispose()
 	 */
 	public Console() {
 		this(new Skin(Gdx.files.classpath("default_skin/uiskin.json")));
@@ -96,8 +102,9 @@ public class Console implements InputProcessor, Disposable {
 	 * Draws the console.
 	 */
 	public void draw() {
-		if(disabled || hidden) return;
-		
+		if(disabled || hidden)
+			return;
+
 		batch.begin();
 		display.draw(batch, 1);
 		batch.end();
@@ -112,7 +119,7 @@ public class Console implements InputProcessor, Disposable {
 	public void log(String msg, LogLevel level) {
 		log.addEntry(msg, level);
 	}
-	
+
 	/**
 	 * Logs a new entry to the console using {@link LogLevel#DEFAULT}.
 	 * @param msg The message to be logged.
@@ -163,7 +170,7 @@ public class Console implements InputProcessor, Disposable {
 	public void setKeyID(int keyID) {
 		this.keyID = keyID;
 	}
-	
+
 	private class ConsoleDisplay extends Table {
 		public ConsoleDisplay(Skin skin) {
 			super(skin);
@@ -175,10 +182,12 @@ public class Console implements InputProcessor, Disposable {
 		}
 	}
 
+	@Override
 	public boolean keyDown(int keycode) {
 		return false;
 	}
 
+	@Override
 	public boolean keyUp(int keycode) {
 		if(keycode == keyID) {
 			hidden = !hidden;
@@ -187,30 +196,40 @@ public class Console implements InputProcessor, Disposable {
 		return false;
 	}
 
+	@Override
 	public boolean keyTyped(char character) {
 		return false;
 	}
 
+	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 		return false;
 	}
 
+	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
 		return false;
 	}
 
+	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
 		return false;
 	}
 
+	@Override
 	public boolean mouseMoved(int screenX, int screenY) {
 		return false;
 	}
 
+	@Override
 	public boolean scrolled(int amount) {
 		return false;
 	}
 
+	/**
+	 * Resets the {@link InputProcessor} to the one that was the default before this console object was created.
+	 */
+	@Override
 	public void dispose() {
 		Gdx.input.setInputProcessor(appInput);
 		batch.dispose();
