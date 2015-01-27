@@ -6,15 +6,19 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldListener;
 import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-public class Console implements InputProcessor, Disposable {
+public class Console implements Disposable {
 	/**
 	 * Specifies the 'level' of a log entry. The level affects the color of the entry in the console and is also displayed next to the entry
 	 * when the log entries are printed to a file with {@link Console#printLogToFile(String)}.
@@ -51,47 +55,53 @@ public class Console implements InputProcessor, Disposable {
 	private boolean hidden = true;
 	private InputProcessor appInput;
 	private InputMultiplexer multiplexer;
-	private Matrix4 consoleMatrix;
-	private SpriteBatch batch;
+	private OrthographicCamera consoleCamera;
+	private Stage stage;
 
 	/**
 	 * Creates the console.<br>
 	 * <b>***IMPORTANT***</b> Call {@link Console#dispose()} to make your {@link InputProcessor} the default processor again (this console
-	 * uses a multiplexer to override it).
+	 * uses a multiplexer to circumvent it).
 	 * @param skin Uses skins for TextField, TextArea, and Table.
 	 * @see Console#dispose()
 	 */
 	public Console(Skin skin) {
 		log = new Log();
 		input = new TextField("", skin);
+		input.setTextFieldListener(new FieldListener());
+		input.addListener(new EnterListener());
 		logArea = new TextArea("", skin);
 		logArea.setPrefRows(20);
+		logArea.setDisabled(true);
 		int width = Gdx.graphics.getWidth(), height = Gdx.graphics.getHeight();
 		display = new ConsoleDisplay(skin, width / 2);
 		display.pack();
+		display.addListener(new KeyIDListener());
+		stage = new Stage();
 		appInput = Gdx.input.getInputProcessor();
 		if(appInput != null) {
 			multiplexer = new InputMultiplexer();
-			multiplexer.addProcessor(this);
+			multiplexer.addProcessor(stage);
 			multiplexer.addProcessor(appInput);
 			Gdx.input.setInputProcessor(multiplexer);
 		}
 		else
-			Gdx.input.setInputProcessor(this);
+			Gdx.input.setInputProcessor(stage);
 
-		OrthographicCamera tmp = new OrthographicCamera(width, height);
-		tmp.position.set(tmp.viewportWidth / 2, tmp.viewportHeight / 2, 0);
-		tmp.update();
-		consoleMatrix = tmp.combined;
-		batch = new SpriteBatch();
-		batch.setProjectionMatrix(consoleMatrix);
+		consoleCamera = new OrthographicCamera(width, height);
+		consoleCamera.position.set(consoleCamera.viewportWidth / 2, consoleCamera.viewportHeight / 2, 0);
+		consoleCamera.update();
+		stage.setViewport(new ScreenViewport(consoleCamera));
 		display.setPosition(width - display.getWidth(), height - display.getHeight());
+		stage.addActor(display);
+		stage.setKeyboardFocus(display);
+		this.log("Console has been set up");
 	}
 
 	/**
 	 * Creates the console using the default skin.<br>
 	 * <b>***IMPORTANT***</b> Call {@link Console#dispose()} to make your {@link InputProcessor} the default processor again (this console
-	 * uses a multiplexer to override it).
+	 * uses a multiplexer to circumvent it).
 	 * @see Console#dispose()
 	 */
 	public Console() {
@@ -102,12 +112,13 @@ public class Console implements InputProcessor, Disposable {
 	 * Draws the console.
 	 */
 	public void draw() {
-		if(disabled || hidden)
+		if(disabled)
 			return;
-
-		batch.begin();
-		display.draw(batch, 1);
-		batch.end();
+		stage.act();
+		
+		if(hidden)
+			return;
+		stage.draw();
 	}
 
 	/**
@@ -118,6 +129,7 @@ public class Console implements InputProcessor, Disposable {
 	 */
 	public void log(String msg, LogLevel level) {
 		log.addEntry(msg, level);
+		logArea.appendText(msg + "\n");
 	}
 
 	/**
@@ -126,7 +138,7 @@ public class Console implements InputProcessor, Disposable {
 	 * @see LogLevel
 	 */
 	public void log(String msg) {
-		log.addEntry(msg, LogLevel.DEFAULT);
+		this.log(msg, LogLevel.DEFAULT);
 	}
 
 	/**
@@ -174,6 +186,7 @@ public class Console implements InputProcessor, Disposable {
 	private class ConsoleDisplay extends Table {
 		public ConsoleDisplay(Skin skin, float w) {
 			super(skin);
+			this.setTouchable(Touchable.childrenOnly);
 			this.clear();
 			this.pad(0);
 			this.add(logArea).expand().fill().width(w).row();
@@ -181,49 +194,47 @@ public class Console implements InputProcessor, Disposable {
 			this.setSize(this.getPrefWidth(), this.getPrefHeight());
 		}
 	}
-
-	@Override
-	public boolean keyDown(int keycode) {
-		return false;
-	}
-
-	@Override
-	public boolean keyUp(int keycode) {
-		if(keycode == keyID) {
-			hidden = !hidden;
-			return true;
+	
+	private class FieldListener implements TextFieldListener {
+		@Override
+		public void keyTyped(TextField textField, char c) {
+			if(c == '`') {
+				String s = textField.getText();
+				textField.setText(s.substring(0, s.length() - 1));
+			}
 		}
-		return false;
+	}
+	
+	private class EnterListener extends InputListener {
+		@Override
+		public boolean keyUp (InputEvent event, int keycode) {
+			if(keycode == Input.Keys.ENTER) {
+				String s = input.getText();
+				if(s.length() == 0 || s.equals(""))
+					return false;
+				log(input.getText());
+				input.setText("");
+				return true;
+			}
+			return false;
+		}
 	}
 
-	@Override
-	public boolean keyTyped(char character) {
-		return false;
-	}
-
-	@Override
-	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		return false;
-	}
-
-	@Override
-	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		return false;
-	}
-
-	@Override
-	public boolean touchDragged(int screenX, int screenY, int pointer) {
-		return false;
-	}
-
-	@Override
-	public boolean mouseMoved(int screenX, int screenY) {
-		return false;
-	}
-
-	@Override
-	public boolean scrolled(int amount) {
-		return false;
+	private class KeyIDListener extends InputListener {
+		@Override
+		public boolean keyUp (InputEvent event, int keycode) {
+			if(keycode == keyID) {
+				hidden = !hidden;
+				if(hidden) {
+					input.setText("");
+					stage.setKeyboardFocus(display);
+				}
+				else
+					stage.setKeyboardFocus(input);
+				return true;
+			}
+			return false;
+		}
 	}
 
 	/**
@@ -232,6 +243,6 @@ public class Console implements InputProcessor, Disposable {
 	@Override
 	public void dispose() {
 		Gdx.input.setInputProcessor(appInput);
-		batch.dispose();
+		stage.dispose();
 	}
 }
