@@ -98,7 +98,7 @@ public class Console implements Disposable {
 	 * Creates the console.<br>
 	 * <b>***IMPORTANT***</b> Call {@link Console#dispose()} to make your {@link InputProcessor} the default processor again (this console
 	 * uses a multiplexer to circumvent it).
-	 * @param skin Uses skins for TextField, TextArea, and Table.
+	 * @param skin Uses skins for Label, TextField, and Table. Skin <b>must</b> contain a font called 'default-font'.
 	 * @see Console#dispose()
 	 */
 	public Console(Skin skin) {
