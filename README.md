@@ -2,7 +2,7 @@
 This is a light-weight LibGdx library that allows a developer to add a console (similar to how it is featured in Source games) to their game.
 
 ## Current Goal
-Auto-complete feature for quicker easier invoking of methods.
+Auto-complete feature for quicker, easier invoking of methods.
 
 License
 =======
