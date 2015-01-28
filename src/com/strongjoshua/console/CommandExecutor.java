@@ -13,11 +13,11 @@
 
 package com.strongjoshua.console;
 
+import com.badlogic.gdx.Gdx;
+
 /**
  * Extend this class (child must be <code>public</code>) and fill it with methods (also <code>public</code> that you wish to have work with
  * the {@link Console}. Then call {@link Console#setCommandExecutor(CommandExecutor)}.<br>
- * It would be best if all methods were static and this class had no constructor, but the console should still work correctly with instance
- * methods.<br>
  * <br>
  * <b>Notes</b><br>
  * <ul>
@@ -36,7 +36,18 @@ public abstract class CommandExecutor {
 		console = c;
 	}
 
+	/**
+	 * Prints the log to a local file.
+	 * @param file The relative of the local file to print to.
+	 */
 	public final void printLog(String file) {
 		console.printLogToFile(file);
+	}
+
+	/**
+	 * Closes the application completely.
+	 */
+	public final void exitApp() {
+		Gdx.app.exit();
 	}
 }

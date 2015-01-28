@@ -29,6 +29,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
@@ -399,9 +400,12 @@ public class Console implements Disposable {
 				if(hidden) {
 					input.setText("");
 					stage.setKeyboardFocus(display);
+					display.setTouchable(Touchable.disabled);
 				}
-				else
+				else {
 					stage.setKeyboardFocus(input);
+					display.setTouchable(Touchable.childrenOnly);
+				}
 				return true;
 			}
 			return false;
