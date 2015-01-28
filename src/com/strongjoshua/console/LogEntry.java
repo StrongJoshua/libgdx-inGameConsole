@@ -13,19 +13,41 @@
 
 package com.strongjoshua.console;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.strongjoshua.console.Console.LogLevel;
 
 class LogEntry {
 	private String text;
 	private LogLevel level;
+	private long timeStamp;
 	
-	public LogEntry(String msg, LogLevel level) {
+	protected LogEntry(String msg, LogLevel level) {
 		this.text = msg;
 		this.level = level;
+		timeStamp = TimeUtils.millis();
+	}
+
+	public Color getColor() {
+		return level.getColor();
+	}
+	
+	protected String toConsoleString() {
+		String r = "";
+		if(level.equals(LogLevel.COMMAND))
+			r += level.getIdentifier();
+		r += text;
+		return r;
 	}
 	
 	@Override
 	public String toString() {
-		return level.getIdentifier() + text;
+		Date d = new Date(timeStamp);
+		DateFormat formatter = new SimpleDateFormat("HH:mm:ss z yyyy");
+		return formatter.format(d) + ": " + level.getIdentifier() + text;
 	}
 }

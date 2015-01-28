@@ -17,29 +17,32 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 
+import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.ui.Cell;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class Console implements Disposable {
 	/**
-	 * Specifies the 'level' of a log entry. The level affects the color of the entry in the console and is also displayed next to the entry
-	 * when the log entries are printed to a file with {@link Console#printLogToFile(String)}.
+	 * Specifies the 'level' of a log entry. The level affects the color of the entry in the console and is also displayed next to the
+	 * entry when the log entries are printed to a file with {@link Console#printLogToFile(String)}.
 	 * 
 	 * @author StrongJoshua
 	 */
@@ -53,14 +56,14 @@ public class Console implements Disposable {
 		 * Use to print errors. Prints in red to the console and has the '<i>ERROR</i>' marking in the log file.<br>
 		 * Intentional Use: printing internal console errors; debugging.
 		 */
-		ERROR(new Color(1, 0, 0, 1), "Error: "),
+		ERROR(new Color(217f/255f, 0, 0, 1), "Error: "),
 		/**
 		 * Use to print success notifications of events. Intentional Use: Print successful execution of console commands (if needed).
 		 */
-		SUCCESS(new Color(0, 1, 0, 1), "Success! "),
+		SUCCESS(new Color(0, 217f/255f, 0, 1), "Success! "),
 		/**
-		 * Prints in white with "> " prepended to the command. Has that prepended text as the indicator in the log file. Intentional Use: To
-		 * be used by the console, alone.
+		 * Prints in white with "> " prepended to the command. Has that prepended text as the indicator in the log file. Intentional Use:
+		 * To be used by the console, alone.
 		 */
 		COMMAND(new Color(1, 1, 1, 1), "> ");
 
@@ -84,13 +87,10 @@ public class Console implements Disposable {
 	private int keyID = Input.Keys.GRAVE;
 	private boolean disabled;
 	private Log log;
-	private TextField input;
-	private TextArea logArea;
 	private ConsoleDisplay display;
 	private boolean hidden = true;
 	private InputProcessor appInput;
 	private InputMultiplexer multiplexer;
-	private OrthographicCamera consoleCamera;
 	private Stage stage;
 	private CommandExecutor exec;
 
@@ -102,18 +102,10 @@ public class Console implements Disposable {
 	 * @see Console#dispose()
 	 */
 	public Console(Skin skin) {
-		log = new Log();
-		input = new TextField("", skin);
-		input.setTextFieldListener(new FieldListener());
-		input.addListener(new EnterListener());
-		logArea = new TextArea("", skin);
-		logArea.setPrefRows(20);
-		logArea.setDisabled(true);
-		int width = Gdx.graphics.getWidth(), height = Gdx.graphics.getHeight();
-		display = new ConsoleDisplay(skin, width / 2);
-		display.pack();
-		display.addListener(new KeyIDListener());
 		stage = new Stage();
+		log = new Log();
+		int width = Gdx.graphics.getWidth(), height = Gdx.graphics.getHeight();
+		display = new ConsoleDisplay(skin, width / 2, height / 2);
 		appInput = Gdx.input.getInputProcessor();
 		if(appInput != null) {
 			multiplexer = new InputMultiplexer();
@@ -124,14 +116,10 @@ public class Console implements Disposable {
 		else
 			Gdx.input.setInputProcessor(stage);
 
-		consoleCamera = new OrthographicCamera(width, height);
-		consoleCamera.position.set(consoleCamera.viewportWidth / 2, consoleCamera.viewportHeight / 2, 0);
-		consoleCamera.update();
-		stage.setViewport(new ScreenViewport(consoleCamera));
-		display.setPosition(width - display.getWidth(), height - display.getHeight());
+		display.setPosition(width / 2, height / 2);
+
 		stage.addActor(display);
 		stage.setKeyboardFocus(display);
-		this.log("Console has been set up");
 	}
 
 	/**
@@ -165,7 +153,7 @@ public class Console implements Disposable {
 	 */
 	public void log(String msg, LogLevel level) {
 		log.addEntry(msg, level);
-		logArea.appendText(level.getIdentifier() + msg + "\n");
+		display.refresh();
 	}
 
 	/**
@@ -179,12 +167,33 @@ public class Console implements Disposable {
 	}
 
 	/**
-	 * Prints all log entries to the given file. Log entries include logs in the code and commands from within in the console while the
-	 * program is running.
-	 * @param file The relative path to the file to print to.
+	 * Prints all log entries to the given file. Log entries include logs in the code and commands made from within in the console while
+	 * the program is running.<br>
+	 * 
+	 * <b>WARNING</b><br>
+	 * The file that is sent to this function will be overwritten!
+	 * 
+	 * @param file The relative path to the file to print to. This method uses {@link Files#local(String)}.
 	 */
 	public void printLogToFile(String file) {
+		this.printLogToFile(Gdx.files.local(file));
+	}
 
+	/**
+	 * Prints all log entries to the given file. Log entries include logs in the code and commands made from within in the console while
+	 * the program is running.<br>
+	 * 
+	 * <b>WARNING</b><br>
+	 * The file that is sent to this function will be overwritten!
+	 * 
+	 * @param fh The {@link FileHandle} that links to the file to be written to. Note that <code>classpath</code> and <code>internal</code>
+	 *            FileHandles cannot be written to.
+	 */
+	public void printLogToFile(FileHandle fh) {
+		if(log.printToFile(fh))
+			log("Successfully wrote logs to file.", LogLevel.SUCCESS);
+		else
+			log("Unable to write logs to file.", LogLevel.ERROR);
 	}
 
 	/**
@@ -213,11 +222,12 @@ public class Console implements Disposable {
 	}
 
 	/**
-	 * @param keyID The new key's ID.
+	 * @param code The new key's ID. Cannot be {@link Keys#ENTER}.
 	 * @see Console#getKeyID()
 	 */
-	public void setKeyID(int keyID) {
-		this.keyID = keyID;
+	public void setKeyID(int code) {
+		if(code == Keys.ENTER) return;
+		keyID = code;
 	}
 
 	/**
@@ -227,6 +237,7 @@ public class Console implements Disposable {
 	 */
 	public void setCommandExecutor(CommandExecutor commandExec) {
 		exec = commandExec;
+		exec.setConsole(this);
 	}
 
 	private void execCommand(String command) {
@@ -242,7 +253,7 @@ public class Console implements Disposable {
 			}
 		}
 
-		// attempt to convert arguments to numbers. If the conversion does not work, keep the argument as a string
+		// attempt to convert arguments to numbers. If the conversion does not work, keep the argument as a string.
 		Object[] args = null;
 		if(sArgs != null) {
 			args = new Object[sArgs.length];
@@ -266,7 +277,7 @@ public class Console implements Disposable {
 		Method[] methods = clazz.getMethods();
 		Array<Integer> possible = new Array<Integer>();
 		for(int i = 0; i < methods.length; i++) {
-			if(methods[i].getName().equals(methodName))
+			if(methods[i].getName().equalsIgnoreCase(methodName))
 				possible.add(i);
 		}
 		if(possible.size <= 0) {
@@ -277,20 +288,7 @@ public class Console implements Disposable {
 		for(int i = 0; i < size; i++) {
 			Method m = methods[possible.get(i)];
 			Parameter[] params = m.getParameters();
-			if(args == null && params.length == 0) {
-				// try to invoke
-				try {
-					m.invoke(exec, null);
-					return;
-				} catch(Exception e) {
-					String msg = e.getMessage();
-					if(msg == null || msg.length() <= 0 || msg.equals(""))
-						msg = "Unknown Error";
-					log(msg, LogLevel.ERROR);
-					return;
-				}
-			}
-			else if((args == null && params.length > 0) || (args.length != params.length))
+			if((args == null && params.length > 0) || (args.length != params.length))
 				continue;
 			else {
 				try {
@@ -298,8 +296,10 @@ public class Console implements Disposable {
 					return;
 				} catch(IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 					String msg = e.getMessage();
-					if(msg == null || msg.length() <= 0 || msg.equals(""))
+					if(msg == null || msg.length() <= 0 || msg.equals("")) {
 						msg = "Unknown Error";
+						e.printStackTrace();
+					}
 					log(msg, LogLevel.ERROR);
 					return;
 				}
@@ -308,32 +308,80 @@ public class Console implements Disposable {
 		log("Bad parameters. Check your code.", LogLevel.ERROR);
 	}
 
+	public boolean hitsConsole(float screenX, float screenY) {
+		if(disabled || hidden)
+			return false;
+		Vector3 stageCoords = stage.getCamera().unproject(new Vector3(screenX, screenY, 0));
+		return stage.hit(stageCoords.x, stageCoords.y, true) != null;
+	}
+
 	private class ConsoleDisplay extends Table {
-		public ConsoleDisplay(Skin skin, float w) {
+
+		private Table logEntries;
+		private TextField input;
+		private ScrollPane scroll;
+		private Skin skin;
+
+		protected ConsoleDisplay(Skin skin, float width, float height) {
 			super(skin);
-			this.setTouchable(Touchable.childrenOnly);
-			this.clear();
-			this.pad(0);
-			this.add(logArea).expand().fill().width(w).row();
-			this.add(input).expand().fill().width(w);
-			this.setSize(this.getPrefWidth(), this.getPrefHeight());
+
+			this.setFillParent(false);
+			this.skin = skin;
+			this.setSize(width, height);
+
+			logEntries = new Table(skin);
+
+			input = new TextField("", skin);
+			input.setTextFieldListener(new FieldListener());
+
+			scroll = new ScrollPane(logEntries, skin);
+			scroll.setFadeScrollBars(false);
+			scroll.setScrollbarsOnTop(false);
+			scroll.setOverscroll(false, false);
+
+			this.add(scroll).expand().fill().row();
+			this.add(input).expandX().fillX();
+			this.addListener(new KeyListener(input));
+		}
+
+		protected void refresh() {
+			Array<LogEntry> entries = log.getLogEntries();
+			logEntries.clear();
+
+			int size = entries.size;
+			for(int i = 0; i < size; i++) {
+				LogEntry le = entries.get(i);
+				Label l = new Label(le.toConsoleString(), skin, "default-font", le.getColor());
+				Cell<Label> c = logEntries.add(l).expandX().fillX().top().left();
+				if(i == size - 1)
+					c.expand();
+				c.row();
+			}
+			scroll.validate();
+			scroll.setScrollPercentY(1);
 		}
 	}
 
 	private class FieldListener implements TextFieldListener {
 		@Override
 		public void keyTyped(TextField textField, char c) {
-			if(c == '`') {
+			if(("" + c).equalsIgnoreCase(Keys.toString(keyID))) {
 				String s = textField.getText();
 				textField.setText(s.substring(0, s.length() - 1));
 			}
 		}
 	}
 
-	private class EnterListener extends InputListener {
+	private class KeyListener extends InputListener {
+		private TextField input;
+
+		protected KeyListener(TextField tf) {
+			input = tf;
+		}
+
 		@Override
-		public boolean keyUp(InputEvent event, int keycode) {
-			if(keycode == Input.Keys.ENTER) {
+		public boolean keyDown(InputEvent event, int keycode) {
+			if(keycode == Keys.ENTER) {
 				String s = input.getText();
 				if(s.length() == 0 || s.equals(""))
 					return false;
@@ -346,14 +394,7 @@ public class Console implements Disposable {
 				input.setText("");
 				return true;
 			}
-			return false;
-		}
-	}
-
-	private class KeyIDListener extends InputListener {
-		@Override
-		public boolean keyUp(InputEvent event, int keycode) {
-			if(keycode == keyID) {
+			else if(keycode == keyID) {
 				hidden = !hidden;
 				if(hidden) {
 					input.setText("");
