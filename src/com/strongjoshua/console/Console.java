@@ -286,10 +286,12 @@ public class Console implements Disposable {
 			return;
 		}
 		int size = possible.size;
+		int numArgs;
+		numArgs = args == null ? 0 : args.length;
 		for(int i = 0; i < size; i++) {
 			Method m = methods[possible.get(i)];
 			Parameter[] params = m.getParameters();
-			if((args == null && params.length > 0) || (args.length != params.length))
+			if(numArgs != params.length)
 				continue;
 			else {
 				try {

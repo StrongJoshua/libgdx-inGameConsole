@@ -13,6 +13,10 @@
 
 package com.strongjoshua.console;
 
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.Parameter;
+
 import com.badlogic.gdx.Gdx;
 
 /**
@@ -49,5 +53,32 @@ public abstract class CommandExecutor {
 	 */
 	public final void exitApp() {
 		Gdx.app.exit();
+	}
+	
+	/**
+	 * Shows all available methods in the console.
+	 */
+	public final void help() {
+		Method[] methods = this.getClass().getDeclaredMethods();
+		String s = "";
+		for(int j = 0; j < methods.length; j++) {
+			Method m = methods[j];
+			if(Modifier.isPublic(m.getModifiers()))
+			{
+				s += m.getName();
+				s += " : ";
+				
+				Parameter[] params = m.getParameters();
+				for(int i = 0; i < params.length; i++) {
+					s += params[i].getType().getSimpleName();
+					if(i < params.length - 1)
+						s += ", ";
+				}
+			}
+			if(j < methods.length - 1)
+				s += "\n";
+		}
+		
+		console.log(s);
 	}
 }
