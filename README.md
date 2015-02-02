@@ -4,6 +4,22 @@ This is a LibGdx library that allows a developer to add a console (similar to ho
 ## Current Goal
 Auto-complete feature for quicker, easier invoking of methods.
 
+## Adding to Project  
+### Gradle
+Currently there is no Maven repository for this library, so you will have to clone it and export it to a .jar file in Eclipse (make sure to check the box that says "include source"). I recommend calling the .jar `libgdx-inGameConsole` so that you can just copy and paste any code below, but you can call it differently if you like.
+
+Create a directory in your `core` project called `libs` and save the .jar you have created there. Then in your project's main `build.gradle` file paste the following into the `:core dependencies` section:
+
+`compile files("libs/libgdx-inGameConsole.jar")`
+
+Then simply right-click the project and choose `Gradle->Refresh All`.
+
+### Maven
+First, clone this project to your computer and [add it to Eclipse](http://www.eclipse.org/forums/index.php/t/226301/). Then right-click the project (this is assuming you have [M2E](http://eclipse.org/m2e/) installed) and choose `Configure->Convert to Maven Project`. Do the same for your project, if you haven't already. Then right-click on your project and choose `Maven->Add Dependency` and search for `strongjoshua`. This project should appear. If it does not, ensure your cloned repository is up-to-date.
+
+### Eclipse
+First, clone this project to your computer and [add it to Eclipse](http://www.eclipse.org/forums/index.php/t/226301/). Then simply click on your project, and choose `Build Path->Configure Build Path`. Then go to `Projects->Add` and add the cloned project.
+
 License
 =======
 Copyright 2015
