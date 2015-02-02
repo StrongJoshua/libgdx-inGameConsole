@@ -353,6 +353,7 @@ public class Console implements Disposable {
 			for(int i = 0; i < size; i++) {
 				LogEntry le = entries.get(i);
 				Label l = new Label(le.toConsoleString(), skin, "default-font", le.getColor());
+				l.setWrap(true);
 				Cell<Label> c = logEntries.add(l).expandX().fillX().top().left();
 				if(i == size - 1)
 					c.expand();
