@@ -240,7 +240,7 @@ public class Console implements Disposable {
 	}
 
 	/**
-	 * Sets this consoles {@link CommandExecutor}. Its methods are the methods that are referenced within the console. Can be set to null,
+	 * Sets this console's {@link CommandExecutor}. Its methods are the methods that are referenced within the console. Can be set to null,
 	 * but this will result in no commands being fired.
 	 * @param commandExec
 	 */
