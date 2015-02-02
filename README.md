@@ -9,6 +9,8 @@ This is a LibGdx library that allows a developer to add a console (similar to ho
 ### Gradle
 Currently there is no Maven repository for this library, so you will have to clone it and export it to a .jar file in Eclipse (make sure to check the box that says "include source"). I recommend calling the .jar `libgdx-inGameConsole` so that you can just copy and paste any code below, but you can call it differently if you like.
 
+*If you are experiencing difficulties, [try downloading this pre-compiled .jar.](http://www.mediafire.com/download/88ssot8j8xx7ap8/libgdx-inGameConsole.jar)*
+
 Create a directory in your `core` project called `libs` and save the .jar you have created there. Then in your project's main `build.gradle` file paste the following into the `:core dependencies` section:
 
 `compile files("libs/libgdx-inGameConsole.jar")`
