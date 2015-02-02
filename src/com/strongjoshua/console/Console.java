@@ -40,6 +40,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 
+/**
+ * A simple console that allows live logging, and live execution of methods, from within an application. Please see the
+ * <a href="https://github.com/StrongJoshua/libgdx-inGameConsole">GitHub Repository</a> for more information.
+ * 
+ * @author StrongJoshua
+ */
 public class Console implements Disposable {
 	/**
 	 * Specifies the 'level' of a log entry. The level affects the color of the entry in the console and is also displayed next to the
