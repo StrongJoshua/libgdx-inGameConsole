@@ -42,10 +42,10 @@ public abstract class CommandExecutor {
 
 	/**
 	 * Prints the log to a local file.
-	 * @param file The relative of the local file to print to.
+	 * @param path The relative path of the local file to print to.
 	 */
-	public final void printLog(String file) {
-		console.printLogToFile(file);
+	public final void printLog(String path) {
+		console.printLogToFile(path);
 	}
 
 	/**
@@ -56,7 +56,7 @@ public abstract class CommandExecutor {
 	}
 	
 	/**
-	 * Shows all available methods in the console.
+	 * Shows all available methods, and their parameter types, in the console.
 	 */
 	public final void help() {
 		Method[] methods = this.getClass().getDeclaredMethods();

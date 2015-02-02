@@ -57,13 +57,14 @@ public class Console implements Disposable {
 		 * Use to print errors. Prints in red to the console and has the '<i>ERROR</i>' marking in the log file.<br>
 		 * Intentional Use: printing internal console errors; debugging.
 		 */
-		ERROR(new Color(217f/255f, 0, 0, 1), "Error: "),
+		ERROR(new Color(217f / 255f, 0, 0, 1), "Error: "),
 		/**
-		 * Use to print success notifications of events. Intentional Use: Print successful execution of console commands (if needed).
+		 * Prints in green. Use to print success notifications of events. Intentional Use: Print successful execution of console commands
+		 * (if needed).
 		 */
-		SUCCESS(new Color(0, 217f/255f, 0, 1), "Success! "),
+		SUCCESS(new Color(0, 217f / 255f, 0, 1), "Success! "),
 		/**
-		 * Prints in white with "> " prepended to the command. Has that prepended text as the indicator in the log file. Intentional Use:
+		 * Prints in white with {@literal "> "} prepended to the command. Has that prepended text as the indicator in the log file. Intentional Use:
 		 * To be used by the console, alone.
 		 */
 		COMMAND(new Color(1, 1, 1, 1), "> ");
@@ -227,7 +228,8 @@ public class Console implements Disposable {
 	 * @see Console#getKeyID()
 	 */
 	public void setKeyID(int code) {
-		if(code == Keys.ENTER) return;
+		if(code == Keys.ENTER)
+			return;
 		keyID = code;
 	}
 
