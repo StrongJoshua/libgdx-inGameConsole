@@ -3,8 +3,7 @@ This is a LibGdx library that allows a developer to add a console (similar to ho
 
 ## Current Goals
 * Auto-complete feature for quicker, easier invoking of methods.
-* Utilization of up and down arrow keys for quick reexecution of methods
-* `help` command for viewing all available methods
+* Utilization of up and down arrow keys for quick re-execution of methods
 
 ## Adding to Project  
 ### Gradle
