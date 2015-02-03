@@ -114,15 +114,8 @@ public class Console implements Disposable {
 		log = new Log();
 		int width = Gdx.graphics.getWidth(), height = Gdx.graphics.getHeight();
 		display = new ConsoleDisplay(skin, width / 2, height / 2);
-		appInput = Gdx.input.getInputProcessor();
-		if(appInput != null) {
-			multiplexer = new InputMultiplexer();
-			multiplexer.addProcessor(stage);
-			multiplexer.addProcessor(appInput);
-			Gdx.input.setInputProcessor(multiplexer);
-		}
-		else
-			Gdx.input.setInputProcessor(stage);
+		
+		resetInputProcessing();
 
 		display.setPosition(width / 2, height / 2);
 
@@ -138,6 +131,22 @@ public class Console implements Disposable {
 	 */
 	public Console() {
 		this(new Skin(Gdx.files.classpath("default_skin/uiskin.json")));
+	}
+	
+	/**
+	 * Call this method if you changed the input processor while this console was active.
+	 * Do <b>NOT</b> call this method if the console's stage is currently part of the InputProcessor.
+	 */
+	public void resetInputProcessing() {
+		appInput = Gdx.input.getInputProcessor();
+		if(appInput != null) {
+			multiplexer = new InputMultiplexer();
+			multiplexer.addProcessor(stage);
+			multiplexer.addProcessor(appInput);
+			Gdx.input.setInputProcessor(multiplexer);
+		}
+		else
+			Gdx.input.setInputProcessor(stage);
 	}
 
 	/**
