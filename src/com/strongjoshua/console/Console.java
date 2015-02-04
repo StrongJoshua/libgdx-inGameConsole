@@ -404,10 +404,10 @@ public class Console implements Disposable {
 		public boolean keyDown(InputEvent event, int keycode) {
 			if(keycode == Keys.ENTER) {
 				String s = input.getText();
-				if(s.length() == 0 || s.equals(""))
+				if(s.length() == 0 || s.equals("") || s.split(" ").length == 0)
 					return false;
 				if(exec != null) {
-					execCommand(input.getText());
+					execCommand(s);
 				}
 				else
 					log("No command executor has been set. Please call setCommandExecutor for this console in your code and restart.",
