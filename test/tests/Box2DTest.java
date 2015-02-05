@@ -3,6 +3,7 @@ package tests;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.graphics.GL20;
@@ -23,6 +24,7 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.strongjoshua.console.CommandExecutor;
 import com.strongjoshua.console.Console;
 
@@ -146,11 +148,26 @@ public class Box2DTest extends ApplicationAdapter {
 
 		debugRenderer = new Box2DDebugRenderer();
 
-		console = new Console();
+		console = new Console(false);
 		cExec = new MyCommandExecutor();
 		console.setCommandExecutor(cExec);
 		// set to 'Z' to demonstrate that it works with binds other than the default
 		console.setKeyID(Input.Keys.Z);
+		
+		// test multiple resets with nested multiplexers
+		InputMultiplexer im1 = new InputMultiplexer();
+		im1.addProcessor(new Stage());
+		im1.addProcessor(new Stage());
+		
+		InputMultiplexer im2 = new InputMultiplexer();
+		im2.addProcessor(new Stage());
+		im2.addProcessor(new Stage());
+		im1.addProcessor(im2);
+		Gdx.input.setInputProcessor(im1);
+		
+		console.resetInputProcessing();
+		// console already present, logged to consoles
+		console.resetInputProcessing();
 	}
 
 	@Override
@@ -163,6 +180,9 @@ public class Box2DTest extends ApplicationAdapter {
 				Vector3 worldVector = c.unproject(new Vector3(x, y, 0));
 
 				createExplosion(worldVector.x, worldVector.y, 2000);
+				
+				console.log(String.format("Created touch explosion at %.2f, %.2f!", worldVector.x, worldVector.y), Console.LogLevel.SUCCESS);
+
 			}
 		}
 		if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE))
