@@ -97,31 +97,11 @@ public class Console implements Disposable {
 	private Log log;
 	private ConsoleDisplay display;
 	private boolean hidden = true;
+	private boolean usesMultiplexer = false;
 	private InputProcessor appInput;
 	private InputMultiplexer multiplexer;
 	private Stage stage;
 	private CommandExecutor exec;
-
-	/**
-	 * Creates the console.<br>
-	 * <b>***IMPORTANT***</b> Call {@link Console#dispose()} to make your {@link InputProcessor} the default processor again (this console
-	 * uses a multiplexer to circumvent it).
-	 * @param skin Uses skins for Label, TextField, and Table. Skin <b>must</b> contain a font called 'default-font'.
-	 * @see Console#dispose()
-	 */
-	public Console(Skin skin) {
-		stage = new Stage();
-		log = new Log();
-		int width = Gdx.graphics.getWidth(), height = Gdx.graphics.getHeight();
-		display = new ConsoleDisplay(skin, width / 2, height / 2);
-		
-		resetInputProcessing();
-
-		display.setPosition(width / 2, height / 2);
-
-		stage.addActor(display);
-		stage.setKeyboardFocus(display);
-	}
 
 	/**
 	 * Creates the console using the default skin.<br>
@@ -132,14 +112,65 @@ public class Console implements Disposable {
 	public Console() {
 		this(new Skin(Gdx.files.classpath("default_skin/uiskin.json")));
 	}
+
+	/**
+	 * Creates the console.<br>
+	 * <b>***IMPORTANT***</b> Call {@link Console#dispose()} to make your {@link InputProcessor} the default processor again (this console
+	 * uses a multiplexer to circumvent it).
+	 * @param skin Uses skins for Label, TextField, and Table. Skin <b>must</b> contain a font called 'default-font'.
+	 * @see Console#dispose()
+	 */
+	public Console(Skin skin) {
+		this(skin, true);
+	}
+
+	/**
+	 * Creates the console.<br>
+	 * <b>***IMPORTANT***</b> Call {@link Console#dispose()} to make your {@link InputProcessor} the default processor again (this console
+	 * uses a multiplexer to circumvent it).
+	 * @param useMultiplexer If internal multiplexer should be used
+	 * @see Console#dispose()
+	 */
+	public Console(boolean useMultiplexer) {
+		this(new Skin(Gdx.files.classpath("default_skin/uiskin.json")), useMultiplexer);
+	}
+	
+	/**
+	 * Creates the console.<br>
+	 * <b>***IMPORTANT***</b> Call {@link Console#dispose()} to make your {@link InputProcessor} the default processor again (this console
+	 * uses a multiplexer to circumvent it).
+	 * @param skin Uses skins for Label, TextField, and Table. Skin <b>must</b> contain a font called 'default-font'.
+	 * @param useMultiplexer If internal multiplexer should be used
+	 * @see Console#dispose()
+	 */
+	public Console(Skin skin, boolean useMultiplexer) {
+		stage = new Stage();
+		log = new Log();
+		int width = Gdx.graphics.getWidth(), height = Gdx.graphics.getHeight();
+		display = new ConsoleDisplay(skin, width / 2, height / 2);
+		usesMultiplexer = useMultiplexer;
+		if (useMultiplexer) {
+			resetInputProcessing();	
+		}
+		
+		display.setPosition(width / 2, height / 2);
+
+		stage.addActor(display);
+		stage.setKeyboardFocus(display);
+	}
 	
 	/**
 	 * Call this method if you changed the input processor while this console was active.
-	 * Do <b>NOT</b> call this method if the console's stage is currently part of the InputProcessor.
 	 */
 	public void resetInputProcessing() {
+		usesMultiplexer = true;
 		appInput = Gdx.input.getInputProcessor();
 		if(appInput != null) {
+			if (hasStage(appInput)) {
+				log("Console already added to input processor!", LogLevel.ERROR);
+				Gdx.app.log("Console", "Already added to input processor!");
+				return;
+			}
 			multiplexer = new InputMultiplexer();
 			multiplexer.addProcessor(stage);
 			multiplexer.addProcessor(appInput);
@@ -147,6 +178,30 @@ public class Console implements Disposable {
 		}
 		else
 			Gdx.input.setInputProcessor(stage);
+	}
+	
+	/*
+	 * Recursively checks given processor for our stage
+	 */
+	private boolean hasStage(InputProcessor processor){
+		if (!(processor instanceof InputMultiplexer)) {
+			return processor == stage;
+		}
+		InputMultiplexer im = (InputMultiplexer)processor;
+		Array<InputProcessor> ips = im.getProcessors();
+		for (InputProcessor ip:ips){
+			if (hasStage(ip)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * @return {@link InputProcessor} for this {@link Console}
+	 */
+	public InputProcessor getInputProcessor() {
+		return stage;
 	}
 
 	/**
@@ -437,7 +492,9 @@ public class Console implements Disposable {
 	 */
 	@Override
 	public void dispose() {
-		Gdx.input.setInputProcessor(appInput);
+		if (usesMultiplexer) {
+			Gdx.input.setInputProcessor(appInput);
+		}
 		stage.dispose();
 	}
 }
