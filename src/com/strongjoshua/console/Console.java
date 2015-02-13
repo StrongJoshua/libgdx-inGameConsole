@@ -418,9 +418,9 @@ public class Console implements Disposable {
 			this.setSize(width, height);
 
 			labels = new Array<Label>();
-			
+
 			logEntries = new Table(skin);
-			
+
 			input = new TextField("", skin);
 			input.setTextFieldListener(new FieldListener());
 
@@ -432,13 +432,12 @@ public class Console implements Disposable {
 			this.add(scroll).expand().fill().row();
 			this.add(input).expandX().fillX();
 			this.addListener(new KeyListener(input));
-
-			debugAll();
 		}
 
 		protected void refresh() {
 			Array<LogEntry> entries = log.getLogEntries();
 			logEntries.clear();
+
 			// expand first so labels start at the bottom
 			logEntries.add().expand().fill().row();
 			int size = entries.size;
