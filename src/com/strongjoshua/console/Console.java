@@ -40,8 +40,8 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 
 /**
- * A simple console that allows live logging, and live execution of methods, from within an application. Please see the
- * <a href="https://github.com/StrongJoshua/libgdx-inGameConsole">GitHub Repository</a> for more information.
+ * A simple console that allows live logging, and live execution of methods, from within an application. Please see the <a
+ * href="https://github.com/StrongJoshua/libgdx-inGameConsole">GitHub Repository</a> for more information.
  * 
  * @author StrongJoshua
  */
@@ -69,8 +69,8 @@ public class Console implements Disposable {
 		 */
 		SUCCESS(new Color(0, 217f / 255f, 0, 1), "Success! "),
 		/**
-		 * Prints in white with {@literal "> "} prepended to the command. Has that prepended text as the indicator in the log file. Intentional Use:
-		 * To be used by the console, alone.
+		 * Prints in white with {@literal "> "} prepended to the command. Has that prepended text as the indicator in the log file.
+		 * Intentional Use: To be used by the console, alone.
 		 */
 		COMMAND(new Color(1, 1, 1, 1), "> ");
 
@@ -90,6 +90,12 @@ public class Console implements Disposable {
 			return identifier;
 		}
 	}
+	
+
+	/**
+	 * Use to set the amount of entries to be stored to unlimited.
+	 */
+	public static final int UNLIMITED_ENTRIES = -1;
 
 	private int keyID = Input.Keys.GRAVE;
 	private boolean disabled;
@@ -133,7 +139,7 @@ public class Console implements Disposable {
 	public Console(boolean useMultiplexer) {
 		this(new Skin(Gdx.files.classpath("default_skin/uiskin.json")), useMultiplexer);
 	}
-	
+
 	/**
 	 * Creates the console.<br>
 	 * <b>***IMPORTANT***</b> Call {@link Console#dispose()} to make your {@link InputProcessor} the default processor again (this console
@@ -148,31 +154,34 @@ public class Console implements Disposable {
 		int width = Gdx.graphics.getWidth(), height = Gdx.graphics.getHeight();
 		display = new ConsoleDisplay(skin, width / 2, height / 2);
 		usesMultiplexer = useMultiplexer;
-		if (useMultiplexer) {
-			resetInputProcessing();	
+		if(useMultiplexer) {
+			resetInputProcessing();
 		}
-		
+
 		display.setPosition(width / 2, height / 2);
 
 		stage.addActor(display);
 		stage.setKeyboardFocus(display);
 	}
-	
+
 	/**
 	 * @param numEntries maximum number of entries the console will hold.
 	 */
-	public void setMaxEntries(int numEntries){
-		log.setMaxEntries(numEntries);
+	public void setMaxEntries(int numEntries) {
+		if(numEntries > 0 || numEntries == UNLIMITED_ENTRIES)
+			log.setMaxEntries(numEntries);
+		else
+			throw new IllegalArgumentException("Maximum entries must be greater than 0 or use Console.UNLIMITED_ENTRIES.");
 	}
-	
+
 	/**
 	 * Clears all log entries.
 	 */
-	public void clear(){
+	public void clear() {
 		log.getLogEntries().clear();
 		display.refresh();
 	}
-	
+
 	/**
 	 * Call this method if you changed the input processor while this console was active.
 	 */
@@ -180,7 +189,7 @@ public class Console implements Disposable {
 		usesMultiplexer = true;
 		appInput = Gdx.input.getInputProcessor();
 		if(appInput != null) {
-			if (hasStage(appInput)) {
+			if(hasStage(appInput)) {
 				log("Console already added to input processor!", LogLevel.ERROR);
 				Gdx.app.log("Console", "Already added to input processor!");
 				return;
@@ -193,24 +202,24 @@ public class Console implements Disposable {
 		else
 			Gdx.input.setInputProcessor(stage);
 	}
-	
+
 	/*
 	 * Recursively checks given processor for our stage
 	 */
-	private boolean hasStage(InputProcessor processor){
-		if (!(processor instanceof InputMultiplexer)) {
+	private boolean hasStage(InputProcessor processor) {
+		if(!(processor instanceof InputMultiplexer)) {
 			return processor == stage;
 		}
-		InputMultiplexer im = (InputMultiplexer)processor;
+		InputMultiplexer im = (InputMultiplexer) processor;
 		Array<InputProcessor> ips = im.getProcessors();
-		for (InputProcessor ip:ips){
-			if (hasStage(ip)) {
+		for(InputProcessor ip : ips) {
+			if(hasStage(ip)) {
 				return true;
 			}
 		}
 		return false;
 	}
-	
+
 	/**
 	 * @return {@link InputProcessor} for this {@link Console}
 	 */
@@ -409,7 +418,7 @@ public class Console implements Disposable {
 		private TextField input;
 		private Skin skin;
 		private Array<Label> labels;
-		
+
 		protected ConsoleDisplay(Skin skin, float width, float height) {
 			super(skin);
 
@@ -445,13 +454,14 @@ public class Console implements Disposable {
 				LogEntry le = entries.get(i);
 				Label l;
 				// recycle the labels so we don't create new ones every refresh
-				if (labels.size > i) {
+				if(labels.size > i) {
 					l = labels.get(i);
-				} else {
+				}
+				else {
 					l = new Label("", skin, "default-font", LogLevel.DEFAULT.getColor());
 					l.setWrap(true);
 					labels.add(l);
-				} 
+				}
 				l.setText(le.toConsoleString());
 				l.setColor(le.getColor());
 				logEntries.add(l).expandX().fillX().top().left().row();
@@ -517,7 +527,7 @@ public class Console implements Disposable {
 	 */
 	@Override
 	public void dispose() {
-		if (usesMultiplexer) {
+		if(usesMultiplexer) {
 			Gdx.input.setInputProcessor(appInput);
 		}
 		stage.dispose();

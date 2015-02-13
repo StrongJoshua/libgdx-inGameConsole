@@ -22,23 +22,24 @@ import com.strongjoshua.console.Console.LogLevel;
 
 class Log {
 	private Array<LogEntry> logEntries;
-	
+
 	protected Log() {
 		logEntries = new Array<LogEntry>();
 	}
-	
-	private int numEntries = Integer.MAX_VALUE;
-	public void setMaxEntries(int numEntries){
+
+	private int numEntries = Console.UNLIMITED_ENTRIES;
+
+	public void setMaxEntries(int numEntries) {
 		this.numEntries = numEntries;
 	}
-	
+
 	protected void addEntry(String msg, LogLevel level) {
 		logEntries.add(new LogEntry(msg, level));
-		if (logEntries.size > numEntries) {
+		if(logEntries.size > numEntries && numEntries != Console.UNLIMITED_ENTRIES) {
 			logEntries.removeIndex(0);
 		}
 	}
-	
+
 	protected Array<LogEntry> getLogEntries() {
 		return logEntries;
 	}
@@ -46,20 +47,19 @@ class Log {
 	public boolean printToFile(FileHandle fh) {
 		if(fh.isDirectory())
 			throw new IllegalArgumentException("File cannot be a directory!");
-		
+
 		Writer out = null;
 		try {
 			out = fh.writer(false);
-		}
-		catch(Exception e) {
+		} catch(Exception e) {
 			return false;
 		}
-		
+
 		String toWrite = "";
 		for(LogEntry l : logEntries) {
 			toWrite += l.toString() + "\n";
 		}
-		
+
 		try {
 			out.write(toWrite);
 			out.close();
