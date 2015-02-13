@@ -27,8 +27,16 @@ class Log {
 		logEntries = new Array<LogEntry>();
 	}
 	
+	private int numEntries = Integer.MAX_VALUE;
+	public void setMaxEntries(int numEntries){
+		this.numEntries = numEntries;
+	}
+	
 	protected void addEntry(String msg, LogLevel level) {
 		logEntries.add(new LogEntry(msg, level));
+		if (logEntries.size > numEntries) {
+			logEntries.removeIndex(0);
+		}
 	}
 	
 	protected Array<LogEntry> getLogEntries() {

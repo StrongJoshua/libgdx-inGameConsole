@@ -164,12 +164,12 @@ public class Box2DTest extends ApplicationAdapter {
 		im2.addProcessor(new Stage());
 		im1.addProcessor(im2);
 		Gdx.input.setInputProcessor(im1);
-		
+		console.setMaxEntries(16);
 		console.resetInputProcessing();
 		// console already present, logged to consoles
 		console.resetInputProcessing();
 	}
-
+	
 	@Override
 	public void render() {
 		if(Gdx.input.isTouched()) {
@@ -182,9 +182,9 @@ public class Box2DTest extends ApplicationAdapter {
 				createExplosion(worldVector.x, worldVector.y, 2000);
 				
 				console.log(String.format("Created touch explosion at %.2f, %.2f!", worldVector.x, worldVector.y), Console.LogLevel.SUCCESS);
-
 			}
 		}
+		
 		if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE))
 			Gdx.app.exit();
 		world.step(1 / 60f, 6, 2);
@@ -251,6 +251,10 @@ public class Box2DTest extends ApplicationAdapter {
 		public void explode(float x, float y, float maxForce) {
 			createExplosion(x, y, maxForce);
 			console.log("Created console explosion!", Console.LogLevel.SUCCESS);
+		}
+		
+		public void clear(){
+			console.clear();
 		}
 	}
 
