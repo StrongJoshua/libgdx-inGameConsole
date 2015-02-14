@@ -447,7 +447,7 @@ public class Console implements Disposable {
 		}
 		log("Bad parameters. Check your code.", LogLevel.ERROR);
 	}
-	
+
 	private Vector3 stageCoords = new Vector3();
 	public boolean hitsConsole(float screenX, float screenY) {
 		if(disabled || hidden)
