@@ -168,6 +168,9 @@ public class Box2DTest extends ApplicationAdapter {
 		console.resetInputProcessing();
 		// console already present, logged to consoles
 		console.resetInputProcessing();
+
+		console.setSizePercent(100, 33);
+		console.setPositionPercent(0, 67);
 	}
 	
 	@Override
