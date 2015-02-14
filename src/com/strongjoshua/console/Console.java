@@ -90,7 +90,6 @@ public class Console implements Disposable {
 			return identifier;
 		}
 	}
-	
 
 	/**
 	 * Use to set the amount of entries to be stored to unlimited.
@@ -187,28 +186,31 @@ public class Console implements Disposable {
 	 * @param height height of the console in pixels
 	 */
 	public void setSize(int width, int height) {
-		if (width <= 0 || height <= 0) {
+		if(width <= 0 || height <= 0) {
 			throw new IllegalArgumentException("Pixel size must be greater than 0.");
 		}
 		display.setSize(width, height);
 	}
-	
+
 	/**
 	 * Set size of the console as a percent of screen size
-	 * @param width width of the console as a percent of screen width
-	 * @param height height of the console as a percent of screen height
+	 * @param widthPct width of the console as a percent of screen width
+	 * @param heightPct height of the console as a percent of screen height
 	 */
 	public void setSizePercent(int widthPct, int heightPct) {
-		if (widthPct <= 0 || heightPct <= 0) {
-			throw new IllegalArgumentException("Size percent must be greater than 0.");
+		if(widthPct <= 0 || heightPct <= 0) {
+			throw new IllegalArgumentException("Size percentage must be greater than 0.");
+		}
+		if(widthPct > 100 || heightPct > 100) {
+			throw new IllegalArgumentException("Size percentage cannot be greater than 100.");
 		}
 		int w = Gdx.graphics.getWidth(), h = Gdx.graphics.getHeight();
-		display.setSize((int)(w * widthPct / 100.0f), (int)(h * heightPct / 100.0f));
+		display.setSize((int) (w * widthPct / 100.0f), (int) (h * heightPct / 100.0f));
 	}
-	
+
 	/**
 	 * Set position of the lower left corner of the console
-	 * @param x 
+	 * @param x
 	 * @param y
 	 */
 	public void setPosition(int x, int y) {
@@ -220,10 +222,13 @@ public class Console implements Disposable {
 	 * 
 	 */
 	public void setPositionPercent(int xPct, int yPct) {
+		if(xPct > 100 || yPct > 100) {
+			throw new IllegalArgumentException("Error: The console would be drawn outside of the screen.");
+		}
 		int w = Gdx.graphics.getWidth(), h = Gdx.graphics.getHeight();
-		display.setPosition((int)(w * xPct / 100.0f), (int)(h * yPct / 100.0f));
+		display.setPosition((int) (w * xPct / 100.0f), (int) (h * yPct / 100.0f));
 	}
-	
+
 	/**
 	 * Call this method if you changed the input processor while this console was active.
 	 */
@@ -245,8 +250,11 @@ public class Console implements Disposable {
 			Gdx.input.setInputProcessor(stage);
 	}
 
-	/*
-	 * Recursively checks given processor for our stage
+	/**
+	 * Compares the given processor to the console's stage. If given a multiplexer, it is iterated through recursively to check all of the
+	 * multiplexer's processors for comparison.
+	 * @param processor
+	 * @return processor == this.stage
 	 */
 	private boolean hasStage(InputProcessor processor) {
 		if(!(processor instanceof InputMultiplexer)) {
@@ -449,6 +457,13 @@ public class Console implements Disposable {
 	}
 
 	private Vector3 stageCoords = new Vector3();
+
+	/**
+	 * Returns if the given screen coordinates hit the console.
+	 * @param screenX
+	 * @param screenY
+	 * @return True, if the console was hit.
+	 */
 	public boolean hitsConsole(float screenX, float screenY) {
 		if(disabled || hidden)
 			return false;
