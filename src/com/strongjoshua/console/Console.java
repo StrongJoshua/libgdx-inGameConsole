@@ -151,14 +151,13 @@ public class Console implements Disposable {
 	public Console(Skin skin, boolean useMultiplexer) {
 		stage = new Stage();
 		log = new Log();
-		int width = Gdx.graphics.getWidth(), height = Gdx.graphics.getHeight();
-		display = new ConsoleDisplay(skin, width / 2, height / 2);
+		display = new ConsoleDisplay(skin);
+		setSizePercent(50, 50);
 		usesMultiplexer = useMultiplexer;
 		if(useMultiplexer) {
 			resetInputProcessing();
 		}
-
-		display.setPosition(width / 2, height / 2);
+		setPositionPercent(50, 50);
 
 		stage.addActor(display);
 		stage.setKeyboardFocus(display);
@@ -182,6 +181,49 @@ public class Console implements Disposable {
 		display.refresh();
 	}
 
+	/**
+	 * Set size of the console in pixels
+	 * @param width width of the console in pixels
+	 * @param height height of the console in pixels
+	 */
+	public void setSize(int width, int height) {
+		if (width <= 0 || height <= 0) {
+			throw new IllegalArgumentException("Pixel size must be greater than 0.");
+		}
+		display.setSize(width, height);
+	}
+	
+	/**
+	 * Set size of the console as a percent of screen size
+	 * @param width width of the console as a percent of screen width
+	 * @param height height of the console as a percent of screen height
+	 */
+	public void setSizePercent(int widthPct, int heightPct) {
+		if (widthPct <= 0 || heightPct <= 0) {
+			throw new IllegalArgumentException("Size percent must be greater than 0.");
+		}
+		int w = Gdx.graphics.getWidth(), h = Gdx.graphics.getHeight();
+		display.setSize((int)(w * widthPct / 100.0f), (int)(h * heightPct / 100.0f));
+	}
+	
+	/**
+	 * Set position of the lower left corner of the console
+	 * @param x 
+	 * @param y
+	 */
+	public void setPosition(int x, int y) {
+		display.setPosition(x, y);
+	}
+
+	/**
+	 * Set position of the lower left corner of the console as a percent of screen size
+	 * 
+	 */
+	public void setPositionPercent(int xPct, int yPct) {
+		int w = Gdx.graphics.getWidth(), h = Gdx.graphics.getHeight();
+		display.setPosition((int)(w * xPct / 100.0f), (int)(h * yPct / 100.0f));
+	}
+	
 	/**
 	 * Call this method if you changed the input processor while this console was active.
 	 */
@@ -405,11 +447,12 @@ public class Console implements Disposable {
 		}
 		log("Bad parameters. Check your code.", LogLevel.ERROR);
 	}
-
+	
+	private Vector3 stageCoords = new Vector3();
 	public boolean hitsConsole(float screenX, float screenY) {
 		if(disabled || hidden)
 			return false;
-		Vector3 stageCoords = stage.getCamera().unproject(new Vector3(screenX, screenY, 0));
+		stage.getCamera().unproject(stageCoords.set(screenX, screenY, 0));
 		return stage.hit(stageCoords.x, stageCoords.y, true) != null;
 	}
 
@@ -419,12 +462,11 @@ public class Console implements Disposable {
 		private Skin skin;
 		private Array<Label> labels;
 
-		protected ConsoleDisplay(Skin skin, float width, float height) {
+		protected ConsoleDisplay(Skin skin) {
 			super(skin);
 
 			this.setFillParent(false);
 			this.skin = skin;
-			this.setSize(width, height);
 
 			labels = new Array<Label>();
 
