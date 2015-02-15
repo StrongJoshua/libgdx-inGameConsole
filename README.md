@@ -1,6 +1,12 @@
 # LibGdx In-Game Console
 This is a LibGdx library that allows a developer to add a console (similar to how it is featured in Source games) to their game.
 
+##How it works
+Essentially what the console allows you to do is specify commands that you will be able to access from within the game, using the console. The console also enables live logging from within the application.
+
+##Purpose
+This console speeds up development substantially by removing the need to recompile a program every time a minute change is made, specifically in regard to manipulating constants or other values when balancing a game, for example.
+
 ## Current Goals
 * Auto-complete feature for quicker, easier invoking of methods.
 * Utilization of up and down arrow keys for quick re-execution of methods
