@@ -1,32 +1,33 @@
 # LibGdx In-Game Console
 This is a LibGdx library that allows a developer to add a console (similar to how it is featured in Source games) to their game.
 
-##How it works
+###How it works
 Essentially what the console allows you to do is specify commands that you will be able to access from within the game, using the console. The console also enables live logging from within the application.
 
-##Purpose
+###Purpose
 This console speeds up development substantially by removing the need to recompile a program every time a minute change is made, specifically in regard to manipulating constants or other values when balancing a game, for example.
 
-## Current Goals
+### Current Goals
 * Auto-complete feature for quicker, easier invocation of methods.
 
-## Adding to Project  
-### Gradle
-Currently there is no Maven repository for this library, so you will have to clone it and export it to a .jar file in Eclipse (make sure to check the box that says "include source"). I recommend calling the .jar `libgdx-inGameConsole` so that you can just copy and paste any code below, but you can call it differently if you like.
-
-*If you are experiencing difficulties, [try downloading this pre-compiled .jar.](http://www.mediafire.com/download/88ssot8j8xx7ap8/libgdx-inGameConsole.jar)*
-
-Create a directory in your `core` project called `libs` and save the .jar you have created there. Then in your project's main `build.gradle` file paste the following into the `:core dependencies` section:
-
-`compile files("libs/libgdx-inGameConsole.jar")`
+### Adding to Project  
+#### Gradle
+Add the following line to your build.gradle file under the dependencies section of the **core** project:  
+`compile "com.strongjoshua:libgdx-inGameConsole:{version}"`  
+Replace **{version}** with the newest version number!
 
 Then simply right-click the project and choose `Gradle->Refresh All`.
 
-### Maven
-First, clone this project to your computer and [add it to Eclipse](http://www.eclipse.org/forums/index.php/t/226301/). Then right-click the project (this is assuming you have [M2E](http://eclipse.org/m2e/) installed) and choose `Configure->Convert to Maven Project`. Do the same for your project, if you haven't already. Then right-click on your project and choose `Maven->Add Dependency` and search for `strongjoshua`. This project should appear. If it does not, ensure your cloned repository is up-to-date.
+#### Maven
+Right-click on your project and choose `Maven->Add Dependency` and search for `strongjoshua`; this project should appear. Make sure to choose the most recent version if multiple appear!
 
-### Eclipse
+#### Eclipse
 First, clone this project to your computer and [add it to Eclipse](http://www.eclipse.org/forums/index.php/t/226301/). Then simply click on your project, and choose `Build Path->Configure Build Path`. Then go to `Projects->Add` and add the cloned project.
+
+Versions
+========
+Latest Stable: **0.1.0**  
+Latest Snapshot:
 
 License
 =======
