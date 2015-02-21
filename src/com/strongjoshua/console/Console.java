@@ -565,9 +565,11 @@ public class Console implements Disposable {
 				return true;
 			} else if (keycode == Keys.UP) {
 				input.setText(commandHistory.getPreviousCommand());
+				input.setCursorPosition(input.getText().length());
 				return true;
 			} else if (keycode == Keys.DOWN) {
 				input.setText(commandHistory.getNextCommand());
+				input.setCursorPosition(input.getText().length());
 				return true;
 			}
 			else if(keycode == keyID) {
