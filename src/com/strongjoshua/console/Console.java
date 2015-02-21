@@ -106,6 +106,7 @@ public class Console implements Disposable {
 	private InputMultiplexer multiplexer;
 	private Stage stage;
 	private CommandExecutor exec;
+	private CommandHistory commandHistory = new CommandHistory();
 
 	/**
 	 * Creates the console using the default skin.<br>
@@ -554,12 +555,21 @@ public class Console implements Disposable {
 				if(s.length() == 0 || s.equals("") || s.split(" ").length == 0)
 					return false;
 				if(exec != null) {
+					commandHistory.store(s);
 					execCommand(s);
 				}
 				else
 					log("No command executor has been set. Please call setCommandExecutor for this console in your code and restart.",
 							LogLevel.ERROR);
 				input.setText("");
+				return true;
+			} else if (keycode == Keys.UP) {
+				input.setText(commandHistory.getPreviousCommand());
+				input.setCursorPosition(input.getText().length());
+				return true;
+			} else if (keycode == Keys.DOWN) {
+				input.setText(commandHistory.getNextCommand());
+				input.setCursorPosition(input.getText().length());
 				return true;
 			}
 			else if(keycode == keyID) {
