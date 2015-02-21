@@ -13,6 +13,39 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <gdx.version>1.5.3</gdx.version>
     </properties>
+    
+    <licenses>
+		<license>
+			<name>Apache License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+	
+	<url>
+		https://github.com/StrongJoshua/libgdx-inGameConsole
+	</url>
+	
+	<developers>
+		<developer>
+			<id>StrongJoshua</id>
+			<name>Jan Risse</name>
+			<email>strongjoshua@hotmail.com</email>
+			<url>http://strongjoshua.com</url>
+			<timezone>America/New_York</timezone>
+			<roles></roles>
+		</developer>
+	</developers>
+	
+	<contributors>
+	</contributors>
+	
+	<scm>
+		<connection>scm:git:git@github.com:StrongJoshua/libgdx-inGameConsole.git</connection>
+		<developerConnection>scm:git:git@github.com:StrongJoshua/libgdx-inGameConsole.git</developerConnection>
+		<tag>HEAD</tag>
+		<url>https://github.com/StrongJoshua/libgdx-inGameConsole</url>
+   </scm>
 
     <dependencies>
         <dependency>
@@ -102,6 +135,11 @@
 	          <value>true</value>
 	        </property>
 	      </activation>
+	      <properties>
+			<gpg.keyname>C9265F15</gpg.keyname>
+			<!--  GPG Key ID to use for signing  -->
+			<release.username>StrongJoshua</release.username>
+			</properties>
 	      <build>
 	        <plugins>
 	          <plugin>
@@ -121,5 +159,18 @@
 	      </build>
 	    </profile>
 	  </profiles>
+	  
+	  <distributionManagement>
+  		<repository>
+     	  <id>deployment</id>
+     	  <name>Internal Releases</name>
+     	  <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+  		</repository>
+  		<snapshotRepository>
+     	  <id>deployment</id>
+     	  <name>Internal Releases</name>
+     	  <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+  		</snapshotRepository>
+	  </distributionManagement>
 
 </project>
