@@ -31,7 +31,7 @@ If you are in the [contributors](https://github.com/StrongJoshua/libgdx-inGameCo
 
 Versions
 ========
-Latest Stable: **0.2.0**  
+Latest Stable: **0.2.1**  
 Latest Snapshot:
 
 License
