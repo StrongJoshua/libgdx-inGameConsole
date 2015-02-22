@@ -106,7 +106,8 @@ public class Console implements Disposable {
 	private InputMultiplexer multiplexer;
 	private Stage stage;
 	private CommandExecutor exec;
-	private CommandHistory commandHistory = new CommandHistory();
+	private CommandHistory commandHistory;
+	private CommandCompleter commandCompleter;
 
 	/**
 	 * Creates the console using the default skin.<br>
@@ -152,6 +153,8 @@ public class Console implements Disposable {
 		stage = new Stage();
 		log = new Log();
 		display = new ConsoleDisplay(skin);
+		commandHistory = new CommandHistory();
+		commandCompleter = new CommandCompleter();
 		setSizePercent(50, 50);
 		usesMultiplexer = useMultiplexer;
 		if(useMultiplexer) {
@@ -550,6 +553,11 @@ public class Console implements Disposable {
 
 		@Override
 		public boolean keyDown(InputEvent event, int keycode) {
+			// reset command completer because input string may have changed
+			if(keycode != Keys.TAB) {
+				commandCompleter.reset();
+			}
+
 			if(keycode == Keys.ENTER) {
 				String s = input.getText();
 				if(s.length() == 0 || s.equals("") || s.split(" ").length == 0)
@@ -563,12 +571,25 @@ public class Console implements Disposable {
 							LogLevel.ERROR);
 				input.setText("");
 				return true;
-			} else if (keycode == Keys.UP) {
+			}
+			else if(keycode == Keys.UP) {
 				input.setText(commandHistory.getPreviousCommand());
 				input.setCursorPosition(input.getText().length());
 				return true;
-			} else if (keycode == Keys.DOWN) {
+			}
+			else if(keycode == Keys.DOWN) {
 				input.setText(commandHistory.getNextCommand());
+				input.setCursorPosition(input.getText().length());
+				return true;
+			}
+			else if(keycode == Keys.TAB) {
+				String s = input.getText();
+				if(s.length() == 0)
+					return false;
+				if(commandCompleter.isNew()) {
+					commandCompleter.set(exec, s);
+				}
+				input.setText(commandCompleter.next());
 				input.setCursorPosition(input.getText().length());
 				return true;
 			}
