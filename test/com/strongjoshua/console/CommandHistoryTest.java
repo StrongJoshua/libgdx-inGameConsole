@@ -14,15 +14,14 @@ public class CommandHistoryTest {
     }
 
     @Test
-    public void shouldReturnTheNextCommandIfWeKeepTryingToLookForThePreviousCommand() {
+    public void shouldCycleFromBeginningIfPreviousCommandIsUsedAtTheEndOfHistory() {
         history.store("1");
         history.store("2");
 
         history.getPreviousCommand();
         history.getPreviousCommand();
-        history.getPreviousCommand();
 
-        assertEquals("2", history.getNextCommand());
+        assertEquals("2", history.getPreviousCommand());
     }
 
     @Test
@@ -57,7 +56,7 @@ public class CommandHistoryTest {
         }
 
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 1; i < 5; i++) {
             assertEquals("command " + i, history.getNextCommand());
         }
     }
