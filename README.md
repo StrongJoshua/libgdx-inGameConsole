@@ -8,7 +8,8 @@ Essentially what the console allows you to do is specify commands that you will 
 This console speeds up development substantially by removing the need to recompile a program every time a minute change is made, specifically in regard to manipulating constants or other values when balancing a game, for example.
 
 ### Current Goals
-* Auto-complete feature for quicker, easier invocation of methods.
+* Allow for the console to be dragged with the mouse
+* Allow for the console to be resized with the mouse
 
 ### Integration
 #### Gradle
@@ -30,7 +31,7 @@ If you are in the [contributors](https://github.com/StrongJoshua/libgdx-inGameCo
 
 Versions
 ========
-Latest Stable: **0.1.1**  
+Latest Stable: **0.2.0**  
 Latest Snapshot:
 
 License
