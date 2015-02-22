@@ -20,7 +20,7 @@ Replace **{version}** with the newest version number!
 Then simply right-click the project and choose `Gradle->Refresh All`.
 
 #### Maven
-Right-click on your project and choose `Maven->Add Dependency` and search for `strongjoshua`; this project should appear. Make sure to choose the most recent version if multiple appear!
+Right-click on your project and choose `Maven->Add Dependency` and search for `strongjoshua`. Make sure to choose the most recent version if multiple appear!
 
 #### Eclipse
 First, clone this project to your computer and [add it to Eclipse](http://www.eclipse.org/forums/index.php/t/226301/). Then simply click on your project, and choose `Build Path->Configure Build Path`. Then go to `Projects->Add` and add the cloned project.
