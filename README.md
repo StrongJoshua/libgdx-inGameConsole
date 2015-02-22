@@ -26,7 +26,7 @@ First, clone this project to your computer and [add it to Eclipse](http://www.ec
 
 Versions
 ========
-Latest Stable: **0.1.0**  
+Latest Stable: **0.1.1**  
 Latest Snapshot:
 
 License
