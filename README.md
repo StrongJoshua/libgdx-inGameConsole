@@ -10,7 +10,7 @@ This console speeds up development substantially by removing the need to recompi
 ### Current Goals
 * Auto-complete feature for quicker, easier invocation of methods.
 
-### Adding to Project  
+### Integration
 #### Gradle
 Add the following line to your build.gradle file under the dependencies section of the **core** project:  
 `compile "com.strongjoshua:libgdx-inGameConsole:{version}"`  
@@ -23,6 +23,10 @@ Right-click on your project and choose `Maven->Add Dependency` and search for `s
 
 #### Eclipse
 First, clone this project to your computer and [add it to Eclipse](http://www.eclipse.org/forums/index.php/t/226301/). Then simply click on your project, and choose `Build Path->Configure Build Path`. Then go to `Projects->Add` and add the cloned project.
+
+### Contributing
+Contributions are always welcome, especially if they involve something in the **Current Goals** category or fix an **Issue**.  
+If you are in the [contributors](https://github.com/StrongJoshua/libgdx-inGameConsole/graphs/contributors) tab and would like to be credited for your work please edit the [pom.xml](https://github.com/StrongJoshua/libgdx-inGameConsole/blob/master/pom.xml) file and add yourself to the contributors section using the [Apache guidelines](http://maven.apache.org/pom.html#Contributors).
 
 Versions
 ========
