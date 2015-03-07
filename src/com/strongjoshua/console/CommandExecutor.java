@@ -20,7 +20,7 @@ import java.lang.reflect.Parameter;
 import com.badlogic.gdx.Gdx;
 
 /**
- * Extend this class (child must be <code>public</code>) and fill it with methods (also <code>public</code> that you wish to have work with
+ * Extend this class (child must be <code>public</code>) and fill it with methods (also <code>public</code>) that you wish to have work with
  * the {@link Console}. Then call {@link Console#setCommandExecutor(CommandExecutor)}.<br>
  * <br>
  * <b>Notes</b><br>

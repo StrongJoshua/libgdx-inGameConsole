@@ -358,6 +358,8 @@ public class Console implements Disposable {
 	 * @param disabled True if the console should be disabled (unable to be shown or used). False otherwise.
 	 */
 	public void setDisabled(boolean disabled) {
+		if(disabled && !hidden)
+			((KeyListener) display.getListeners().get(0)).keyDown(null, keyID);
 		this.disabled = disabled;
 	}
 
@@ -553,6 +555,9 @@ public class Console implements Disposable {
 
 		@Override
 		public boolean keyDown(InputEvent event, int keycode) {
+			if(disabled)
+				return false;
+			
 			// reset command completer because input string may have changed
 			if(keycode != Keys.TAB) {
 				commandCompleter.reset();
@@ -615,7 +620,7 @@ public class Console implements Disposable {
 	 */
 	@Override
 	public void dispose() {
-		if(usesMultiplexer) {
+		if(usesMultiplexer && appInput != null) {
 			Gdx.input.setInputProcessor(appInput);
 		}
 		stage.dispose();
