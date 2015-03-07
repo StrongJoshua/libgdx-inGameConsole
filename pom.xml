@@ -1,31 +1,29 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <groupId>com.strongjoshua</groupId>
-    <artifactId>libgdx-inGameConsole</artifactId>
-    <version>0.2.1</version>
-    <name>LibGdx In-Game Console</name>
-    <description>This is a LibGdx library that allows a developer to add a console (similar to how it is
-        featured in Source games) to their game.
-    </description>
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.strongjoshua</groupId>
+	<artifactId>libgdx-inGameConsole</artifactId>
+	<version>0.2.2</version>
+	<name>LibGdx In-Game Console</name>
+	<description>This is a LibGdx library that allows a developer to add a console (similar to how it is featured in Source games) to their game.</description>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <gdx.version>1.5.3</gdx.version>
-    </properties>
-    
-    <licenses>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<gdx.version>1.5.3</gdx.version>
+	</properties>
+
+	<licenses>
 		<license>
 			<name>Apache License, Version 2.0</name>
 			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
 			<distribution>repo</distribution>
 		</license>
 	</licenses>
-	
+
 	<url>
 		https://github.com/StrongJoshua/libgdx-inGameConsole
 	</url>
-	
+
 	<developers>
 		<developer>
 			<id>StrongJoshua</id>
@@ -36,141 +34,141 @@
 			<roles></roles>
 		</developer>
 	</developers>
-	
+
 	<contributors>
 	</contributors>
-	
+
 	<scm>
 		<connection>scm:git:git@github.com:StrongJoshua/libgdx-inGameConsole.git</connection>
 		<developerConnection>scm:git:git@github.com:StrongJoshua/libgdx-inGameConsole.git</developerConnection>
 		<tag>HEAD</tag>
 		<url>https://github.com/StrongJoshua/libgdx-inGameConsole</url>
-   </scm>
+	</scm>
 
-    <dependencies>
-        <dependency>
-            <groupId>com.badlogicgames.gdx</groupId>
-            <artifactId>gdx</artifactId>
-            <version>${gdx.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.badlogicgames.gdx</groupId>
-            <artifactId>gdx-backend-lwjgl</artifactId>
-            <version>${gdx.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.badlogicgames.gdx</groupId>
-            <artifactId>gdx-platform</artifactId>
-            <version>${gdx.version}</version>
-            <classifier>natives-desktop</classifier>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.badlogicgames.gdx</groupId>
-            <artifactId>gdx-box2d</artifactId>
-            <version>${gdx.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.badlogicgames.gdx</groupId>
-            <artifactId>gdx-box2d-platform</artifactId>
-            <version>${gdx.version}</version>
-            <classifier>natives-desktop</classifier>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.11</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
+	<dependencies>
+		<dependency>
+			<groupId>com.badlogicgames.gdx</groupId>
+			<artifactId>gdx</artifactId>
+			<version>${gdx.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.badlogicgames.gdx</groupId>
+			<artifactId>gdx-backend-lwjgl</artifactId>
+			<version>${gdx.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.badlogicgames.gdx</groupId>
+			<artifactId>gdx-platform</artifactId>
+			<version>${gdx.version}</version>
+			<classifier>natives-desktop</classifier>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.badlogicgames.gdx</groupId>
+			<artifactId>gdx-box2d</artifactId>
+			<version>${gdx.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.badlogicgames.gdx</groupId>
+			<artifactId>gdx-box2d-platform</artifactId>
+			<version>${gdx.version}</version>
+			<classifier>natives-desktop</classifier>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.11</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
 
-    <build>
-        <sourceDirectory>src</sourceDirectory>
-        <testSourceDirectory>test</testSourceDirectory>
+	<build>
+		<sourceDirectory>src</sourceDirectory>
+		<testSourceDirectory>test</testSourceDirectory>
 
-        <resources>
-            <resource>
-                <directory>src</directory>
-                <includes>
-                    <include>default_skin/*.*</include>
-                </includes>
-            </resource>
-        </resources>
+		<resources>
+			<resource>
+				<directory>src</directory>
+				<includes>
+					<include>default_skin/*.*</include>
+				</includes>
+			</resource>
+		</resources>
 
-        <testResources>
-            <testResource>
-                <directory>test</directory>
-                <includes>
-                    <include>**/*.*</include>
-                </includes>
-                <excludes>
-                    <exclude>**/*.java</exclude>
-                </excludes>
-            </testResource>
-        </testResources>
+		<testResources>
+			<testResource>
+				<directory>test</directory>
+				<includes>
+					<include>**/*.*</include>
+				</includes>
+				<excludes>
+					<exclude>**/*.java</exclude>
+				</excludes>
+			</testResource>
+		</testResources>
 
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
-                <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
-                </configuration>
-            </plugin>
-        </plugins>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<source>1.7</source>
+					<target>1.7</target>
+				</configuration>
+			</plugin>
+		</plugins>
 
-    </build>
+	</build>
 
 	<profiles>
-	    <profile>
-	      <id>release-sign-artifacts</id>
-	      <activation>
-	        <property>
-	          <name>performRelease</name>
-	          <value>true</value>
-	        </property>
-	      </activation>
-	      <properties>
-			<gpg.keyname>C9265F15</gpg.keyname>
-			<!--  GPG Key ID to use for signing  -->
-			<release.username>StrongJoshua</release.username>
+		<profile>
+			<id>release-sign-artifacts</id>
+			<activation>
+				<property>
+					<name>performRelease</name>
+					<value>true</value>
+				</property>
+			</activation>
+			<properties>
+				<gpg.keyname>C9265F15</gpg.keyname>
+				<!-- GPG Key ID to use for signing -->
+				<release.username>StrongJoshua</release.username>
 			</properties>
-	      <build>
-	        <plugins>
-	          <plugin>
-	            <groupId>org.apache.maven.plugins</groupId>
-	            <artifactId>maven-gpg-plugin</artifactId>
-	            <executions>
-	              <execution>
-	                <id>sign-artifacts</id>
-	                <phase>verify</phase>
-	                <goals>
-	                  <goal>sign</goal>
-	                </goals>
-	              </execution>
-	            </executions>
-	          </plugin>
-	        </plugins>
-	      </build>
-	    </profile>
-	  </profiles>
-	  
-	  <distributionManagement>
-  		<repository>
-     	  <id>deployment</id>
-     	  <name>Internal Releases</name>
-     	  <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
-  		</repository>
-  		<snapshotRepository>
-     	  <id>deployment</id>
-     	  <name>Internal Releases</name>
-     	  <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-  		</snapshotRepository>
-	  </distributionManagement>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
+	<distributionManagement>
+		<repository>
+			<id>deployment</id>
+			<name>Internal Releases</name>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+		</repository>
+		<snapshotRepository>
+			<id>deployment</id>
+			<name>Internal Releases</name>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+	</distributionManagement>
 
 </project>
