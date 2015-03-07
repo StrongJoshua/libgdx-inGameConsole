@@ -164,6 +164,7 @@ public class Console implements Disposable {
 
 		stage.addActor(display);
 		stage.setKeyboardFocus(display);
+		display.setTouchable(Touchable.disabled);
 	}
 
 	/**
