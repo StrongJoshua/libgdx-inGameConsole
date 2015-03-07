@@ -1,6 +1,7 @@
 package com.strongjoshua.console;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectSet;
@@ -19,7 +20,7 @@ class CommandCompleter {
 	public void set(CommandExecutor ce, String s) {
 		reset();
 		setString = s.toLowerCase();
-		Array<Method> methods = getAllMethodsOn(ce);
+		Array<Method> methods = getAllMethods(ce);
 		for(Method m : methods) {
 			String name = m.getName();
 			if(name.toLowerCase().startsWith(setString))
@@ -50,14 +51,17 @@ class CommandCompleter {
 		return iterator.next();
 	}
 
-	private Array<Method> getAllMethodsOn(CommandExecutor ce) {
+	private Array<Method> getAllMethods(CommandExecutor ce) {
 		Array<Method> methods = new Array<>();
-		for (Method method : ce.getClass().getDeclaredMethods()) {
-			methods.add(method);
+		Method[] ms = ce.getClass().getDeclaredMethods();
+		for(Method m : ms) {
+			if(Modifier.isPublic(m.getModifiers()))
+				methods.add(m);
 		}
-
-		for (Method method : ce.getClass().getSuperclass().getDeclaredMethods()) {
-			methods.add(method);
+		ms = ce.getClass().getSuperclass().getDeclaredMethods();
+		for(Method m : ms) {
+			if(Modifier.isPublic(m.getModifiers()))
+				methods.add(m);
 		}
 
 		return methods;
