@@ -26,8 +26,8 @@ import com.badlogic.gdx.Gdx;
  * <b>Notes</b><br>
  * <ul>
  * <li>Arguments <i><b>must</b></i> be primitive types (the only exception being {@link String}).</li>
- * <li>No two methods, of the same name, can have the same number of parameters. Make multiple methods with more specific names more
- * specific if they must have the same number of parameters.</li>
+ * <li>No two methods, of the same name, can have the same number of parameters. Make multiple methods with more specific names if they
+ * must have the same number of parameters.</li>
  * <li>Methods are case-<b>insensitive</b> when invoked from the console.</li>
  * </ul>
  * 
@@ -54,7 +54,7 @@ public abstract class CommandExecutor {
 	public final void exitApp() {
 		Gdx.app.exit();
 	}
-	
+
 	/**
 	 * Shows all available methods, and their parameter types, in the console.
 	 */
@@ -63,11 +63,10 @@ public abstract class CommandExecutor {
 		String s = "";
 		for(int j = 0; j < methods.length; j++) {
 			Method m = methods[j];
-			if(Modifier.isPublic(m.getModifiers()))
-			{
+			if(Modifier.isPublic(m.getModifiers())) {
 				s += m.getName();
 				s += " : ";
-				
+
 				Parameter[] params = m.getParameters();
 				for(int i = 0; i < params.length; i++) {
 					s += params[i].getType().getSimpleName();
@@ -78,7 +77,7 @@ public abstract class CommandExecutor {
 			if(j < methods.length - 1)
 				s += "\n";
 		}
-		
+
 		console.log(s);
 	}
 }
