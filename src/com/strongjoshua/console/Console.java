@@ -294,6 +294,34 @@ public class Console implements Disposable {
 			return;
 		stage.draw();
 	}
+	
+	/**
+	 * Calls {@link Console#refresh(boolean)} with true.
+	 */
+	public void refresh() {
+		this.refresh(true);
+	}
+	
+	/**
+	 * Refreshes the console's stage. Use if the app's window size was changed.
+	 * @param retain True if you want position and size percentages to be kept.
+	 */
+	public void refresh(boolean retain) {
+		int oldWPct = 0, oldHPct = 0, oldXPosPct = 0, oldYPosPct = 0;
+		if(retain) {
+			oldWPct = (int) (display.getWidth() / stage.getWidth() * 100);
+			oldHPct = (int) (display.getHeight() / stage.getHeight() * 100);
+			oldXPosPct = (int) (display.getX() / stage.getWidth() * 100);
+			oldYPosPct = (int) (display.getY() / stage.getHeight() * 100);
+		}
+		int width = Gdx.graphics.getWidth(), height = Gdx.graphics.getHeight();
+		stage.getViewport().setWorldSize(width, height);
+		stage.getViewport().update(width, height, true);
+		if(retain) {
+			this.setSizePercent(oldWPct, oldHPct);
+			this.setPositionPercent(oldXPosPct, oldYPosPct);
+		}
+	}
 
 	/**
 	 * Logs a new entry to the console.
