@@ -13,11 +13,9 @@
 
 package com.strongjoshua.console;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.Parameter;
-
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.utils.reflect.ClassReflection;
+import com.badlogic.gdx.utils.reflect.Method;
 
 /**
  * Extend this class (child must be <code>public</code>) and fill it with methods (also <code>public</code>) that you wish to have work with
@@ -59,17 +57,17 @@ public abstract class CommandExecutor {
 	 * Shows all available methods, and their parameter types, in the console.
 	 */
 	public final void help() {
-		Method[] methods = this.getClass().getDeclaredMethods();
+		Method[] methods = ClassReflection.getDeclaredMethods(this.getClass());
 		String s = "";
 		for(int j = 0; j < methods.length; j++) {
 			Method m = methods[j];
-			if(Modifier.isPublic(m.getModifiers())) {
+			if(m.isPublic()) {
 				s += m.getName();
 				s += " : ";
 
-				Parameter[] params = m.getParameters();
+				Class<?>[] params = m.getParameterTypes();
 				for(int i = 0; i < params.length; i++) {
-					s += params[i].getType().getSimpleName();
+					s += params[i].getSimpleName();
 					if(i < params.length - 1)
 						s += ", ";
 				}

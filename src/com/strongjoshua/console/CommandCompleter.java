@@ -1,11 +1,10 @@
 package com.strongjoshua.console;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectSet;
 import com.badlogic.gdx.utils.ObjectSet.ObjectSetIterator;
+import com.badlogic.gdx.utils.reflect.ClassReflection;
+import com.badlogic.gdx.utils.reflect.Method;
 
 class CommandCompleter {
 	private ObjectSet<String> possibleCommands;
@@ -53,14 +52,14 @@ class CommandCompleter {
 
 	private Array<Method> getAllMethods(CommandExecutor ce) {
 		Array<Method> methods = new Array<>();
-		Method[] ms = ce.getClass().getDeclaredMethods();
+		Method[] ms = ClassReflection.getDeclaredMethods(ce.getClass());
 		for(Method m : ms) {
-			if(Modifier.isPublic(m.getModifiers()))
+			if(m.isPublic())
 				methods.add(m);
 		}
-		ms = ce.getClass().getSuperclass().getDeclaredMethods();
+		ms = ClassReflection.getDeclaredMethods(ce.getClass().getSuperclass());
 		for(Method m : ms) {
-			if(Modifier.isPublic(m.getModifiers()))
+			if(m.isPublic())
 				methods.add(m);
 		}
 

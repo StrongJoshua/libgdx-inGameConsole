@@ -13,10 +13,6 @@
 
 package com.strongjoshua.console;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
-
 import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -38,6 +34,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.utils.reflect.ClassReflection;
+import com.badlogic.gdx.utils.reflect.Method;
+import com.badlogic.gdx.utils.reflect.ReflectionException;
 
 /**
  * A simple console that allows live logging, and live execution of methods, from within an application. Please see the <a
@@ -455,7 +454,7 @@ public class Console implements Disposable {
 		}
 
 		Class<? extends CommandExecutor> clazz = exec.getClass();
-		Method[] methods = clazz.getMethods();
+		Method[] methods = ClassReflection.getMethods(clazz);
 		Array<Integer> possible = new Array<Integer>();
 		for(int i = 0; i < methods.length; i++) {
 			if(methods[i].getName().equalsIgnoreCase(methodName))
@@ -470,14 +469,14 @@ public class Console implements Disposable {
 		numArgs = args == null ? 0 : args.length;
 		for(int i = 0; i < size; i++) {
 			Method m = methods[possible.get(i)];
-			Parameter[] params = m.getParameters();
+			Class<?>[] params = m.getParameterTypes();
 			if(numArgs != params.length)
 				continue;
 			else {
 				try {
 					m.invoke(exec, args);
 					return;
-				} catch(IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+				} catch(ReflectionException e) {
 					String msg = e.getMessage();
 					if(msg == null || msg.length() <= 0 || msg.equals("")) {
 						msg = "Unknown Error";
