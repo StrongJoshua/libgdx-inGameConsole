@@ -178,12 +178,8 @@ public class Console implements Disposable {
 		stage.addActor(consoleWindow);
 		stage.setKeyboardFocus(display);
 		
-	
-		
-		//display.setTouchable(Touchable.disabled);
-		
-		//setSizePercent(50, 50);
-		//setPositionPercent(50, 50);
+		setSizePercent(50, 50);
+		setPositionPercent(50, 50);
 	}
 
 	/**
@@ -663,7 +659,7 @@ public class Console implements Disposable {
 				return true;
 			}
 			else if(keycode == keyID) {
-				hidden=!hidden;
+				hidden = !hidden;
 				if(hidden) {
 					input.setText("");
 					stage.setKeyboardFocus(display);
