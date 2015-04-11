@@ -32,6 +32,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldListener;
+import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
@@ -107,6 +108,8 @@ public class Console implements Disposable {
 	private CommandExecutor exec;
 	private CommandHistory commandHistory;
 	private CommandCompleter commandCompleter;
+	private Window consoleWindow;
+	private Boolean logToSystem;
 
 	/**
 	 * Creates the console using the default skin.<br>
@@ -154,16 +157,33 @@ public class Console implements Disposable {
 		display = new ConsoleDisplay(skin);
 		commandHistory = new CommandHistory();
 		commandCompleter = new CommandCompleter();
-		setSizePercent(50, 50);
+		logToSystem = false;
+	
 		usesMultiplexer = useMultiplexer;
 		if(useMultiplexer) {
 			resetInputProcessing();
 		}
-		setPositionPercent(50, 50);
+		
+	
+		display.pad(4);
+		display.padTop(22);
+		display.setFillParent(true);
 
-		stage.addActor(display);
+		consoleWindow = new Window("Console", skin);
+		consoleWindow.setMovable(true);
+		consoleWindow.setResizable(true);
+		consoleWindow.setKeepWithinStage(true);
+		consoleWindow.addActor(display);
+	
+		stage.addActor(consoleWindow);
 		stage.setKeyboardFocus(display);
-		display.setTouchable(Touchable.disabled);
+		
+	
+		
+		//display.setTouchable(Touchable.disabled);
+		
+		//setSizePercent(50, 50);
+		//setPositionPercent(50, 50);
 	}
 
 	/**
@@ -193,7 +213,16 @@ public class Console implements Disposable {
 		if(width <= 0 || height <= 0) {
 			throw new IllegalArgumentException("Pixel size must be greater than 0.");
 		}
-		display.setSize(width, height);
+		consoleWindow.setSize(width, height);
+	}
+	
+	/**
+	 * Sets logging to system with System.out.println as well as console
+	 * @param Log to the system
+	 */
+	public void setLoggingToSystem(Boolean log)
+	{
+		this.logToSystem = log;
 	}
 
 	/**
@@ -209,7 +238,7 @@ public class Console implements Disposable {
 			throw new IllegalArgumentException("Size percentage cannot be greater than 100.");
 		}
 		int w = Gdx.graphics.getWidth(), h = Gdx.graphics.getHeight();
-		display.setSize((int) (w * widthPct / 100.0f), (int) (h * heightPct / 100.0f));
+		consoleWindow.setSize((int) (w * widthPct / 100.0f), (int) (h * heightPct / 100.0f));
 	}
 
 	/**
@@ -218,7 +247,7 @@ public class Console implements Disposable {
 	 * @param y
 	 */
 	public void setPosition(int x, int y) {
-		display.setPosition(x, y);
+		consoleWindow.setPosition(x, y);
 	}
 
 	/**
@@ -230,7 +259,7 @@ public class Console implements Disposable {
 			throw new IllegalArgumentException("Error: The console would be drawn outside of the screen.");
 		}
 		int w = Gdx.graphics.getWidth(), h = Gdx.graphics.getHeight();
-		display.setPosition((int) (w * xPct / 100.0f), (int) (h * yPct / 100.0f));
+		consoleWindow.setPosition((int) (w * xPct / 100.0f), (int) (h * yPct / 100.0f));
 	}
 
 	/**
@@ -308,10 +337,10 @@ public class Console implements Disposable {
 	public void refresh(boolean retain) {
 		int oldWPct = 0, oldHPct = 0, oldXPosPct = 0, oldYPosPct = 0;
 		if(retain) {
-			oldWPct = (int) (display.getWidth() / stage.getWidth() * 100);
-			oldHPct = (int) (display.getHeight() / stage.getHeight() * 100);
-			oldXPosPct = (int) (display.getX() / stage.getWidth() * 100);
-			oldYPosPct = (int) (display.getY() / stage.getHeight() * 100);
+			oldWPct = (int) (consoleWindow.getWidth() / stage.getWidth() * 100);
+			oldHPct = (int) (consoleWindow.getHeight() / stage.getHeight() * 100);
+			oldXPosPct = (int) (consoleWindow.getX() / stage.getWidth() * 100);
+			oldYPosPct = (int) (consoleWindow.getY() / stage.getHeight() * 100);
 		}
 		int width = Gdx.graphics.getWidth(), height = Gdx.graphics.getHeight();
 		stage.getViewport().setWorldSize(width, height);
@@ -331,6 +360,11 @@ public class Console implements Disposable {
 	public void log(String msg, LogLevel level) {
 		log.addEntry(msg, level);
 		display.refresh();
+		
+		if(logToSystem)
+		{
+			System.out.println(msg);
+		}
 	}
 
 	/**
@@ -520,17 +554,19 @@ public class Console implements Disposable {
 			labels = new Array<Label>();
 
 			logEntries = new Table(skin);
+			
 
 			input = new TextField("", skin);
 			input.setTextFieldListener(new FieldListener());
+			
 
 			scroll = new ScrollPane(logEntries, skin);
 			scroll.setFadeScrollBars(false);
 			scroll.setScrollbarsOnTop(false);
 			scroll.setOverscroll(false, false);
 
-			this.add(scroll).expand().fill().row();
-			this.add(input).expandX().fillX();
+			this.add(scroll).expand().fill().pad(4).row();;
+			this.add(input).expandX().fillX().pad(4);
 			this.addListener(new KeyListener(input));
 		}
 
@@ -555,7 +591,7 @@ public class Console implements Disposable {
 				}
 				l.setText(le.toConsoleString());
 				l.setColor(le.getColor());
-				logEntries.add(l).expandX().fillX().top().left().row();
+				logEntries.add(l).expandX().fillX().top().left().padLeft(4).row();
 			}
 			scroll.validate();
 			scroll.setScrollPercentY(1);
@@ -627,7 +663,7 @@ public class Console implements Disposable {
 				return true;
 			}
 			else if(keycode == keyID) {
-				hidden = !hidden;
+				hidden=!hidden;
 				if(hidden) {
 					input.setText("");
 					stage.setKeyboardFocus(display);
@@ -653,4 +689,13 @@ public class Console implements Disposable {
 		}
 		stage.dispose();
 	}
+
+	/**
+	 * @return If console is hidden
+	 */
+	public boolean isHidden() {
+		return hidden;
+	}
+
+
 }
