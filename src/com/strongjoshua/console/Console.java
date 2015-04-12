@@ -213,8 +213,8 @@ public class Console implements Disposable {
 	}
 	
 	/**
-	 * Sets logging to system with System.out.println as well as console
-	 * @param Log to the system
+	 * Sets if the console should also log to System.out
+	 * @param log to the system
 	 */
 	public void setLoggingToSystem(Boolean log)
 	{
