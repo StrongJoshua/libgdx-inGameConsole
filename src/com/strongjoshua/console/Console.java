@@ -664,11 +664,11 @@ public class Console implements Disposable {
 				if(hidden) {
 					input.setText("");
 					stage.setKeyboardFocus(display);
-					display.setTouchable(Touchable.disabled);
+					consoleWindow.setTouchable(Touchable.disabled);
 				}
 				else {
 					stage.setKeyboardFocus(input);
-					display.setTouchable(Touchable.childrenOnly);
+					consoleWindow.setTouchable(Touchable.childrenOnly);
 				}
 				return true;
 			}
