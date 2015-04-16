@@ -174,6 +174,7 @@ public class Console implements Disposable {
 		consoleWindow.setResizable(true);
 		consoleWindow.setKeepWithinStage(true);
 		consoleWindow.addActor(display);
+		consoleWindow.setTouchable(Touchable.disabled);
 	
 		stage.addActor(consoleWindow);
 		stage.setKeyboardFocus(display);
@@ -213,8 +214,8 @@ public class Console implements Disposable {
 	}
 	
 	/**
-	 * Sets logging to system with System.out.println as well as console
-	 * @param Log to the system
+	 * Makes the console also log to the System when {@link Console#log(String)} is called.
+	 * @param log to the system
 	 */
 	public void setLoggingToSystem(Boolean log)
 	{

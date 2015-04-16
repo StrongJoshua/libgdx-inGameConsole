@@ -53,10 +53,6 @@ class CommandHistory {
         return command.equals(commands.first());
     }
 
-    private void indexAtEnd() {
-        index = commands.size - 1;
-    }
-
     private void indexAtBeginning() {
         index = -1;
     }
