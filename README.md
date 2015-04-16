@@ -31,8 +31,8 @@ If you are in the [contributors](https://github.com/StrongJoshua/libgdx-inGameCo
 
 Versions
 ========
-Latest Stable: **0.2.4**  
-Latest Snapshot: **0.3.0-SNAPSHOT**
+Latest Stable: **0.3.0**  
+Latest Snapshot:
 ###How the Numbers Work
 ####First Digit
 This digit goes up whenever I feel that the project has reached a milestone and/or no longer resembles the first version in it's current digit (e.g.: 0.13.3 is completely different from 0.1.0).
