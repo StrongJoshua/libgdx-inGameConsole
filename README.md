@@ -31,7 +31,7 @@ If you are in the [contributors](https://github.com/StrongJoshua/libgdx-inGameCo
 
 Versions
 ========
-Latest Stable: **0.3.0**  
+Latest Stable: **0.3.1**  
 Latest Snapshot:
 ###How the Numbers Work
 ####First Digit
