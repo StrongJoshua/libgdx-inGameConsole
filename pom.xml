@@ -3,13 +3,13 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.strongjoshua</groupId>
 	<artifactId>libgdx-inGameConsole</artifactId>
-	<version>0.3.1</version>
+	<version>0.3.2</version>
 	<name>LibGdx In-Game Console</name>
 	<description>This is a LibGdx library that allows a developer to add a console (similar to how it is featured in Source games) to their game.</description>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<gdx.version>1.5.6</gdx.version>
+		<gdx.version>1.6.0</gdx.version>
 	</properties>
 
 	<licenses>
