@@ -543,7 +543,7 @@ public class Console implements Disposable {
 				commandCompleter.reset();
 			}
 
-			if (keycode == Keys.ENTER) {
+			if (keycode == Keys.ENTER && !hidden) {
 				String s = input.getText();
 				if (s.length() == 0 || s.equals("") || s.split(" ").length == 0) return false;
 				if (exec != null) {
@@ -554,15 +554,15 @@ public class Console implements Disposable {
 						LogLevel.ERROR);
 				input.setText("");
 				return true;
-			} else if (keycode == Keys.UP) {
+			} else if (keycode == Keys.UP && !hidden) {
 				input.setText(commandHistory.getPreviousCommand());
 				input.setCursorPosition(input.getText().length());
 				return true;
-			} else if (keycode == Keys.DOWN) {
+			} else if (keycode == Keys.DOWN && !hidden) {
 				input.setText(commandHistory.getNextCommand());
 				input.setCursorPosition(input.getText().length());
 				return true;
-			} else if (keycode == Keys.TAB) {
+			} else if (keycode == Keys.TAB && !hidden) {
 				String s = input.getText();
 				if (s.length() == 0) return false;
 				if (commandCompleter.isNew()) {
