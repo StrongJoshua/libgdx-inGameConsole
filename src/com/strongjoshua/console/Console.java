@@ -430,6 +430,7 @@ public class Console implements Disposable {
 				continue;
 			else {
 				try {
+					m.setAccessible(true);
 					m.invoke(exec, args);
 					return;
 				} catch (ReflectionException e) {
