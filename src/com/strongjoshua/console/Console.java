@@ -377,7 +377,10 @@ public class Console implements Disposable {
 		exec.setConsole(this);
 	}
 
-	private void execCommand (String command) {
+	/**
+	 * Executes the specified command via the set {@link CommandExecutor}.
+	 */
+	public void execCommand (String command) {
 		log(command, LogLevel.COMMAND);
 
 		String[] parts = command.split(" ");
