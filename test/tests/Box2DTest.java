@@ -54,7 +54,7 @@ public class Box2DTest extends ApplicationAdapter {
 		float h = Gdx.graphics.getHeight();
 		h *= 2;
 		ratio = h / w;
-		Gdx.app.getGraphics().setDisplayMode((int) w, (int) h, false);
+		Gdx.app.getGraphics().setWindowedMode((int) w, (int) h);
 
 		mX = (float) WIDTH / w;
 		mY = (float) HEIGHT / h;
