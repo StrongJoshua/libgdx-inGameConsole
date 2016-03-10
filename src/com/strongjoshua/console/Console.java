@@ -487,7 +487,6 @@ public class Console implements Disposable {
 			scroll.setOverscroll(false, false);
 
 			this.add(scroll).expand().fill().pad(4).row();
-			;
 			this.add(input).expandX().fillX().pad(4);
 			this.addListener(new KeyListener(input));
 		}
