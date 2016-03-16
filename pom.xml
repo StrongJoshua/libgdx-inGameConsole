@@ -134,7 +134,7 @@
 				</property>
 			</activation>
 			<properties>
-				<gpg.keyname>C9265F15</gpg.keyname>
+				<gpg.keyname>DE785E68</gpg.keyname>
 				<!-- GPG Key ID to use for signing -->
 				<release.username>StrongJoshua</release.username>
 			</properties>
