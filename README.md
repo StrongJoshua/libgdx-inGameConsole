@@ -7,9 +7,6 @@ Essentially what the console allows you to do is specify commands that you will 
 ###Purpose
 This console speeds up development substantially by removing the need to recompile a program every time a minute change is made, specifically in regard to manipulating constants or other values when balancing a game, for example.
 
-### Current Goals
-Wow, we have done a lot! It seems there are no goals right now.
-
 ### Integration
 #### Gradle
 Add the following line to your build.gradle file under the dependencies section of the **core** project:  
@@ -30,7 +27,7 @@ If you are in the [contributors](https://github.com/StrongJoshua/libgdx-inGameCo
 
 Versions
 ========
-Latest Stable: **0.3.3**  
+Latest Stable: **0.4.0**  
 Latest Snapshot:
 ###How the Numbers Work
 ####First Digit
