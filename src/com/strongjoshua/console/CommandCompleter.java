@@ -22,8 +22,9 @@ class CommandCompleter {
 		Array<Method> methods = getAllMethods(ce);
 		for(Method m : methods) {
 			String name = m.getName();
-			if(name.toLowerCase().startsWith(setString))
+			if(name.toLowerCase().startsWith(setString)) {
 				possibleCommands.add(name);
+			}
 		}
 		iterator = new ObjectSetIterator<>(possibleCommands);
 	}
@@ -54,13 +55,15 @@ class CommandCompleter {
 		Array<Method> methods = new Array<>();
 		Method[] ms = ClassReflection.getDeclaredMethods(ce.getClass());
 		for(Method m : ms) {
-			if(m.isPublic())
+			if(m.isPublic()) {
 				methods.add(m);
+			}
 		}
 		ms = ClassReflection.getDeclaredMethods(ce.getClass().getSuperclass());
 		for(Method m : ms) {
-			if(m.isPublic())
+			if(m.isPublic()) {
 				methods.add(m);
+			}
 		}
 
 		return methods;

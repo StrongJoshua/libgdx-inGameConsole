@@ -27,6 +27,8 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.strongjoshua.console.CommandExecutor;
 import com.strongjoshua.console.Console;
+import com.strongjoshua.console.GUIConsole;
+import com.strongjoshua.console.LogLevel;
 
 /**
  * Extension of the <a
@@ -148,7 +150,7 @@ public class Box2DTest extends ApplicationAdapter {
 
 		debugRenderer = new Box2DDebugRenderer();
 
-		console = new Console(false);
+		console = new GUIConsole(false);
 		cExec = new MyCommandExecutor();
 		console.setCommandExecutor(cExec);
 		// set to 'Z' to demonstrate that it works with binds other than the default
@@ -184,7 +186,7 @@ public class Box2DTest extends ApplicationAdapter {
 
 				createExplosion(worldVector.x, worldVector.y, 2000);
 				
-				console.log(String.format("Created touch explosion at %.2f, %.2f!", worldVector.x, worldVector.y), Console.LogLevel.SUCCESS);
+				console.log(String.format("Created touch explosion at %.2f, %.2f!", worldVector.x, worldVector.y), LogLevel.SUCCESS);
 			}
 		}
 		
@@ -253,7 +255,7 @@ public class Box2DTest extends ApplicationAdapter {
 	public class MyCommandExecutor extends CommandExecutor {
 		public void explode(float x, float y, float maxForce) {
 			createExplosion(x, y, maxForce);
-			console.log("Created console explosion!", Console.LogLevel.SUCCESS);
+			console.log("Created console explosion!", LogLevel.SUCCESS);
 		}
 		
 		public void clear(){
