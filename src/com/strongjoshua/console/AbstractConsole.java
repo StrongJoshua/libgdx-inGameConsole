@@ -1,14 +1,12 @@
 /**
- * 
+ *
  */
 package com.strongjoshua.console;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
-import com.badlogic.gdx.utils.Logger;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.reflect.Method;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
@@ -19,12 +17,12 @@ import com.badlogic.gdx.utils.reflect.ReflectionException;
  */
 public abstract class AbstractConsole implements Console, Disposable {
 	protected CommandExecutor exec;
-	
+
 	protected final Log log;
 	protected boolean logToSystem;
-	
+
 	protected boolean disabled;
-	
+
 	public AbstractConsole() {
 		log = new Log();
 	}
@@ -46,12 +44,12 @@ public abstract class AbstractConsole implements Console, Disposable {
 
 		if (logToSystem) {
 			switch(level) {
-				case ERROR:
-					System.err.println("> " + msg);
-					break;
-				default:
-					System.out.println("> " + msg);
-					break;
+			case ERROR:
+				System.err.println("> " + msg);
+				break;
+			default:
+				System.out.println("> " + msg);
+				break;
 			}
 		}
 	}
@@ -77,10 +75,11 @@ public abstract class AbstractConsole implements Console, Disposable {
 	 */
 	@Override
 	public void printLogToFile (FileHandle fh) {
-		if (log.printToFile(fh))
+		if (log.printToFile(fh)) {
 			log("Successfully wrote logs to file.", LogLevel.SUCCESS);
-		else
+		} else {
 			log("Unable to write logs to file.", LogLevel.ERROR);
+		}
 	}
 
 	/* (non-Javadoc)
@@ -149,7 +148,9 @@ public abstract class AbstractConsole implements Console, Disposable {
 		Method[] methods = ClassReflection.getMethods(clazz);
 		Array<Integer> possible = new Array<Integer>();
 		for (int i = 0; i < methods.length; i++) {
-			if (methods[i].getName().equalsIgnoreCase(methodName)) possible.add(i);
+			if (methods[i].getName().equalsIgnoreCase(methodName)) {
+				possible.add(i);
+			}
 		}
 		if (possible.size <= 0) {
 			log("No such method found.", LogLevel.ERROR);
@@ -161,9 +162,9 @@ public abstract class AbstractConsole implements Console, Disposable {
 		for (int i = 0; i < size; i++) {
 			Method m = methods[possible.get(i)];
 			Class<?>[] params = m.getParameterTypes();
-			if (numArgs != params.length)
+			if (numArgs != params.length) {
 				continue;
-			else {
+			} else {
 				try {
 					m.setAccessible(true);
 					m.invoke(exec, args);

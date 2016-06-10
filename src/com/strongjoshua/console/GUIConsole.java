@@ -1,11 +1,11 @@
 /**
  * Copyright 2015 StrongJoshua (strongjoshua@hotmail.com)
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may
  * obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions
  * and limitations under the License.
@@ -18,7 +18,6 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -32,19 +31,16 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.reflect.ClassReflection;
-import com.badlogic.gdx.utils.reflect.Method;
-import com.badlogic.gdx.utils.reflect.ReflectionException;
 
 /** A simple console that allows live logging, and live execution of methods, from within an application. Please see the <a
  * href="https://github.com/StrongJoshua/libgdx-inGameConsole">GitHub Repository</a> for more information.
- * 
+ *
  * @author StrongJoshua */
 public class GUIConsole extends AbstractConsole {
 
 	private int keyID = Input.Keys.GRAVE;
-	
-	
+
+
 	private ConsoleDisplay display;
 	private boolean hidden = true;
 	private boolean usesMultiplexer = false;
@@ -54,7 +50,7 @@ public class GUIConsole extends AbstractConsole {
 	private CommandHistory commandHistory;
 	private CommandCompleter commandCompleter;
 	private Window consoleWindow;
-	
+
 
 	/** Creates the console using the default skin.<br>
 	 * <b>***IMPORTANT***</b> Call {@link Console#dispose()} to make your {@link InputProcessor} the default processor again (this
@@ -123,10 +119,11 @@ public class GUIConsole extends AbstractConsole {
 	 */
 	@Override
 	public void setMaxEntries (int numEntries) {
-		if (numEntries > 0 || numEntries == UNLIMITED_ENTRIES)
+		if (numEntries > 0 || numEntries == UNLIMITED_ENTRIES) {
 			log.setMaxEntries(numEntries);
-		else
+		} else {
 			throw new IllegalArgumentException("Maximum entries must be greater than 0 or use Console.UNLIMITED_ENTRIES.");
+		}
 	}
 
 	/* (non-Javadoc)
@@ -201,8 +198,9 @@ public class GUIConsole extends AbstractConsole {
 			multiplexer.addProcessor(stage);
 			multiplexer.addProcessor(appInput);
 			Gdx.input.setInputProcessor(multiplexer);
-		} else
+		} else {
 			Gdx.input.setInputProcessor(stage);
+		}
 	}
 
 	/** Compares the given processor to the console's stage. If given a multiplexer, it is iterated through recursively to check all
@@ -236,10 +234,14 @@ public class GUIConsole extends AbstractConsole {
 	 */
 	@Override
 	public void draw () {
-		if (disabled) return;
+		if (disabled) {
+			return;
+		}
 		stage.act();
 
-		if (hidden) return;
+		if (hidden) {
+			return;
+		}
 		stage.draw();
 	}
 
@@ -278,7 +280,7 @@ public class GUIConsole extends AbstractConsole {
 	@Override
 	public void log (String msg, LogLevel level) {
 		super.log(msg, level);
-		
+
 		display.refresh();
 	}
 
@@ -287,7 +289,9 @@ public class GUIConsole extends AbstractConsole {
 	 */
 	@Override
 	public void setDisabled (boolean disabled) {
-		if (disabled && !hidden) ((KeyListener)display.getListeners().get(0)).keyDown(null, keyID);
+		if (disabled && !hidden) {
+			((KeyListener)display.getListeners().get(0)).keyDown(null, keyID);
+		}
 		this.disabled = disabled;
 	}
 
@@ -304,7 +308,9 @@ public class GUIConsole extends AbstractConsole {
 	 */
 	@Override
 	public void setKeyID (int code) {
-		if (code == Keys.ENTER) return;
+		if (code == Keys.ENTER) {
+			return;
+		}
 		keyID = code;
 	}
 
@@ -315,7 +321,9 @@ public class GUIConsole extends AbstractConsole {
 	 */
 	@Override
 	public boolean hitsConsole (float screenX, float screenY) {
-		if (disabled || hidden) return false;
+		if (disabled || hidden) {
+			return false;
+		}
 		stage.getCamera().unproject(stageCoords.set(screenX, screenY, 0));
 		return stage.hit(stageCoords.x, stageCoords.y, true) != null;
 	}
@@ -397,7 +405,9 @@ public class GUIConsole extends AbstractConsole {
 
 		@Override
 		public boolean keyDown (InputEvent event, int keycode) {
-			if (disabled) return false;
+			if (disabled) {
+				return false;
+			}
 
 			// reset command completer because input string may have changed
 			if (keycode != Keys.TAB) {
@@ -406,13 +416,16 @@ public class GUIConsole extends AbstractConsole {
 
 			if (keycode == Keys.ENTER && !hidden) {
 				String s = input.getText();
-				if (s.length() == 0 || s.equals("") || s.split(" ").length == 0) return false;
+				if (s.length() == 0 || s.equals("") || s.split(" ").length == 0) {
+					return false;
+				}
 				if (exec != null) {
 					commandHistory.store(s);
 					execCommand(s);
-				} else
+				} else {
 					log("No command executor has been set. Please call setCommandExecutor for this console in your code and restart.",
-						LogLevel.ERROR);
+							LogLevel.ERROR);
+				}
 				input.setText("");
 				return true;
 			} else if (keycode == Keys.UP && !hidden) {
@@ -425,7 +438,9 @@ public class GUIConsole extends AbstractConsole {
 				return true;
 			} else if (keycode == Keys.TAB && !hidden) {
 				String s = input.getText();
-				if (s.length() == 0) return false;
+				if (s.length() == 0) {
+					return false;
+				}
 				if (commandCompleter.isNew()) {
 					commandCompleter.set(exec, s);
 				}

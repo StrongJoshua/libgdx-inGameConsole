@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 
 /** Specifies the 'level' of a log entry. The level affects the color of the entry in the console and is also displayed next to
  * the entry when the log entries are printed to a file with {@link Console#printLogToFile(String)}.
- * 
+ *
  * @author StrongJoshua */
 public enum LogLevel {
 	/** The default log level. Prints in white to the console and has no special indicator in the log file.<br>

@@ -7,10 +7,10 @@ import com.badlogic.gdx.files.FileHandle;
 
 /** A simple console that allows live logging, and live execution of methods, from within an application. Please see the <a
  * href="https://github.com/StrongJoshua/libgdx-inGameConsole">GitHub Repository</a> for more information.
- * 
+ *
  * @author StrongJoshua */
 public interface Console {
-	
+
 	/** Use to set the amount of entries to be stored to unlimited. */
 	public static final int UNLIMITED_ENTRIES = -1;
 
@@ -74,19 +74,19 @@ public interface Console {
 
 	/** Prints all log entries to the given file. Log entries include logs in the code and commands made from within in the console
 	 * while the program is running.<br>
-	 * 
+	 *
 	 * <b>WARNING</b><br>
 	 * The file that is sent to this function will be overwritten!
-	 * 
+	 *
 	 * @param file The relative path to the file to print to. This method uses {@link Files#local(String)}. */
 	public void printLogToFile(String file);
 
 	/** Prints all log entries to the given file. Log entries include logs in the code and commands made from within in the console
 	 * while the program is running.<br>
-	 * 
+	 *
 	 * <b>WARNING</b><br>
 	 * The file that is sent to this function will be overwritten!
-	 * 
+	 *
 	 * @param fh The {@link FileHandle} that links to the file to be written to. Note that <code>classpath</code> and
 	 *           <code>internal</code> FileHandles cannot be written to. */
 	public void printLogToFile(FileHandle fh);
