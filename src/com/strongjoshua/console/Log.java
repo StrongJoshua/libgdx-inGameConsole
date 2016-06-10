@@ -26,7 +26,7 @@ class Log {
 		logEntries = new Array<LogEntry>();
 	}
 
-	private int numEntries = AbstractConsole.UNLIMITED_ENTRIES;
+	private int numEntries = Console.UNLIMITED_ENTRIES;
 
 	public void setMaxEntries(int numEntries) {
 		this.numEntries = numEntries;
@@ -34,7 +34,7 @@ class Log {
 
 	protected void addEntry(String msg, LogLevel level) {
 		logEntries.add(new LogEntry(msg, level));
-		if(logEntries.size > numEntries && numEntries != AbstractConsole.UNLIMITED_ENTRIES) {
+		if(logEntries.size > numEntries && numEntries != Console.UNLIMITED_ENTRIES) {
 			logEntries.removeIndex(0);
 		}
 	}

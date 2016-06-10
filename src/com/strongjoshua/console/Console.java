@@ -6,6 +6,9 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.files.FileHandle;
 
 public interface Console {
+	
+	/** Use to set the amount of entries to be stored to unlimited. */
+	public static final int UNLIMITED_ENTRIES = -1;
 
 	/** @param numEntries maximum number of entries the console will hold. */
 	public void setMaxEntries(int numEntries);

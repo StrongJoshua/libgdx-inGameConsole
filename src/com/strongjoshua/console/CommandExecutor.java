@@ -32,7 +32,7 @@ import com.badlogic.gdx.utils.reflect.Method;
  * @author StrongJoshua
  */
 public abstract class CommandExecutor {
-	private Console console;
+	protected Console console;
 
 	protected void setConsole(Console c) {
 		console = c;
@@ -58,10 +58,10 @@ public abstract class CommandExecutor {
 	 */
 	public final void help() {
 		Method[] methods = ClassReflection.getDeclaredMethods(this.getClass());
-		String s = "";
 		for(int j = 0; j < methods.length; j++) {
 			Method m = methods[j];
 			if(m.isPublic()) {
+				String s = "";
 				s += m.getName();
 				s += " : ";
 
@@ -71,11 +71,9 @@ public abstract class CommandExecutor {
 					if(i < params.length - 1)
 						s += ", ";
 				}
+				
+				console.log(s);
 			}
-			if(j < methods.length - 1)
-				s += "\n";
 		}
-
-		console.log(s);
 	}
 }

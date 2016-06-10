@@ -6,12 +6,17 @@ package com.strongjoshua.console;
 import com.badlogic.gdx.InputProcessor;
 
 /**
+ * Headless Console used for servers
+ * 
  * @author Eric
  *
  */
-public class CMDConsole extends AbstractConsole {
+public class HeadlessConsole extends AbstractConsole {
 	
-	public CMDConsole() {
+	/**
+	 * Creates an Headless console
+	 */
+	public HeadlessConsole() {
 		logToSystem = true;
 	}
 

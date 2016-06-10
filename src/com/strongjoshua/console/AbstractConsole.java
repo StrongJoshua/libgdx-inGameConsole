@@ -18,18 +18,16 @@ import com.badlogic.gdx.utils.reflect.ReflectionException;
  *
  */
 public abstract class AbstractConsole implements Console, Disposable {
-	private final static Logger logger = new Logger(Console.class.getSimpleName());
-	
-	/** Use to set the amount of entries to be stored to unlimited. */
-	public static final int UNLIMITED_ENTRIES = -1;
-	
 	protected CommandExecutor exec;
 	
-	protected Log log;
-	protected Boolean logToSystem;
+	protected final Log log;
+	protected boolean logToSystem;
 	
 	protected boolean disabled;
 	
+	public AbstractConsole() {
+		log = new Log();
+	}
 
 	/* (non-Javadoc)
 	 * @see com.strongjoshua.console.Console#setLoggingToSystem(java.lang.Boolean)
@@ -48,12 +46,12 @@ public abstract class AbstractConsole implements Console, Disposable {
 
 		if (logToSystem) {
 			switch(level) {
-			case ERROR:
-				logger.error(msg);
-				break;
-			default:
-				logger.info(msg);
-				break;
+				case ERROR:
+					System.err.println("> " + msg);
+					break;
+				default:
+					System.out.println("> " + msg);
+					break;
 			}
 		}
 	}

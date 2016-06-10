@@ -90,7 +90,6 @@ public class GUIConsole extends AbstractConsole {
 	 * @see Console#dispose() */
 	public GUIConsole (Skin skin, boolean useMultiplexer) {
 		stage = new Stage();
-		log = new Log();
 		display = new ConsoleDisplay(skin);
 		commandHistory = new CommandHistory();
 		commandCompleter = new CommandCompleter();
@@ -278,39 +277,9 @@ public class GUIConsole extends AbstractConsole {
 	 */
 	@Override
 	public void log (String msg, LogLevel level) {
-		log.addEntry(msg, level);
+		super.log(msg, level);
+		
 		display.refresh();
-
-		if (logToSystem) {
-			System.out.println(msg);
-		}
-	}
-
-	/* (non-Javadoc)
-	 * @see com.strongjoshua.console.Console#log(java.lang.String)
-	 */
-	@Override
-	public void log (String msg) {
-		this.log(msg, LogLevel.DEFAULT);
-	}
-
-	/* (non-Javadoc)
-	 * @see com.strongjoshua.console.Console#printLogToFile(java.lang.String)
-	 */
-	@Override
-	public void printLogToFile (String file) {
-		this.printLogToFile(Gdx.files.local(file));
-	}
-
-	/* (non-Javadoc)
-	 * @see com.strongjoshua.console.Console#printLogToFile(com.badlogic.gdx.files.FileHandle)
-	 */
-	@Override
-	public void printLogToFile (FileHandle fh) {
-		if (log.printToFile(fh))
-			log("Successfully wrote logs to file.", LogLevel.SUCCESS);
-		else
-			log("Unable to write logs to file.", LogLevel.ERROR);
 	}
 
 	/* (non-Javadoc)
