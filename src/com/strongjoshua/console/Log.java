@@ -18,7 +18,6 @@ import java.io.Writer;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
-import com.strongjoshua.console.Console.LogLevel;
 
 class Log {
 	private Array<LogEntry> logEntries;
@@ -27,7 +26,7 @@ class Log {
 		logEntries = new Array<LogEntry>();
 	}
 
-	private int numEntries = Console.UNLIMITED_ENTRIES;
+	private int numEntries = AbstractConsole.UNLIMITED_ENTRIES;
 
 	public void setMaxEntries(int numEntries) {
 		this.numEntries = numEntries;
@@ -35,7 +34,7 @@ class Log {
 
 	protected void addEntry(String msg, LogLevel level) {
 		logEntries.add(new LogEntry(msg, level));
-		if(logEntries.size > numEntries && numEntries != Console.UNLIMITED_ENTRIES) {
+		if(logEntries.size > numEntries && numEntries != AbstractConsole.UNLIMITED_ENTRIES) {
 			logEntries.removeIndex(0);
 		}
 	}
