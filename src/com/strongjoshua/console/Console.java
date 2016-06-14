@@ -90,6 +90,9 @@ public interface Console {
 	 * @param fh The {@link FileHandle} that links to the file to be written to. Note that <code>classpath</code> and
 	 *           <code>internal</code> FileHandles cannot be written to. */
 	public void printLogToFile(FileHandle fh);
+	
+	/** Prints all commands */
+	public void printCommands();
 
 	/** @return If the console is disabled.
 	 * @see Console#setDisabled(boolean) */
@@ -128,5 +131,16 @@ public interface Console {
 
 	/** @return If console is hidden */
 	public boolean isHidden();
-
+	
+	/** Sets the executeHiddenCommands field
+	 * 
+	 * @param enabled - if true, commands annotated with {@link HiddenCommand} can be executed
+	 */
+	public void setExecuteHiddenCommands(boolean enabled);
+	
+	/** Sets the executeHiddenCommands field
+	 * 
+	 * @param enabled - if true, commands annotated with {@link HiddenCommand} show when printCommands (help) is executed
+	 */
+	public void setDisplayHiddenCommands(boolean enabled);
 }

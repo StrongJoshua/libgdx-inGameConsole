@@ -57,24 +57,6 @@ public abstract class CommandExecutor {
 	 * Shows all available methods, and their parameter types, in the console.
 	 */
 	public final void help() {
-		Method[] methods = ClassReflection.getDeclaredMethods(this.getClass());
-		for(int j = 0; j < methods.length; j++) {
-			Method m = methods[j];
-			if(m.isPublic()) {
-				String s = "";
-				s += m.getName();
-				s += " : ";
-
-				Class<?>[] params = m.getParameterTypes();
-				for(int i = 0; i < params.length; i++) {
-					s += params[i].getSimpleName();
-					if(i < params.length - 1) {
-						s += ", ";
-					}
-				}
-
-				console.log(s);
-			}
-		}
+		console.printCommands();
 	}
 }

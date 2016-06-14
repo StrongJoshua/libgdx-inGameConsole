@@ -22,6 +22,9 @@ public abstract class AbstractConsole implements Console, Disposable {
 	protected boolean logToSystem;
 
 	protected boolean disabled;
+	
+	protected boolean executeHiddenCommands = true;
+	protected boolean displayHiddenCommands = false;
 
 	public AbstractConsole() {
 		log = new Log();
@@ -148,8 +151,11 @@ public abstract class AbstractConsole implements Console, Disposable {
 		Method[] methods = ClassReflection.getMethods(clazz);
 		Array<Integer> possible = new Array<Integer>();
 		for (int i = 0; i < methods.length; i++) {
-			if (methods[i].getName().equalsIgnoreCase(methodName)) {
-				possible.add(i);
+			Method method = methods[i];
+			if (method.getName().equalsIgnoreCase(methodName)) {
+				if(canExecuteCommand(method)) {
+					possible.add(i);
+				}
 			}
 		}
 		if (possible.size <= 0) {
@@ -181,6 +187,60 @@ public abstract class AbstractConsole implements Console, Disposable {
 			}
 		}
 		log("Bad parameters. Check your code.", LogLevel.ERROR);
+	}
+	
+	@Override
+	public void printCommands() {
+		Method[] methods = ClassReflection.getDeclaredMethods(this.getClass());
+		for(int j = 0; j < methods.length; j++) {
+			Method m = methods[j];
+			if(m.isPublic() && canDisplayCommand(m)) {
+				String s = "";
+				s += m.getName();
+				s += " : ";
 
+				Class<?>[] params = m.getParameterTypes();
+				for(int i = 0; i < params.length; i++) {
+					s += params[i].getSimpleName();
+					if(i < params.length - 1) {
+						s += ", ";
+					}
+				}
+
+				log(s);
+			}
+		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see com.strongjoshua.console.Console#setExecuteHiddenCommands(boolean)
+	 */
+	@Override
+	public void setExecuteHiddenCommands(boolean enabled) {
+		executeHiddenCommands = enabled;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.strongjoshua.console.Console#setDisplayHiddenCommands(boolean)
+	 */
+	@Override
+	public void setDisplayHiddenCommands(boolean enabled) {
+		displayHiddenCommands = enabled;		
+	}
+
+	protected boolean canExecuteCommand(Method method) {
+		if(!executeHiddenCommands && method.isAnnotationPresent(HiddenCommand.class)) {
+			return false;
+		}
+		
+		return true;
+	}
+	
+	protected boolean canDisplayCommand(Method method) {
+		if(!displayHiddenCommands && method.isAnnotationPresent(HiddenCommand.class)) {
+			return false;
+		}
+		
+		return true;
 	}
 }
