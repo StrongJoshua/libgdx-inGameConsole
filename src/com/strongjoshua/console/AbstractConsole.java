@@ -193,7 +193,7 @@ public abstract class AbstractConsole implements Console, Disposable {
 	
 	@Override
 	public void printCommands() {
-		Method[] methods = ClassReflection.getDeclaredMethods(this.getClass());
+		Method[] methods = ClassReflection.getDeclaredMethods(exec.getClass());
 		for(int j = 0; j < methods.length; j++) {
 			Method m = methods[j];
 			if(m.isPublic() && canDisplayCommand(m)) {

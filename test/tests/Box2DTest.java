@@ -257,7 +257,7 @@ public class Box2DTest extends ApplicationAdapter {
 		
 		@HiddenCommand
 		public void superExplode() {
-			explode(0, 0, 10000);
+			explode(0, 0, 1000000);
 		}
 		
 		public void setExecuteHiddenCommands(boolean enabled) {
