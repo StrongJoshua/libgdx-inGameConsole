@@ -115,6 +115,8 @@ public abstract class AbstractConsole implements Console, Disposable {
 	 */
 	@Override
 	public void execCommand(String command) {
+		if(disabled) return;
+		
 		log(command, LogLevel.COMMAND);
 
 		String[] parts = command.split(" ");
