@@ -129,51 +129,62 @@ public abstract class AbstractConsole implements Console, Disposable {
 			}
 		}
 
-		// attempt to convert arguments to numbers. If the conversion does not work, keep the argument as a string.
-		Object[] args = null;
-		if (sArgs != null) {
-			args = new Object[sArgs.length];
-			for (int i = 0; i < sArgs.length; i++) {
-				String s = sArgs[i];
-				try {
-					int j = Integer.parseInt(s);
-					args[i] = j;
-				} catch (NumberFormatException e) {
-					try {
-						float f = Float.parseFloat(s);
-						args[i] = f;
-					} catch (NumberFormatException e2) {
-						args[i] = s;
-					}
-				}
-			}
-		}
-
 		Class<? extends CommandExecutor> clazz = exec.getClass();
 		Method[] methods = ClassReflection.getMethods(clazz);
 		Array<Integer> possible = new Array<Integer>();
 		for (int i = 0; i < methods.length; i++) {
 			Method method = methods[i];
-			if (method.getName().equalsIgnoreCase(methodName)) {
-				if(canExecuteCommand(method)) {
-					possible.add(i);
-				}
+			if (method.getName().equalsIgnoreCase(methodName) && ConsoleUtils.canExecuteCommand(this, method)) {
+				possible.add(i);
 			}
 		}
+		
 		if (possible.size <= 0) {
 			log("No such method found.", LogLevel.ERROR);
 			return;
 		}
+		
 		int size = possible.size;
-		int numArgs;
-		numArgs = args == null ? 0 : args.length;
+		int numArgs = sArgs == null ? 0 : sArgs.length;
 		for (int i = 0; i < size; i++) {
 			Method m = methods[possible.get(i)];
 			Class<?>[] params = m.getParameterTypes();
-			if (numArgs != params.length) {
-				continue;
-			} else {
+			if (numArgs == params.length) {
 				try {
+					Object[] args = null;
+					
+					try {
+						if(sArgs != null) {
+							args = new Object[numArgs];
+							
+							for(int j=0; j<params.length; j++) {
+								Class<?> param = params[j];
+								final String value = sArgs[j];
+								
+								if(param.equals(String.class)) {
+									args[j] = value;
+								} else if(param.equals(Boolean.class) || param.equals(boolean.class)) {
+									args[j] = Boolean.parseBoolean(value);
+								} else if(param.equals(Byte.class) || param.equals(byte.class)) {
+									args[j] = Byte.parseByte(value);
+								} else if(param.equals(Short.class) || param.equals(short.class)) {
+									args[j] = Short.parseShort(value);
+								} else if(param.equals(Integer.class) || param.equals(int.class)) {
+									args[j] = Integer.parseInt(value);
+								} else if(param.equals(Long.class) || param.equals(long.class)) {
+									args[j] = Long.parseLong(value);
+								} else if(param.equals(Float.class) || param.equals(float.class)) {
+									args[j] = Float.parseFloat(value);
+								} else if(param.equals(Double.class) || param.equals(double.class)) {
+									args[j] = Double.parseDouble(value);
+								}
+							}
+						}
+					} catch(Exception e) {
+						// Error occurred trying to parse parameter, continue to next function
+						continue;
+					}
+					
 					m.setAccessible(true);
 					m.invoke(exec, args);
 					return;
@@ -188,6 +199,7 @@ public abstract class AbstractConsole implements Console, Disposable {
 				}
 			}
 		}
+		
 		log("Bad parameters. Check your code.", LogLevel.ERROR);
 	}
 	
@@ -196,7 +208,7 @@ public abstract class AbstractConsole implements Console, Disposable {
 		Method[] methods = ClassReflection.getDeclaredMethods(exec.getClass());
 		for(int j = 0; j < methods.length; j++) {
 			Method m = methods[j];
-			if(m.isPublic() && canDisplayCommand(m)) {
+			if(m.isPublic() && ConsoleUtils.canDisplayCommand(this, m)) {
 				String s = "";
 				s += m.getName();
 				s += " : ";
@@ -221,6 +233,11 @@ public abstract class AbstractConsole implements Console, Disposable {
 	public void setExecuteHiddenCommands(boolean enabled) {
 		executeHiddenCommands = enabled;
 	}
+	
+	@Override
+	public boolean isExecuteHiddenCommandsEnabled() {
+		return executeHiddenCommands;
+	}
 
 	/* (non-Javadoc)
 	 * @see com.strongjoshua.console.Console#setDisplayHiddenCommands(boolean)
@@ -229,20 +246,9 @@ public abstract class AbstractConsole implements Console, Disposable {
 	public void setDisplayHiddenCommands(boolean enabled) {
 		displayHiddenCommands = enabled;		
 	}
-
-	protected boolean canExecuteCommand(Method method) {
-		if(!executeHiddenCommands && method.isAnnotationPresent(HiddenCommand.class)) {
-			return false;
-		}
-		
-		return true;
-	}
 	
-	protected boolean canDisplayCommand(Method method) {
-		if(!displayHiddenCommands && method.isAnnotationPresent(HiddenCommand.class)) {
-			return false;
-		}
-		
-		return true;
+	@Override
+	public boolean isDisplayHiddenCommandsEnabled() {
+		return displayHiddenCommands;
 	}
 }

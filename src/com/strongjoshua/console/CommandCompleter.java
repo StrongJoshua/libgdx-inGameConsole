@@ -22,7 +22,7 @@ class CommandCompleter {
 		Array<Method> methods = getAllMethods(ce);
 		for(Method m : methods) {
 			String name = m.getName();
-			if(name.toLowerCase().startsWith(setString)) {
+			if(name.toLowerCase().startsWith(setString) && ConsoleUtils.canDisplayCommand(ce.console, m)) {
 				possibleCommands.add(name);
 			}
 		}

@@ -143,4 +143,16 @@ public interface Console {
 	 * @param enabled - if true, commands annotated with {@link HiddenCommand} show when printCommands (help) is executed
 	 */
 	public void setDisplayHiddenCommands(boolean enabled);
+	
+	/**
+	 * 
+	 * @return If hidden commands can be executed
+	 */
+	public boolean isExecuteHiddenCommandsEnabled();
+	
+	/**
+	 * 
+	 * @return If hidden commands can be displayed
+	 */
+	public boolean isDisplayHiddenCommandsEnabled();
 }
