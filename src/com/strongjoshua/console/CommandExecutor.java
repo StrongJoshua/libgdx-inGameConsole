@@ -32,7 +32,7 @@ import com.badlogic.gdx.utils.reflect.Method;
  * @author StrongJoshua
  */
 public abstract class CommandExecutor {
-	Console console;
+	protected Console console;
 
 	protected void setConsole(Console c) {
 		console = c;
