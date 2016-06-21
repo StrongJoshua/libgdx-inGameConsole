@@ -28,6 +28,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.strongjoshua.console.CommandExecutor;
 import com.strongjoshua.console.Console;
 import com.strongjoshua.console.GUIConsole;
+import com.strongjoshua.console.HiddenCommand;
 import com.strongjoshua.console.LogLevel;
 
 /**
@@ -253,6 +254,22 @@ public class Box2DTest extends ApplicationAdapter {
 	}
 
 	public class MyCommandExecutor extends CommandExecutor {
+		
+		@HiddenCommand
+		public void superExplode() {
+			explode(0, 0, 1000000);
+		}
+		
+		public void setExecuteHiddenCommands(boolean enabled) {
+			console.setExecuteHiddenCommands(enabled);
+			console.log("ExecuteHiddenCommands was set to " + enabled);
+		}
+		
+		public void setDisplayHiddenCommands(boolean enabled) {
+			console.setDisplayHiddenCommands(enabled);
+			console.log("DisplayHiddenCommands was set to " + enabled);
+		}
+		
 		public void explode(float x, float y, float maxForce) {
 			createExplosion(x, y, maxForce);
 			console.log("Created console explosion!", LogLevel.SUCCESS);
