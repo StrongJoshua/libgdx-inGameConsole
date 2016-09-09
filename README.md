@@ -27,7 +27,7 @@ If you are in the [contributors](https://github.com/StrongJoshua/libgdx-inGameCo
 
 Versions
 ========
-Latest Stable: **0.4.0**  
+Latest Stable: **0.5.1**  
 Latest Snapshot:
 ###How the Numbers Work
 ####First Digit
@@ -42,7 +42,7 @@ License
 Copyright 2015
 
 Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
+you may not use these files except in compliance with the License.
 You may obtain a copy of the License at
 
     http://www.apache.org/licenses/LICENSE-2.0
