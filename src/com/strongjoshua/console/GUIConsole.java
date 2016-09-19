@@ -299,7 +299,7 @@ public class GUIConsole extends AbstractConsole {
 	 * @see com.strongjoshua.console.Console#getKeyID()
 	 */
 	@Override
-	public int getKeyID () {
+	public int getDisplayKeyID () {
 		return keyID;
 	}
 
@@ -307,7 +307,7 @@ public class GUIConsole extends AbstractConsole {
 	 * @see com.strongjoshua.console.Console#setKeyID(int)
 	 */
 	@Override
-	public void setKeyID (int code) {
+	public void setDisplayKeyID (int code) {
 		if (code == Keys.ENTER) {
 			return;
 		}
@@ -448,18 +448,22 @@ public class GUIConsole extends AbstractConsole {
 				input.setCursorPosition(input.getText().length());
 				return true;
 			} else if (keycode == keyID) {
-				hidden = !hidden;
-				if (hidden) {
-					input.setText("");
-					stage.setKeyboardFocus(display);
-					consoleWindow.setTouchable(Touchable.disabled);
-				} else {
-					stage.setKeyboardFocus(input);
-					consoleWindow.setTouchable(Touchable.childrenOnly);
-				}
+				setHidden(!hidden);
 				return true;
 			}
 			return false;
+		}
+		
+		private void setHidden(boolean h) {
+			hidden = h;
+			if (hidden) {
+				input.setText("");
+				stage.setKeyboardFocus(display);
+				consoleWindow.setTouchable(Touchable.disabled);
+			} else {
+				stage.setKeyboardFocus(input);
+				consoleWindow.setTouchable(Touchable.childrenOnly);
+			}
 		}
 	}
 
@@ -482,4 +486,10 @@ public class GUIConsole extends AbstractConsole {
 		return hidden;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.strongjoshua.console.Console#setHidden()
+	 */
+	public void setHidden(boolean hidden) {
+		((KeyListener)display.getListeners().get(0)).setHidden(hidden);
+	}
 }

@@ -87,13 +87,13 @@ public class HeadlessConsole extends AbstractConsole {
 	}
 
 	@Override
-	public int getKeyID() {
+	public int getDisplayKeyID() {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-	public void setKeyID(int code) {
+	public void setDisplayKeyID(int code) {
 		// TODO Auto-generated method stub
 
 	}
@@ -116,5 +116,8 @@ public class HeadlessConsole extends AbstractConsole {
 		return false;
 	}
 
-
+	@Override
+	public void setHidden(boolean hidden) {
+		// TODO Auto-generated method stub
+	}
 }

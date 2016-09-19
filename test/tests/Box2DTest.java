@@ -32,9 +32,9 @@ import com.strongjoshua.console.HiddenCommand;
 import com.strongjoshua.console.LogLevel;
 
 /**
- * Extension of the <a
- * href='https://github.com/StrongJoshua/libgdx-utils/blob/master/src/com/strongjoshua/libgdx_utils/tests/Box2DTest.java'>Simple Box2D
- * test</a> to incorporate the console.
+ * Extension of the <a href=
+ * 'https://github.com/StrongJoshua/libgdx-utils/blob/master/src/com/strongjoshua/libgdx_utils/tests/Box2DTest.java'>Simple
+ * Box2D test</a> to incorporate the console.
  * 
  * @author StrongJoshua
  */
@@ -69,24 +69,20 @@ public class Box2DTest extends ApplicationAdapter {
 		sprites = new Sprite[250];
 		bodies = new Body[sprites.length];
 		float k, j;
-		for(int i = 0; i < sprites.length; i++) {
-			if(i < 50) {
+		for (int i = 0; i < sprites.length; i++) {
+			if (i < 50) {
 				k = 0;
 				j = 1;
-			}
-			else if(i < 100) {
+			} else if (i < 100) {
 				k = 50 * sprites[i - 1].getWidth() + sprites[i - 1].getWidth() / 2;
 				j = 2;
-			}
-			else if(i < 150) {
+			} else if (i < 150) {
 				k = 100 * sprites[i - 1].getWidth() + sprites[i - 1].getWidth() / 2;
 				j = 3;
-			}
-			else if(i < 200) {
+			} else if (i < 200) {
 				k = 150 * sprites[i - 1].getWidth() + sprites[i - 1].getWidth() / 2;
 				j = 4;
-			}
-			else {
+			} else {
 				k = 200 * sprites[i - 1].getWidth() + sprites[i - 1].getWidth() / 2;
 				j = 5;
 			}
@@ -154,14 +150,16 @@ public class Box2DTest extends ApplicationAdapter {
 		console = new GUIConsole(false);
 		cExec = new MyCommandExecutor();
 		console.setCommandExecutor(cExec);
-		// set to 'Z' to demonstrate that it works with binds other than the default
-		console.setKeyID(Input.Keys.Z);
-		
+		// set to 'Z' to demonstrate that it works with binds other than the
+		// default
+		console.setDisplayKeyID(Input.Keys.Z);
+		console.setHidden(false);
+
 		// test multiple resets with nested multiplexers
 		InputMultiplexer im1 = new InputMultiplexer();
 		im1.addProcessor(new Stage());
 		im1.addProcessor(new Stage());
-		
+
 		InputMultiplexer im2 = new InputMultiplexer();
 		im2.addProcessor(new Stage());
 		im2.addProcessor(new Stage());
@@ -175,30 +173,31 @@ public class Box2DTest extends ApplicationAdapter {
 		console.setSizePercent(100, 33);
 		console.setPositionPercent(0, 67);
 	}
-	
+
 	@Override
 	public void render() {
-		if(Gdx.input.isTouched()) {
+		if (Gdx.input.isTouched()) {
 			float x = Gdx.input.getX();
 			float y = Gdx.input.getY();
 
-			if(!console.hitsConsole(x, y)) {
+			if (!console.hitsConsole(x, y)) {
 				Vector3 worldVector = c.unproject(new Vector3(x, y, 0));
 
 				createExplosion(worldVector.x, worldVector.y, 2000);
-				
-				console.log(String.format("Created touch explosion at %.2f, %.2f!", worldVector.x, worldVector.y), LogLevel.SUCCESS);
+
+				console.log(String.format("Created touch explosion at %.2f, %.2f!", worldVector.x, worldVector.y),
+						LogLevel.SUCCESS);
 			}
 		}
-		
-		if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE))
+
+		if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE))
 			Gdx.app.exit();
 		world.step(1 / 60f, 6, 2);
 
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
-		for(int i = 0; i < bodies.length; i++) {
+		for (int i = 0; i < bodies.length; i++) {
 			Vector2 pos = bodies[i].getPosition();
 			sprites[i].setPosition(pos.x - sprites[i].getWidth() / 2, pos.y - sprites[i].getHeight() / 2);
 			sprites[i].setRotation(MathUtils.radiansToDegrees * bodies[i].getAngle());
@@ -213,19 +212,22 @@ public class Box2DTest extends ApplicationAdapter {
 	}
 
 	/**
-	 * Creates an explosion that applies forces to the bodies relative to their position and the given x and y values.
+	 * Creates an explosion that applies forces to the bodies relative to their
+	 * position and the given x and y values.
 	 * 
-	 * @param maxForce The maximum force to be applied to the bodies (diminishes as distance from touch increases).
+	 * @param maxForce
+	 *            The maximum force to be applied to the bodies (diminishes as
+	 *            distance from touch increases).
 	 */
 	private void createExplosion(float x, float y, float maxForce) {
 		float force;
 		Vector2 touch = new Vector2(x, y);
-		for(int i = 0; i < bodies.length; i++) {
+		for (int i = 0; i < bodies.length; i++) {
 			Body b = bodies[i];
 			Vector2 v = b.getPosition();
 			float dist = v.dst2(touch);
 
-			if(dist == 0)
+			if (dist == 0)
 				force = maxForce;
 			else
 				force = MathUtils.clamp(maxForce / dist, 0, maxForce);
@@ -254,28 +256,28 @@ public class Box2DTest extends ApplicationAdapter {
 	}
 
 	public class MyCommandExecutor extends CommandExecutor {
-		
+
 		@HiddenCommand
 		public void superExplode() {
 			explode(0, 0, 1000000);
 		}
-		
+
 		public void setExecuteHiddenCommands(boolean enabled) {
 			console.setExecuteHiddenCommands(enabled);
 			console.log("ExecuteHiddenCommands was set to " + enabled);
 		}
-		
+
 		public void setDisplayHiddenCommands(boolean enabled) {
 			console.setDisplayHiddenCommands(enabled);
 			console.log("DisplayHiddenCommands was set to " + enabled);
 		}
-		
+
 		public void explode(float x, float y, float maxForce) {
 			createExplosion(x, y, maxForce);
 			console.log("Created console explosion!", LogLevel.SUCCESS);
 		}
-		
-		public void clear(){
+
+		public void clear() {
 			console.clear();
 		}
 	}
