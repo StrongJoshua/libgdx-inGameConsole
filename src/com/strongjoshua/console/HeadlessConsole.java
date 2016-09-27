@@ -111,13 +111,13 @@ public class HeadlessConsole extends AbstractConsole {
 	}
 
 	@Override
-	public boolean isHidden() {
+	public boolean isVisible() {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override
-	public void setHidden(boolean hidden) {
+	public void setVisible(boolean visible) {
 		// TODO Auto-generated method stub
 	}
 }

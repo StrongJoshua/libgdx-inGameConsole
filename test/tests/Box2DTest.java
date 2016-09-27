@@ -153,7 +153,7 @@ public class Box2DTest extends ApplicationAdapter {
 		// set to 'Z' to demonstrate that it works with binds other than the
 		// default
 		console.setDisplayKeyID(Input.Keys.Z);
-		console.setHidden(false);
+		console.setVisible(true);
 
 		// test multiple resets with nested multiplexers
 		InputMultiplexer im1 = new InputMultiplexer();

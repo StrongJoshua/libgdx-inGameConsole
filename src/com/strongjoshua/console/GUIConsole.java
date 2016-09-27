@@ -482,14 +482,14 @@ public class GUIConsole extends AbstractConsole {
 	 * @see com.strongjoshua.console.Console#isHidden()
 	 */
 	@Override
-	public boolean isHidden () {
-		return hidden;
+	public boolean isVisible () {
+		return !hidden;
 	}
 
 	/* (non-Javadoc)
 	 * @see com.strongjoshua.console.Console#setHidden()
 	 */
-	public void setHidden(boolean hidden) {
-		((KeyListener)display.getListeners().get(0)).setHidden(hidden);
+	public void setVisible(boolean visible) {
+		((KeyListener)display.getListeners().get(0)).setHidden(!visible);
 	}
 }

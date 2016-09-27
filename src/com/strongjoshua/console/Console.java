@@ -209,14 +209,14 @@ public interface Console {
 	 */
 	public void dispose();
 
-	/** @return If console is hidden */
-	public boolean isHidden();
+	/** @return If console is visible */
+	public boolean isVisible();
 
 	/**
 	 * Hides or shows the console. Same effect as pushing the display button,
 	 * except it doesn't toggle.
 	 */
-	public void setHidden(boolean hidden);
+	public void setVisible(boolean visible);
 
 	/**
 	 * Sets the executeHiddenCommands field
