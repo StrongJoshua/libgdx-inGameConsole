@@ -1,3 +1,20 @@
 target
+
+dist
+bin
+.classpath
+.project
+.settings
+
+# Idea
+/.idea/
 *.iml
-.idea
+*.ipr
+*.iws
+
+# Gradle
+/.gradle/
+/build/
+
+# Maven
+/target/
