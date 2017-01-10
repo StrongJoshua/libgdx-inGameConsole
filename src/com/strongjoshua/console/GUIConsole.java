@@ -492,4 +492,9 @@ public class GUIConsole extends AbstractConsole {
 	public void setVisible(boolean visible) {
 		((KeyListener)display.getListeners().get(0)).setHidden(!visible);
 	}
+
+	/** Run this when your screen size changes */
+	public void update(int width, int height) {
+		stage.getViewport().update(width, height);
+	}
 }
