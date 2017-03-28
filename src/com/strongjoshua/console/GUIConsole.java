@@ -77,7 +77,7 @@ public class GUIConsole extends AbstractConsole {
 	 * @param useMultiplexer If internal multiplexer should be used
 	 * @see Console#dispose() */
 	public GUIConsole (Skin skin, boolean useMultiplexer) {
-		this(skin, useMultiplexer, Keys.TAB);
+		this(skin, useMultiplexer, Keys.APOSTROPHE);
 	}
 
 	/** Creates the console.<br>
