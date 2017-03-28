@@ -1,6 +1,7 @@
 /**
  * 
  */
+
 package com.strongjoshua.console;
 
 import java.lang.annotation.Documented;
@@ -10,10 +11,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/**
- * @author Eric Burns (ThaBalla1148)
- *
- */
+/** @author Eric Burns (ThaBalla1148) */
 @Documented
 @Target(ElementType.METHOD)
 @Inherited

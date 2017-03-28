@@ -19,7 +19,7 @@ class CommandHistory {
 	private final Array<String> commands = new Array<>(true, 20);
 	private int index;
 
-	public void store(String command) {
+	public void store (String command) {
 		if (commands.size > 0 && isLastCommand(command)) {
 			return;
 		}
@@ -27,7 +27,7 @@ class CommandHistory {
 		indexAtBeginning();
 	}
 
-	public String getPreviousCommand() {
+	public String getPreviousCommand () {
 		index++;
 
 		if (commands.size == 0) {
@@ -40,7 +40,7 @@ class CommandHistory {
 		return commands.get(index);
 	}
 
-	public String getNextCommand() {
+	public String getNextCommand () {
 		index--;
 		if (commands.size <= 1 || index < 0) {
 			indexAtBeginning();
@@ -49,11 +49,11 @@ class CommandHistory {
 		return commands.get(index);
 	}
 
-	private boolean isLastCommand(String command) {
+	private boolean isLastCommand (String command) {
 		return command.equals(commands.first());
 	}
 
-	private void indexAtBeginning() {
+	private void indexAtBeginning () {
 		index = -1;
 	}
 }

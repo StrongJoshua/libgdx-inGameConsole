@@ -1,6 +1,7 @@
 /**
  *
  */
+
 package com.strongjoshua.console;
 
 import com.badlogic.gdx.Gdx;
@@ -11,10 +12,7 @@ import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.reflect.Method;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
 
-/**
- * @author Eric
- *
- */
+/** @author Eric */
 public abstract class AbstractConsole implements Console, Disposable {
 	protected CommandExecutor exec;
 
@@ -22,15 +20,17 @@ public abstract class AbstractConsole implements Console, Disposable {
 	protected boolean logToSystem;
 
 	protected boolean disabled;
-	
+
 	protected boolean executeHiddenCommands = true;
 	protected boolean displayHiddenCommands = false;
 
-	public AbstractConsole() {
+	public AbstractConsole () {
 		log = new Log();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.strongjoshua.console.Console#setLoggingToSystem(java.lang.Boolean)
 	 */
 	@Override
@@ -38,7 +38,9 @@ public abstract class AbstractConsole implements Console, Disposable {
 		this.logToSystem = log;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.strongjoshua.console.Console#log(java.lang.String, com.strongjoshua.console.GUIConsole.LogLevel)
 	 */
 	@Override
@@ -46,7 +48,7 @@ public abstract class AbstractConsole implements Console, Disposable {
 		log.addEntry(msg, level);
 
 		if (logToSystem) {
-			switch(level) {
+			switch (level) {
 			case ERROR:
 				System.err.println("> " + msg);
 				break;
@@ -57,7 +59,9 @@ public abstract class AbstractConsole implements Console, Disposable {
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.strongjoshua.console.Console#log(java.lang.String)
 	 */
 	@Override
@@ -65,7 +69,9 @@ public abstract class AbstractConsole implements Console, Disposable {
 		this.log(msg, LogLevel.DEFAULT);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.strongjoshua.console.Console#printLogToFile(java.lang.String)
 	 */
 	@Override
@@ -73,7 +79,9 @@ public abstract class AbstractConsole implements Console, Disposable {
 		this.printLogToFile(Gdx.files.local(file));
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.strongjoshua.console.Console#printLogToFile(com.badlogic.gdx.files.FileHandle)
 	 */
 	@Override
@@ -85,7 +93,9 @@ public abstract class AbstractConsole implements Console, Disposable {
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.strongjoshua.console.Console#isDisabled()
 	 */
 	@Override
@@ -93,7 +103,9 @@ public abstract class AbstractConsole implements Console, Disposable {
 		return disabled;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.strongjoshua.console.Console#setDisabled(boolean)
 	 */
 	@Override
@@ -101,7 +113,9 @@ public abstract class AbstractConsole implements Console, Disposable {
 		this.disabled = disabled;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.strongjoshua.console.Console#setCommandExecutor(com.strongjoshua.console.CommandExecutor)
 	 */
 	@Override
@@ -110,13 +124,15 @@ public abstract class AbstractConsole implements Console, Disposable {
 		exec.setConsole(this);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.strongjoshua.console.Console#execCommand(java.lang.String)
 	 */
 	@Override
-	public void execCommand(String command) {
-		if(disabled) return;
-		
+	public void execCommand (String command) {
+		if (disabled) return;
+
 		log(command, LogLevel.COMMAND);
 
 		String[] parts = command.split(" ");
@@ -138,12 +154,12 @@ public abstract class AbstractConsole implements Console, Disposable {
 				possible.add(i);
 			}
 		}
-		
+
 		if (possible.size <= 0) {
 			log("No such method found.", LogLevel.ERROR);
 			return;
 		}
-		
+
 		int size = possible.size;
 		int numArgs = sArgs == null ? 0 : sArgs.length;
 		for (int i = 0; i < size; i++) {
@@ -152,39 +168,39 @@ public abstract class AbstractConsole implements Console, Disposable {
 			if (numArgs == params.length) {
 				try {
 					Object[] args = null;
-					
+
 					try {
-						if(sArgs != null) {
+						if (sArgs != null) {
 							args = new Object[numArgs];
-							
-							for(int j=0; j<params.length; j++) {
+
+							for (int j = 0; j < params.length; j++) {
 								Class<?> param = params[j];
 								final String value = sArgs[j];
-								
-								if(param.equals(String.class)) {
+
+								if (param.equals(String.class)) {
 									args[j] = value;
-								} else if(param.equals(Boolean.class) || param.equals(boolean.class)) {
+								} else if (param.equals(Boolean.class) || param.equals(boolean.class)) {
 									args[j] = Boolean.parseBoolean(value);
-								} else if(param.equals(Byte.class) || param.equals(byte.class)) {
+								} else if (param.equals(Byte.class) || param.equals(byte.class)) {
 									args[j] = Byte.parseByte(value);
-								} else if(param.equals(Short.class) || param.equals(short.class)) {
+								} else if (param.equals(Short.class) || param.equals(short.class)) {
 									args[j] = Short.parseShort(value);
-								} else if(param.equals(Integer.class) || param.equals(int.class)) {
+								} else if (param.equals(Integer.class) || param.equals(int.class)) {
 									args[j] = Integer.parseInt(value);
-								} else if(param.equals(Long.class) || param.equals(long.class)) {
+								} else if (param.equals(Long.class) || param.equals(long.class)) {
 									args[j] = Long.parseLong(value);
-								} else if(param.equals(Float.class) || param.equals(float.class)) {
+								} else if (param.equals(Float.class) || param.equals(float.class)) {
 									args[j] = Float.parseFloat(value);
-								} else if(param.equals(Double.class) || param.equals(double.class)) {
+								} else if (param.equals(Double.class) || param.equals(double.class)) {
 									args[j] = Double.parseDouble(value);
 								}
 							}
 						}
-					} catch(Exception e) {
+					} catch (Exception e) {
 						// Error occurred trying to parse parameter, continue to next function
 						continue;
 					}
-					
+
 					m.setAccessible(true);
 					m.invoke(exec, args);
 					return;
@@ -199,24 +215,24 @@ public abstract class AbstractConsole implements Console, Disposable {
 				}
 			}
 		}
-		
+
 		log("Bad parameters. Check your code.", LogLevel.ERROR);
 	}
-	
+
 	@Override
-	public void printCommands() {
+	public void printCommands () {
 		Method[] methods = ClassReflection.getDeclaredMethods(exec.getClass());
-		for(int j = 0; j < methods.length; j++) {
+		for (int j = 0; j < methods.length; j++) {
 			Method m = methods[j];
-			if(m.isPublic() && ConsoleUtils.canDisplayCommand(this, m)) {
+			if (m.isPublic() && ConsoleUtils.canDisplayCommand(this, m)) {
 				String s = "";
 				s += m.getName();
 				s += " : ";
 
 				Class<?>[] params = m.getParameterTypes();
-				for(int i = 0; i < params.length; i++) {
+				for (int i = 0; i < params.length; i++) {
 					s += params[i].getSimpleName();
-					if(i < params.length - 1) {
+					if (i < params.length - 1) {
 						s += ", ";
 					}
 				}
@@ -225,30 +241,34 @@ public abstract class AbstractConsole implements Console, Disposable {
 			}
 		}
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.strongjoshua.console.Console#setExecuteHiddenCommands(boolean)
 	 */
 	@Override
-	public void setExecuteHiddenCommands(boolean enabled) {
+	public void setExecuteHiddenCommands (boolean enabled) {
 		executeHiddenCommands = enabled;
 	}
-	
+
 	@Override
-	public boolean isExecuteHiddenCommandsEnabled() {
+	public boolean isExecuteHiddenCommandsEnabled () {
 		return executeHiddenCommands;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.strongjoshua.console.Console#setDisplayHiddenCommands(boolean)
 	 */
 	@Override
-	public void setDisplayHiddenCommands(boolean enabled) {
-		displayHiddenCommands = enabled;		
+	public void setDisplayHiddenCommands (boolean enabled) {
+		displayHiddenCommands = enabled;
 	}
-	
+
 	@Override
-	public boolean isDisplayHiddenCommandsEnabled() {
+	public boolean isDisplayHiddenCommandsEnabled () {
 		return displayHiddenCommands;
 	}
 }

@@ -1,3 +1,4 @@
+
 package com.strongjoshua.console;
 
 import com.badlogic.gdx.graphics.Color;

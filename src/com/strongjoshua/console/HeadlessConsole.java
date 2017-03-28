@@ -1,123 +1,119 @@
 /**
  *
  */
+
 package com.strongjoshua.console;
 
 import com.badlogic.gdx.InputProcessor;
 
-/**
- * Headless Console used for servers
+/** Headless Console used for servers
  *
- * @author Eric
- *
- */
+ * @author Eric */
 public class HeadlessConsole extends AbstractConsole {
 
-	/**
-	 * Creates an Headless console
-	 */
-	public HeadlessConsole() {
+	/** Creates an Headless console */
+	public HeadlessConsole () {
 		logToSystem = true;
 	}
 
 	@Override
-	public void setMaxEntries(int numEntries) {
+	public void setMaxEntries (int numEntries) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void clear() {
+	public void clear () {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void setSize(int width, int height) {
+	public void setSize (int width, int height) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void setSizePercent(float wPct, float hPct) {
+	public void setSizePercent (float wPct, float hPct) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void setPosition(int x, int y) {
+	public void setPosition (int x, int y) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void setPositionPercent(float xPosPct, float yPosPct) {
+	public void setPositionPercent (float xPosPct, float yPosPct) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void resetInputProcessing() {
+	public void resetInputProcessing () {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public InputProcessor getInputProcessor() {
+	public InputProcessor getInputProcessor () {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void draw() {
+	public void draw () {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void refresh() {
+	public void refresh () {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void refresh(boolean retain) {
+	public void refresh (boolean retain) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public int getDisplayKeyID() {
+	public int getDisplayKeyID () {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-	public void setDisplayKeyID(int code) {
+	public void setDisplayKeyID (int code) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public boolean hitsConsole(float screenX, float screenY) {
+	public boolean hitsConsole (float screenX, float screenY) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public void dispose() {
+	public void dispose () {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public boolean isVisible() {
+	public boolean isVisible () {
 		// TODO Auto-generated method stub
 		return true;
 	}
 
 	@Override
-	public void setVisible(boolean visible) {
+	public void setVisible (boolean visible) {
 		// TODO Auto-generated method stub
 	}
 }
