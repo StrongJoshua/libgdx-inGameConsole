@@ -77,7 +77,7 @@ public class GUIConsole extends AbstractConsole {
 	 * @param useMultiplexer If internal multiplexer should be used
 	 * @see Console#dispose() */
 	public GUIConsole (Skin skin, boolean useMultiplexer) {
-		this(skin, useMultiplexer, Keys.APOSTROPHE);
+		this(skin, useMultiplexer, Keys.TAB);
 	}
 
 	/** Creates the console.<br>
@@ -116,12 +116,6 @@ public class GUIConsole extends AbstractConsole {
 
 		setSizePercent(50, 50);
 		setPositionPercent(50, 50);
-	}
-
-	/** Sets the key used to open/close the console. */
-	public GUIConsole setKeyID (int keyIT) {
-		this.keyID = keyID;
-		return this;
 	}
 
 	/*
@@ -539,10 +533,5 @@ public class GUIConsole extends AbstractConsole {
 	 */
 	public void setVisible (boolean visible) {
 		((KeyListener)display.getListeners().get(0)).setHidden(!visible);
-	}
-
-	/** Run this when your screen size changes */
-	public void update (int width, int height) {
-		stage.getViewport().update(width, height);
 	}
 }
