@@ -1,10 +1,10 @@
 # libGDX In-Game Console
 This is a libGDX library that allows a developer to add a console (similar to how it is featured in Source games) to their game. Check out the [Javadocs and changelog](http://strongjoshua.com/projects/games/in-game_console)! If you want to discuss the library without posting an issue, you can do so on the [forums](http://strongjoshua.com/forums/viewforum.php?f=6)!
 
-###How it works
+### How it works
 Essentially what the console allows you to do is specify commands that you will be able to access from within the game, using the console. The console also enables live logging from within the application.
 
-###Purpose
+### Purpose
 This console speeds up development substantially by removing the need to recompile a program every time a minute change is made, specifically in regard to manipulating constants or other values when balancing a game, for example.
 
 ### Integration
@@ -27,14 +27,14 @@ If you are in the [contributors](https://github.com/StrongJoshua/libgdx-inGameCo
 
 Versions
 ========
-Latest Stable: **0.5.2**  
+Latest Stable: **0.5.3**  
 Latest Snapshot:
-###How the Numbers Work
-####First Digit
+### How the Numbers Work
+#### First Digit
 This digit goes up whenever I feel that the project has reached a milestone and/or no longer resembles the first version in it's current digit (e.g.: 0.13.3 is completely different from 0.1.0).
-####Second Digit
+#### Second Digit
 This digit goes up whenever a new feature is added, but if two or more features are added in one group of updates, this digit will still only rise by one. This number resets to 0 when the first digit goes up.
-####Third Digit
+#### Third Digit
 This digit goes up whenever a bugfix is released. This number resets to 0 when the second digit goes up.
 
 License
