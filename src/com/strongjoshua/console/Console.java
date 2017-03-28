@@ -40,8 +40,8 @@ public interface Console {
 
 	/** Set position of the lower left corner of the console
 	 * 
-	 * @param x
-	 * @param y */
+	 * @param x X coordinate.
+	 * @param y Y coordinate. */
 	public void setPosition (int x, int y);
 
 	/** Set position of the lower left corner of the console as a percent of screen size
@@ -123,16 +123,17 @@ public interface Console {
 	/** Sets this console's {@link CommandExecutor}. Its methods are the methods that are referenced within the console. Can be set
 	 * to null, but this will result in no commands being fired.
 	 * 
-	 * @param commandExec */
+	 * @param commandExec The {@link CommandExecutor} to use. */
 	public void setCommandExecutor (CommandExecutor commandExec);
 
-	/** Executes the specified command via the set {@link CommandExecutor}. */
+	/** Executes the specified command via the set {@link CommandExecutor}.
+	 * @param command The command to execute. */
 	public void execCommand (String command);
 
 	/** Returns if the given screen coordinates hit the console.
 	 * 
-	 * @param screenX
-	 * @param screenY
+	 * @param screenX X coordinate on the screen.
+	 * @param screenY Y coordinate on the screen.
 	 * @return True, if the console was hit. */
 	public boolean hitsConsole (float screenX, float screenY);
 
@@ -142,7 +143,8 @@ public interface Console {
 	/** @return If console is visible */
 	public boolean isVisible ();
 
-	/** Hides or shows the console. Same effect as pushing the display button, except it doesn't toggle. */
+	/** Hides or shows the console. Same effect as pushing the display button, except it doesn't toggle.
+	 * @param visible If the console should be visible. */
 	public void setVisible (boolean visible);
 
 	/** Sets the executeHiddenCommands field
@@ -161,6 +163,6 @@ public interface Console {
 	/** @return If hidden commands can be displayed */
 	public boolean isDisplayHiddenCommandsEnabled ();
 
-	/** @param consoleTrace If the command execution stack traces should be printed to the console. */
+	/** @param enabled If the command execution stack traces should be printed to the console. */
 	public void setConsoleStackTrace (boolean enabled);
 }
