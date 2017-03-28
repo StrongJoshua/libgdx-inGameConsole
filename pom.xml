@@ -12,7 +12,6 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <gdx.version>1.9.6</gdx.version>
-        <maven.source.version>2.4</maven.source.version>
     </properties>
 
     <licenses>
@@ -83,7 +82,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.11</version>
+            <version>4.12</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -117,7 +116,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
+                <version>3.6.1</version>
                 <configuration>
                     <source>1.7</source>
                     <target>1.7</target>
@@ -126,7 +125,7 @@
 
             <plugin>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>${maven.source.version}</version>
+                <version>3.0.1</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>
@@ -153,7 +152,7 @@
                 </property>
             </activation>
             <properties>
-                <gpg.keyname>DE785E68</gpg.keyname>
+                <gpg.keyname>51390673</gpg.keyname>
                 <!-- GPG Key ID to use for signing -->
                 <release.username>StrongJoshua</release.username>
             </properties>
@@ -162,6 +161,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.6</version>
                         <executions>
                             <execution>
                                 <id>sign-artifacts</id>
