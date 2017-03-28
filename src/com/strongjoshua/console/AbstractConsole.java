@@ -4,6 +4,9 @@
 
 package com.strongjoshua.console;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
@@ -23,6 +26,7 @@ public abstract class AbstractConsole implements Console, Disposable {
 
 	protected boolean executeHiddenCommands = true;
 	protected boolean displayHiddenCommands = false;
+	protected boolean consoleTrace = false;
 
 	public AbstractConsole () {
 		log = new Log();
@@ -211,6 +215,11 @@ public abstract class AbstractConsole implements Console, Disposable {
 						e.printStackTrace();
 					}
 					log(msg, LogLevel.ERROR);
+					if (consoleTrace) {
+						StringWriter sw = new StringWriter();
+						e.printStackTrace(new PrintWriter(sw));
+						log(sw.toString(), LogLevel.ERROR);
+					}
 					return;
 				}
 			}
@@ -221,7 +230,14 @@ public abstract class AbstractConsole implements Console, Disposable {
 
 	@Override
 	public void printCommands () {
-		Method[] methods = ClassReflection.getDeclaredMethods(exec.getClass());
+		Method[] pMethods = ClassReflection.getDeclaredMethods(exec.getClass().getSuperclass());
+		Method[] mMethods = ClassReflection.getDeclaredMethods(exec.getClass());
+		Method[] methods = new Method[pMethods.length + mMethods.length];
+		for (int i = 0; i < pMethods.length; i++)
+			methods[i] = pMethods[i];
+		for (int i = 0; i < mMethods.length; i++)
+			methods[i + pMethods.length] = mMethods[i];
+
 		for (int j = 0; j < methods.length; j++) {
 			Method m = methods[j];
 			if (m.isPublic() && ConsoleUtils.canDisplayCommand(this, m)) {
@@ -270,5 +286,10 @@ public abstract class AbstractConsole implements Console, Disposable {
 	@Override
 	public boolean isDisplayHiddenCommandsEnabled () {
 		return displayHiddenCommands;
+	}
+	
+	@Override
+	public void setConsoleStackTrace (boolean enabled) {
+		this.consoleTrace = enabled;
 	}
 }

@@ -160,4 +160,7 @@ public interface Console {
 
 	/** @return If hidden commands can be displayed */
 	public boolean isDisplayHiddenCommandsEnabled ();
+
+	/** @param consoleTrace If the command execution stack traces should be printed to the console. */
+	public void setConsoleStackTrace (boolean enabled);
 }

@@ -1,3 +1,4 @@
+
 package tests;
 
 import com.badlogic.gdx.ApplicationAdapter;
@@ -31,13 +32,11 @@ import com.strongjoshua.console.GUIConsole;
 import com.strongjoshua.console.HiddenCommand;
 import com.strongjoshua.console.LogLevel;
 
-/**
- * Extension of the <a href=
- * 'https://github.com/StrongJoshua/libgdx-utils/blob/master/src/com/strongjoshua/libgdx_utils/tests/Box2DTest.java'>Simple
- * Box2D test</a> to incorporate the console.
+/** Extension of the <a href=
+ * 'https://github.com/StrongJoshua/libgdx-utils/blob/master/src/com/strongjoshua/libgdx_utils/tests/Box2DTest.java'>Simple Box2D
+ * test</a> to incorporate the console.
  * 
- * @author StrongJoshua
- */
+ * @author StrongJoshua */
 public class Box2DTest extends ApplicationAdapter {
 	SpriteBatch batch;
 	Sprite[] sprites;
@@ -51,16 +50,16 @@ public class Box2DTest extends ApplicationAdapter {
 	MyCommandExecutor cExec;
 
 	@Override
-	public void create() {
+	public void create () {
 		float w = Gdx.graphics.getWidth();
 		w *= 2;
 		float h = Gdx.graphics.getHeight();
 		h *= 2;
 		ratio = h / w;
-		Gdx.app.getGraphics().setWindowedMode((int) w, (int) h);
+		Gdx.app.getGraphics().setWindowedMode((int)w, (int)h);
 
-		mX = (float) WIDTH / w;
-		mY = (float) HEIGHT / h;
+		mX = (float)WIDTH / w;
+		mY = (float)HEIGHT / h;
 
 		Box2D.init();
 		world = new World(new Vector2(0, -9.81f), true);
@@ -154,6 +153,7 @@ public class Box2DTest extends ApplicationAdapter {
 		// default
 		console.setDisplayKeyID(Input.Keys.Z);
 		console.setVisible(true);
+		console.setConsoleStackTrace(true);
 
 		// test multiple resets with nested multiplexers
 		InputMultiplexer im1 = new InputMultiplexer();
@@ -175,7 +175,7 @@ public class Box2DTest extends ApplicationAdapter {
 	}
 
 	@Override
-	public void render() {
+	public void render () {
 		if (Gdx.input.isTouched()) {
 			float x = Gdx.input.getX();
 			float y = Gdx.input.getY();
@@ -185,13 +185,11 @@ public class Box2DTest extends ApplicationAdapter {
 
 				createExplosion(worldVector.x, worldVector.y, 2000);
 
-				console.log(String.format("Created touch explosion at %.2f, %.2f!", worldVector.x, worldVector.y),
-						LogLevel.SUCCESS);
+				console.log(String.format("Created touch explosion at %.2f, %.2f!", worldVector.x, worldVector.y), LogLevel.SUCCESS);
 			}
 		}
 
-		if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE))
-			Gdx.app.exit();
+		if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) Gdx.app.exit();
 		world.step(1 / 60f, 6, 2);
 
 		Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -211,15 +209,10 @@ public class Box2DTest extends ApplicationAdapter {
 		console.draw();
 	}
 
-	/**
-	 * Creates an explosion that applies forces to the bodies relative to their
-	 * position and the given x and y values.
+	/** Creates an explosion that applies forces to the bodies relative to their position and the given x and y values.
 	 * 
-	 * @param maxForce
-	 *            The maximum force to be applied to the bodies (diminishes as
-	 *            distance from touch increases).
-	 */
-	private void createExplosion(float x, float y, float maxForce) {
+	 * @param maxForce The maximum force to be applied to the bodies (diminishes as distance from touch increases). */
+	private void createExplosion (float x, float y, float maxForce) {
 		float force;
 		Vector2 touch = new Vector2(x, y);
 		for (int i = 0; i < bodies.length; i++) {
@@ -250,7 +243,7 @@ public class Box2DTest extends ApplicationAdapter {
 	}
 
 	@Override
-	public void dispose() {
+	public void dispose () {
 		console.dispose();
 		super.dispose();
 	}
@@ -258,31 +251,35 @@ public class Box2DTest extends ApplicationAdapter {
 	public class MyCommandExecutor extends CommandExecutor {
 
 		@HiddenCommand
-		public void superExplode() {
+		public void superExplode () {
 			explode(0, 0, 1000000);
 		}
 
-		public void setExecuteHiddenCommands(boolean enabled) {
+		public void setExecuteHiddenCommands (boolean enabled) {
 			console.setExecuteHiddenCommands(enabled);
 			console.log("ExecuteHiddenCommands was set to " + enabled);
 		}
 
-		public void setDisplayHiddenCommands(boolean enabled) {
+		public void setDisplayHiddenCommands (boolean enabled) {
 			console.setDisplayHiddenCommands(enabled);
 			console.log("DisplayHiddenCommands was set to " + enabled);
 		}
 
-		public void explode(float x, float y, float maxForce) {
+		public void explode (float x, float y, float maxForce) {
 			createExplosion(x, y, maxForce);
 			console.log("Created console explosion!", LogLevel.SUCCESS);
 		}
 
-		public void clear() {
+		public void clear () {
 			console.clear();
+		}
+
+		public void failFunction () {
+			throw new RuntimeException("This function was designed to fail.");
 		}
 	}
 
-	public static void main(String[] args) {
+	public static void main (String[] args) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		new LwjglApplication(new Box2DTest(), config);
 	}
