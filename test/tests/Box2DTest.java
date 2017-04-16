@@ -180,7 +180,11 @@ public class Box2DTest extends ApplicationAdapter {
 			float x = Gdx.input.getX();
 			float y = Gdx.input.getY();
 
-			if (!console.hitsConsole(x, y)) {
+			if (console.hitsConsole(x, y)) {
+				console.setSelected(true);
+			} else {
+				console.setSelected(false);
+
 				Vector3 worldVector = c.unproject(new Vector3(x, y, 0));
 
 				createExplosion(worldVector.x, worldVector.y, 2000);
@@ -207,6 +211,12 @@ public class Box2DTest extends ApplicationAdapter {
 		debugRenderer.render(world, c.combined);
 
 		console.draw();
+	}
+
+	@Override
+	public void resize(int width, int height) {
+		super.resize(width, height);
+		console.refresh();
 	}
 
 	/** Creates an explosion that applies forces to the bodies relative to their position and the given x and y values.

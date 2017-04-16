@@ -418,6 +418,14 @@ public class GUIConsole extends AbstractConsole {
 			scroll.validate();
 			scroll.setScrollPercentY(1);
 		}
+
+		protected void setSelected(boolean selected) {
+			input.setDisabled(!selected);
+		}
+
+		protected boolean isSelected() {
+			return !input.isDisabled();
+		}
 	}
 
 	private ScrollPane scroll;
@@ -442,6 +450,14 @@ public class GUIConsole extends AbstractConsole {
 		@Override
 		public boolean keyDown (InputEvent event, int keycode) {
 			if (disabled) {
+				return false;
+			}
+			// If not selected, allow only hiding/showing
+			if(input.isDisabled()) {
+				if (keycode == keyID) {
+					setHidden(!hidden);
+					return true;
+				}
 				return false;
 			}
 
@@ -531,7 +547,28 @@ public class GUIConsole extends AbstractConsole {
 	 * 
 	 * @see com.strongjoshua.console.Console#setHidden()
 	 */
+	@Override
 	public void setVisible (boolean visible) {
 		((KeyListener)display.getListeners().get(0)).setHidden(!visible);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.strongjoshua.console.Console#setSelected()
+	 */
+	@Override
+	public void setSelected(boolean selected) {
+		display.setSelected(selected);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.strongjoshua.console.Console#isSelected()
+	 */
+	@Override
+	public boolean isSelected() {
+		return display.isSelected();
 	}
 }
