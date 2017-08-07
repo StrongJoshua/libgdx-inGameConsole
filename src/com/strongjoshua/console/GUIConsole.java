@@ -17,6 +17,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -24,6 +25,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldListener;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldStyle;
 import com.badlogic.gdx.utils.Array;
 
 /** A simple console that allows live logging, and live execution of methods, from within an application. Please see the
@@ -120,7 +122,7 @@ public class GUIConsole extends AbstractConsole {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.strongjoshua.console.Console#setMaxEntries(int)
 	 */
 	@Override
@@ -134,7 +136,7 @@ public class GUIConsole extends AbstractConsole {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.strongjoshua.console.Console#clear()
 	 */
 	@Override
@@ -145,7 +147,7 @@ public class GUIConsole extends AbstractConsole {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.strongjoshua.console.Console#setSize(int, int)
 	 */
 	@Override
@@ -158,7 +160,7 @@ public class GUIConsole extends AbstractConsole {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.strongjoshua.console.Console#setSizePercent(float, float)
 	 */
 	@Override
@@ -175,7 +177,7 @@ public class GUIConsole extends AbstractConsole {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.strongjoshua.console.Console#setPosition(int, int)
 	 */
 	@Override
@@ -185,7 +187,7 @@ public class GUIConsole extends AbstractConsole {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.strongjoshua.console.Console#setPositionPercent(float, float)
 	 */
 	@Override
@@ -199,7 +201,7 @@ public class GUIConsole extends AbstractConsole {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.strongjoshua.console.Console#resetInputProcessing()
 	 */
 	@Override
@@ -241,7 +243,7 @@ public class GUIConsole extends AbstractConsole {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.strongjoshua.console.Console#getInputProcessor()
 	 */
 	@Override
@@ -251,7 +253,7 @@ public class GUIConsole extends AbstractConsole {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.strongjoshua.console.Console#draw()
 	 */
 	@Override
@@ -269,7 +271,7 @@ public class GUIConsole extends AbstractConsole {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.strongjoshua.console.Console#refresh()
 	 */
 	@Override
@@ -279,7 +281,7 @@ public class GUIConsole extends AbstractConsole {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.strongjoshua.console.Console#refresh(boolean)
 	 */
 	@Override
@@ -302,7 +304,7 @@ public class GUIConsole extends AbstractConsole {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.strongjoshua.console.Console#log(java.lang.String, com.strongjoshua.console.GUIConsole.LogLevel)
 	 */
 	@Override
@@ -314,7 +316,7 @@ public class GUIConsole extends AbstractConsole {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.strongjoshua.console.Console#setDisabled(boolean)
 	 */
 	@Override
@@ -327,7 +329,7 @@ public class GUIConsole extends AbstractConsole {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.strongjoshua.console.Console#getKeyID()
 	 */
 	@Override
@@ -337,7 +339,7 @@ public class GUIConsole extends AbstractConsole {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.strongjoshua.console.Console#setKeyID(int)
 	 */
 	@Override
@@ -352,7 +354,7 @@ public class GUIConsole extends AbstractConsole {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.strongjoshua.console.Console#hitsConsole(float, float)
 	 */
 	@Override
@@ -369,18 +371,25 @@ public class GUIConsole extends AbstractConsole {
 		private TextField input;
 		private Skin skin;
 		private Array<Label> labels;
+		private String fontName;
 
 		protected ConsoleDisplay (Skin skin) {
-			super(skin);
-
 			this.setFillParent(false);
 			this.skin = skin;
+
+			if(skin.has("console-font", BitmapFont.class))
+				fontName = "console-font";
+			else
+				fontName = "default-font";
+
+			TextFieldStyle tfs = skin.get(TextFieldStyle.class);
+			tfs.font = skin.getFont(fontName);
 
 			labels = new Array<Label>();
 
 			logEntries = new Table(skin);
 
-			input = new TextField("", skin);
+			input = new TextField("", tfs);
 			input.setTextFieldListener(new FieldListener());
 
 			scroll = new ScrollPane(logEntries, skin);
@@ -407,7 +416,7 @@ public class GUIConsole extends AbstractConsole {
 				if (labels.size > i) {
 					l = labels.get(i);
 				} else {
-					l = new Label("", skin, "default-font", LogLevel.DEFAULT.getColor());
+					l = new Label("", skin, fontName, LogLevel.DEFAULT.getColor());
 					l.setWrap(true);
 					labels.add(l);
 				}
@@ -505,7 +514,7 @@ public class GUIConsole extends AbstractConsole {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.strongjoshua.console.Console#dispose()
 	 */
 	@Override
@@ -518,7 +527,7 @@ public class GUIConsole extends AbstractConsole {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.strongjoshua.console.Console#isHidden()
 	 */
 	@Override
@@ -528,7 +537,7 @@ public class GUIConsole extends AbstractConsole {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.strongjoshua.console.Console#setHidden()
 	 */
 	public void setVisible (boolean visible) {

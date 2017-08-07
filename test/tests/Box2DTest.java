@@ -7,6 +7,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -26,6 +27,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.strongjoshua.console.CommandExecutor;
 import com.strongjoshua.console.Console;
 import com.strongjoshua.console.GUIConsole;
@@ -35,7 +37,7 @@ import com.strongjoshua.console.LogLevel;
 /** Extension of the <a href=
  * 'https://github.com/StrongJoshua/libgdx-utils/blob/master/src/com/strongjoshua/libgdx_utils/tests/Box2DTest.java'>Simple Box2D
  * test</a> to incorporate the console.
- * 
+ *
  * @author StrongJoshua */
 public class Box2DTest extends ApplicationAdapter {
 	SpriteBatch batch;
@@ -146,7 +148,8 @@ public class Box2DTest extends ApplicationAdapter {
 
 		debugRenderer = new Box2DDebugRenderer();
 
-		console = new GUIConsole(false);
+		console = new GUIConsole(new Skin(
+				Gdx.files.classpath("tests/test_skin/uiskin.json")), false);
 		cExec = new MyCommandExecutor();
 		console.setCommandExecutor(cExec);
 		// set to 'Z' to demonstrate that it works with binds other than the
@@ -210,7 +213,7 @@ public class Box2DTest extends ApplicationAdapter {
 	}
 
 	/** Creates an explosion that applies forces to the bodies relative to their position and the given x and y values.
-	 * 
+	 *
 	 * @param maxForce The maximum force to be applied to the bodies (diminishes as distance from touch increases). */
 	private void createExplosion (float x, float y, float maxForce) {
 		float force;
