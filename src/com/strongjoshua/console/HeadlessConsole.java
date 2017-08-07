@@ -116,4 +116,9 @@ public class HeadlessConsole extends AbstractConsole {
 	public void setVisible (boolean visible) {
 		// TODO Auto-generated method stub
 	}
+
+	@Override
+	public void deselect() {
+		// Does nothing
+	}
 }

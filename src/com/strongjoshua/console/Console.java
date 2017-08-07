@@ -22,30 +22,30 @@ public interface Console {
 	public void clear ();
 
 	/** Set size of the console in pixels
-	 * 
+	 *
 	 * @param width width of the console in pixels
 	 * @param height height of the console in pixels */
 	public void setSize (int width, int height);
 
 	/** Makes the console also log to the System when {@link Console#log(String)} is called.
-	 * 
+	 *
 	 * @param log to the system */
 	public void setLoggingToSystem (Boolean log);
 
 	/** Set size of the console as a percent of screen size
-	 * 
+	 *
 	 * @param wPct width of the console as a percent of screen width
 	 * @param hPct height of the console as a percent of screen height */
 	public void setSizePercent (float wPct, float hPct);
 
 	/** Set position of the lower left corner of the console
-	 * 
+	 *
 	 * @param x X coordinate.
 	 * @param y Y coordinate. */
 	public void setPosition (int x, int y);
 
 	/** Set position of the lower left corner of the console as a percent of screen size
-	 * 
+	 *
 	 * @param xPosPct Percentage for the x position relative to the screen size.
 	 * @param yPosPct Percentage for the y position relative to the screen size. */
 	public void setPositionPercent (float xPosPct, float yPosPct);
@@ -63,19 +63,19 @@ public interface Console {
 	public void refresh ();
 
 	/** Refreshes the console's stage. Use if the app's window size was changed.
-	 * 
+	 *
 	 * @param retain True if you want position and size percentages to be kept. */
 	public void refresh (boolean retain);
 
 	/** Logs a new entry to the console.
-	 * 
+	 *
 	 * @param msg The message to be logged.
 	 * @param level The {@link LogLevel} of the log entry.
 	 * @see LogLevel */
 	public void log (String msg, LogLevel level);
 
 	/** Logs a new entry to the console using {@link LogLevel#DEFAULT}.
-	 * 
+	 *
 	 * @param msg The message to be logged.
 	 * @see LogLevel
 	 * @see Console#log(String, LogLevel) */
@@ -112,7 +112,7 @@ public interface Console {
 
 	/** Gets the console's display key. If the console is enabled, the console will be shown upon this key being pressed.<br>
 	 * Default key is <b>`</b> a.k.a. '<b>backtick</b>'.
-	 * 
+	 *
 	 * @return the keyID */
 	public int getDisplayKeyID ();
 
@@ -122,7 +122,7 @@ public interface Console {
 
 	/** Sets this console's {@link CommandExecutor}. Its methods are the methods that are referenced within the console. Can be set
 	 * to null, but this will result in no commands being fired.
-	 * 
+	 *
 	 * @param commandExec The {@link CommandExecutor} to use. */
 	public void setCommandExecutor (CommandExecutor commandExec);
 
@@ -131,7 +131,7 @@ public interface Console {
 	public void execCommand (String command);
 
 	/** Returns if the given screen coordinates hit the console.
-	 * 
+	 *
 	 * @param screenX X coordinate on the screen.
 	 * @param screenY Y coordinate on the screen.
 	 * @return True, if the console was hit. */
@@ -148,12 +148,12 @@ public interface Console {
 	public void setVisible (boolean visible);
 
 	/** Sets the executeHiddenCommands field
-	 * 
+	 *
 	 * @param enabled - if true, commands annotated with {@link HiddenCommand} can be executed */
 	public void setExecuteHiddenCommands (boolean enabled);
 
 	/** Sets the executeHiddenCommands field
-	 * 
+	 *
 	 * @param enabled - if true, commands annotated with {@link HiddenCommand} show when printCommands (help) is executed */
 	public void setDisplayHiddenCommands (boolean enabled);
 
@@ -165,4 +165,7 @@ public interface Console {
 
 	/** @param enabled If the command execution stack traces should be printed to the console. */
 	public void setConsoleStackTrace (boolean enabled);
+
+	/** Works only for a GUIConsole. Deselects the text field. */
+	public void deselect ();
 }

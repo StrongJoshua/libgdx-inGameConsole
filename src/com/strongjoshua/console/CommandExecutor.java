@@ -49,4 +49,10 @@ public abstract class CommandExecutor {
 	public final void help () {
 		console.printCommands();
 	}
+
+	/** Deselects the text field in the console. Gives keyboard control back to
+	 * the application.*/
+	public final void logView () {
+		console.deselect();
+	}
 }

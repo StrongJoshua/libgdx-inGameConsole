@@ -427,6 +427,10 @@ public class GUIConsole extends AbstractConsole {
 			scroll.validate();
 			scroll.setScrollPercentY(1);
 		}
+
+		public void deselect() {
+			stage.setKeyboardFocus(null);
+		}
 	}
 
 	private ScrollPane scroll;
@@ -542,5 +546,10 @@ public class GUIConsole extends AbstractConsole {
 	 */
 	public void setVisible (boolean visible) {
 		((KeyListener)display.getListeners().get(0)).setHidden(!visible);
+	}
+
+	@Override
+	public void deselect() {
+		display.deselect();
 	}
 }
