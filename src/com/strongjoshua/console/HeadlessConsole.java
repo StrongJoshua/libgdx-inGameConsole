@@ -116,4 +116,16 @@ public class HeadlessConsole extends AbstractConsole {
 	public void setVisible (boolean visible) {
 		// TODO Auto-generated method stub
 	}
+
+	@Override
+	public boolean isSelected () {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public void setSelected (boolean isSelected) {
+		// TODO Auto-generated method stub
+		
+	}
 }

@@ -147,6 +147,13 @@ public interface Console {
 	 * @param visible If the console should be visible. */
 	public void setVisible (boolean visible);
 
+	/** @return If the console is selected */
+	public boolean isSelected();
+
+	/** Selects or deselects the console. The console accepts typing commands only if it is selected.
+	 *  @param selected If the console should be selected */
+	public void setSelected(boolean selected);
+
 	/** Sets the executeHiddenCommands field
 	 * 
 	 * @param enabled - if true, commands annotated with {@link HiddenCommand} can be executed */
