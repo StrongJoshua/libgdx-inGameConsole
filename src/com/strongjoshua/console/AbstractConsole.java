@@ -11,9 +11,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.utils.reflect.Annotation;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.reflect.Method;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
+import com.strongjoshua.console.annotation.ConsoleDoc;
 
 /** @author Eric */
 public abstract class AbstractConsole implements Console, Disposable {
@@ -34,7 +36,7 @@ public abstract class AbstractConsole implements Console, Disposable {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.strongjoshua.console.Console#setLoggingToSystem(java.lang.Boolean)
 	 */
 	@Override
@@ -44,7 +46,7 @@ public abstract class AbstractConsole implements Console, Disposable {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.strongjoshua.console.Console#log(java.lang.String, com.strongjoshua.console.GUIConsole.LogLevel)
 	 */
 	@Override
@@ -65,7 +67,7 @@ public abstract class AbstractConsole implements Console, Disposable {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.strongjoshua.console.Console#log(java.lang.String)
 	 */
 	@Override
@@ -75,7 +77,7 @@ public abstract class AbstractConsole implements Console, Disposable {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.strongjoshua.console.Console#printLogToFile(java.lang.String)
 	 */
 	@Override
@@ -85,7 +87,7 @@ public abstract class AbstractConsole implements Console, Disposable {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.strongjoshua.console.Console#printLogToFile(com.badlogic.gdx.files.FileHandle)
 	 */
 	@Override
@@ -99,7 +101,7 @@ public abstract class AbstractConsole implements Console, Disposable {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.strongjoshua.console.Console#isDisabled()
 	 */
 	@Override
@@ -109,7 +111,7 @@ public abstract class AbstractConsole implements Console, Disposable {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.strongjoshua.console.Console#setDisabled(boolean)
 	 */
 	@Override
@@ -119,7 +121,7 @@ public abstract class AbstractConsole implements Console, Disposable {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.strongjoshua.console.Console#setCommandExecutor(com.strongjoshua.console.CommandExecutor)
 	 */
 	@Override
@@ -130,7 +132,7 @@ public abstract class AbstractConsole implements Console, Disposable {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.strongjoshua.console.Console#execCommand(java.lang.String)
 	 */
 	@Override
@@ -228,8 +230,7 @@ public abstract class AbstractConsole implements Console, Disposable {
 		log("Bad parameters. Check your code.", LogLevel.ERROR);
 	}
 
-	@Override
-	public void printCommands () {
+	private Method[] getAllMethods() {
 		Method[] pMethods = ClassReflection.getDeclaredMethods(exec.getClass().getSuperclass());
 		Method[] mMethods = ClassReflection.getDeclaredMethods(exec.getClass());
 		Method[] methods = new Method[pMethods.length + mMethods.length];
@@ -237,9 +238,13 @@ public abstract class AbstractConsole implements Console, Disposable {
 			methods[i] = pMethods[i];
 		for (int i = 0; i < mMethods.length; i++)
 			methods[i + pMethods.length] = mMethods[i];
+		return methods;
+	}
 
-		for (int j = 0; j < methods.length; j++) {
-			Method m = methods[j];
+	@Override
+	public void printCommands () {
+		Method[] methods = getAllMethods();
+		for (Method m : methods) {
 			if (m.isPublic() && ConsoleUtils.canDisplayCommand(this, m)) {
 				String s = "";
 				s += m.getName();
@@ -258,9 +263,51 @@ public abstract class AbstractConsole implements Console, Disposable {
 		}
 	}
 
+	@Override
+	public void printHelp(String command) {
+		Method[] methods = getAllMethods();
+		boolean found = false;
+		for (Method m : methods) {
+			if(m.getName().equals(command)) {
+				found = true;
+				StringBuilder sb = new StringBuilder();
+				sb.append(m.getName()).append(": ");
+				Annotation annotation = m.getDeclaredAnnotation(ConsoleDoc.class);
+				if(annotation != null) {
+					ConsoleDoc doc = annotation.getAnnotation(ConsoleDoc.class);
+					sb.append(doc.description()).append("\n");
+					Class<?>[] params = m.getParameterTypes();
+					for(int i = 0; i < params.length; i++) {
+						for(int j = 0; j < m.getName().length() + 2; j++)
+							// using spaces this way works with monotype fonts
+							sb.append(" ");
+						sb.append(params[i].getSimpleName()).append(": ");
+						if(i < doc.paramDescriptions().length)
+							sb.append(doc.paramDescriptions()[i]);
+						if(i < params.length - 1)
+							sb.append("\n");
+					}
+				} else {
+					Class<?>[] params = m.getParameterTypes();
+					for (int i = 0; i < params.length; i++) {
+						sb.append(params[i].getSimpleName());
+						if (i < params.length - 1) {
+							sb.append(", ");
+						}
+					}
+				}
+
+				log(sb.toString());
+			}
+		}
+
+		if(!found)
+			log("Command does not exist.");
+	}
+
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.strongjoshua.console.Console#setExecuteHiddenCommands(boolean)
 	 */
 	@Override
@@ -275,7 +322,7 @@ public abstract class AbstractConsole implements Console, Disposable {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.strongjoshua.console.Console#setDisplayHiddenCommands(boolean)
 	 */
 	@Override
@@ -287,7 +334,7 @@ public abstract class AbstractConsole implements Console, Disposable {
 	public boolean isDisplayHiddenCommandsEnabled () {
 		return displayHiddenCommands;
 	}
-	
+
 	@Override
 	public void setConsoleStackTrace (boolean enabled) {
 		this.consoleTrace = enabled;

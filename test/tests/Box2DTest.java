@@ -31,7 +31,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.strongjoshua.console.CommandExecutor;
 import com.strongjoshua.console.Console;
 import com.strongjoshua.console.GUIConsole;
-import com.strongjoshua.console.HiddenCommand;
+import com.strongjoshua.console.annotation.ConsoleDoc;
+import com.strongjoshua.console.annotation.HiddenCommand;
 import com.strongjoshua.console.LogLevel;
 
 /** Extension of the <a href=
@@ -268,6 +269,11 @@ public class Box2DTest extends ApplicationAdapter {
 			console.log("DisplayHiddenCommands was set to " + enabled);
 		}
 
+		@ConsoleDoc(
+				description = "Creates an explosion.",
+				paramDescriptions = {"The x coordinate",
+									 "The y coordinate",
+									 "The amount of force"})
 		public void explode (float x, float y, float maxForce) {
 			createExplosion(x, y, maxForce);
 			console.log("Created console explosion!", LogLevel.SUCCESS);

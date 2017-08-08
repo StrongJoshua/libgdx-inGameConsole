@@ -50,6 +50,11 @@ public abstract class CommandExecutor {
 		console.printCommands();
 	}
 
+	/** Prints out ConsoleDoc for the given command, if it exists. */
+	public final void help (String command) {
+		console.printHelp(command);
+	}
+
 	/** Deselects the text field in the console. Gives keyboard control back to
 	 * the application.*/
 	public final void logView () {

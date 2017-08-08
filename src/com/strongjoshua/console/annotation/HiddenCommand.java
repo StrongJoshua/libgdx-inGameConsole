@@ -1,8 +1,8 @@
 /**
- * 
+ *
  */
 
-package com.strongjoshua.console;
+package com.strongjoshua.console.annotation;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

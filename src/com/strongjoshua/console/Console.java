@@ -5,6 +5,7 @@ import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.files.FileHandle;
+import com.strongjoshua.console.annotation.HiddenCommand;
 
 /** A simple console that allows live logging, and live execution of methods, from within an application. Please see the
  * <a href="https://github.com/StrongJoshua/libgdx-inGameConsole">GitHub Repository</a> for more information.
@@ -102,6 +103,10 @@ public interface Console {
 
 	/** Prints all commands */
 	public void printCommands ();
+
+	/** Prints ConsoleDoc for the given command.
+	 * @param command The command to get help for. */
+	public void printHelp (String command);
 
 	/** @return If the console is disabled.
 	 * @see Console#setDisabled(boolean) */

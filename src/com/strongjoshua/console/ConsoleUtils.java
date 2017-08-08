@@ -1,10 +1,11 @@
 /**
- * 
+ *
  */
 
 package com.strongjoshua.console;
 
 import com.badlogic.gdx.utils.reflect.Method;
+import com.strongjoshua.console.annotation.HiddenCommand;
 
 /** @author Eric */
 public final class ConsoleUtils {
