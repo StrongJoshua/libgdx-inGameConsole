@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.strongjoshua.console.CommandExecutor;
 import com.strongjoshua.console.GUIConsole;
+import com.strongjoshua.console.annotation.ConsoleDoc;
 
 public class StageTest extends ApplicationAdapter {
 	private Stage stage;
@@ -28,7 +29,8 @@ public class StageTest extends ApplicationAdapter {
 
 		console = new GUIConsole(new Skin(Gdx.files.classpath
 				("tests/test_skin/uiskin.json")));
-		console.setCommandExecutor(new MyCommandExecutor() {});
+		console.setCommandExecutor(new MyCommandExecutor());
+		console.setSizePercent(100, 50);
 
 		stage.addListener(new InputListener() {
 			@Override
@@ -43,8 +45,8 @@ public class StageTest extends ApplicationAdapter {
 			}
 		});
 
-		image = new Image(new Texture(Gdx.files.classpath(
-				"tests/badlogic.jpg")));
+		image = new Image(new Texture(Gdx.files.classpath("tests/badlogic" +
+				"" + ".jpg")));
 		image.setScale(.5f);
 		stage.addActor(image);
 	}
@@ -59,15 +61,34 @@ public class StageTest extends ApplicationAdapter {
 		console.draw();
 	}
 
+	private void blink() {
+		image.addAction(Actions.sequence(Actions.fadeOut(1), Actions.fadeIn
+				(1)));
+	}
+
+	@Override
+	public void dispose() {
+		console.dispose();
+		stage.dispose();
+		super.dispose();
+	}
+
 	private class MyCommandExecutor extends CommandExecutor {
+		@ConsoleDoc(description = "Makes the badlogic image fade out and back " +
+				"" + "" + "in.")
 		public void blink() {
 			StageTest.this.blink();
 		}
-	}
 
-	private void blink() {
-		image.addAction(Actions.sequence(Actions.fadeOut(1),
-				Actions.fadeIn(1)));
+		public void setExecuteHiddenCommands (boolean enabled) {
+			console.setExecuteHiddenCommands(enabled);
+			console.log("ExecuteHiddenCommands was set to " + enabled);
+		}
+
+		public void setDisplayHiddenCommands (boolean enabled) {
+			console.setDisplayHiddenCommands(enabled);
+			console.log("DisplayHiddenCommands was set to " + enabled);
+		}
 	}
 
 	public static void main(String[] args) {

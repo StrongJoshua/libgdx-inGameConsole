@@ -17,6 +17,8 @@ import com.strongjoshua.console.annotation.ConsoleDoc;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * @author Eric
@@ -245,23 +247,19 @@ public abstract class AbstractConsole implements Console, Disposable {
 		log("Bad parameters. Check your code.", LogLevel.ERROR);
 	}
 
-	private Method[] getAllMethods() {
-		Method[] pMethods = ClassReflection.getDeclaredMethods(exec.getClass()
-				.getSuperclass());
-		Method[] mMethods = ClassReflection.getDeclaredMethods(exec.getClass
-				());
-		Method[] methods = new Method[pMethods.length + mMethods.length];
-		for (int i = 0; i < pMethods.length; i++)
-			methods[i] = pMethods[i];
-		for (int i = 0; i < mMethods.length; i++)
-			methods[i + pMethods.length] = mMethods[i];
+	private ArrayList<Method> getAllMethods() {
+		ArrayList<Method> methods = new ArrayList<Method>();
+		Class c = exec.getClass();
+		while(c != Object.class) {
+			Collections.addAll(methods, ClassReflection.getDeclaredMethods(c));
+			c = c.getSuperclass();
+		}
 		return methods;
 	}
 
 	@Override
 	public void printCommands() {
-		Method[] methods = getAllMethods();
-		for (Method m : methods) {
+		for (Method m : getAllMethods()) {
 			if (m.isPublic() && ConsoleUtils.canDisplayCommand(this, m)) {
 				String s = "";
 				s += m.getName();
@@ -282,9 +280,8 @@ public abstract class AbstractConsole implements Console, Disposable {
 
 	@Override
 	public void printHelp(String command) {
-		Method[] methods = getAllMethods();
 		boolean found = false;
-		for (Method m : methods) {
+		for (Method m : getAllMethods()) {
 			if (m.getName().equals(command)) {
 				found = true;
 				StringBuilder sb = new StringBuilder();
@@ -294,16 +291,16 @@ public abstract class AbstractConsole implements Console, Disposable {
 				if (annotation != null) {
 					ConsoleDoc doc = annotation.getAnnotation(ConsoleDoc
 							.class);
-					sb.append(doc.description()).append("\n");
+					sb.append(doc.description());
 					Class<?>[] params = m.getParameterTypes();
 					for (int i = 0; i < params.length; i++) {
+						sb.append("\n");
 						for (int j = 0; j < m.getName().length() + 2; j++)
 							// using spaces this way works with monotype fonts
 							sb.append(" ");
 						sb.append(params[i].getSimpleName()).append(": ");
 						if (i < doc.paramDescriptions().length)
 							sb.append(doc.paramDescriptions()[i]);
-						if (i < params.length - 1) sb.append("\n");
 					}
 				} else {
 					Class<?>[] params = m.getParameterTypes();

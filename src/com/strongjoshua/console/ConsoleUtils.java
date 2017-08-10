@@ -9,21 +9,14 @@ import com.strongjoshua.console.annotation.HiddenCommand;
 
 /** @author Eric */
 public final class ConsoleUtils {
-
 	public static boolean canExecuteCommand (Console console, Method method) {
-		if (!console.isExecuteHiddenCommandsEnabled() && method.isAnnotationPresent(HiddenCommand.class)) {
-			return false;
-		}
-
-		return true;
+		return console.isExecuteHiddenCommandsEnabled() || !method
+				.isAnnotationPresent(HiddenCommand.class);
 	}
 
 	public static boolean canDisplayCommand (Console console, Method method) {
-		if (!console.isDisplayHiddenCommandsEnabled() && method.isAnnotationPresent(HiddenCommand.class)) {
-			return false;
-		}
-
-		return true;
+		return console.isDisplayHiddenCommandsEnabled() || !method
+				.isAnnotationPresent(HiddenCommand.class);
 	}
 
 }

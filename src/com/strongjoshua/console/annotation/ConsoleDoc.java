@@ -12,6 +12,7 @@ public @interface ConsoleDoc {
 
 	/**
 	 * Put these in the same order as your actual function parameters.
+	 * @return An array of parameter descriptions.
 	 */
 	String[] paramDescriptions() default {};
 }

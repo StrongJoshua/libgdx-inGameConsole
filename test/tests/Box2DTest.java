@@ -7,7 +7,6 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -253,7 +252,6 @@ public class Box2DTest extends ApplicationAdapter {
 	}
 
 	public class MyCommandExecutor extends CommandExecutor {
-
 		@HiddenCommand
 		public void superExplode () {
 			explode(0, 0, 1000000);
