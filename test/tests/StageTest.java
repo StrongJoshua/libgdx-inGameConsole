@@ -17,15 +17,9 @@ import com.strongjoshua.console.CommandExecutor;
 import com.strongjoshua.console.GUIConsole;
 
 public class StageTest extends ApplicationAdapter {
-	Stage stage;
-	GUIConsole console;
-	Image image;
-
-	public static void main(String[] args) {
-		LwjglApplicationConfiguration config = new
-				LwjglApplicationConfiguration();
-		new LwjglApplication(new StageTest(), config);
-	}
+	private Stage stage;
+	private GUIConsole console;
+	private Image image;
 
 	@Override
 	public void create() {
@@ -34,7 +28,7 @@ public class StageTest extends ApplicationAdapter {
 
 		console = new GUIConsole(new Skin(Gdx.files.classpath
 				("tests/test_skin/uiskin.json")));
-		console.setCommandExecutor(new CommandExecutor() {});
+		console.setCommandExecutor(new MyCommandExecutor() {});
 
 		stage.addListener(new InputListener() {
 			@Override
@@ -42,7 +36,10 @@ public class StageTest extends ApplicationAdapter {
 				if (keycode == Input.Keys.F) {
 					blink();
 					return true;
-				} else return super.keyUp(event, keycode);
+				} else if (keycode == Input.Keys.TAB) {
+					console.select();
+				}
+				return super.keyUp(event, keycode);
 			}
 		});
 
@@ -62,8 +59,20 @@ public class StageTest extends ApplicationAdapter {
 		console.draw();
 	}
 
+	private class MyCommandExecutor extends CommandExecutor {
+		public void blink() {
+			StageTest.this.blink();
+		}
+	}
+
 	private void blink() {
 		image.addAction(Actions.sequence(Actions.fadeOut(1),
 				Actions.fadeIn(1)));
+	}
+
+	public static void main(String[] args) {
+		LwjglApplicationConfiguration config = new
+				LwjglApplicationConfiguration();
+		new LwjglApplication(new StageTest(), config);
 	}
 }

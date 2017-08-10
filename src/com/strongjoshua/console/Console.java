@@ -171,6 +171,9 @@ public interface Console {
 	/** @param enabled If the command execution stack traces should be printed to the console. */
 	public void setConsoleStackTrace (boolean enabled);
 
+	/** Works only for GUIConsole. Selects the text field. */
+	void select();
+
 	/** Works only for a GUIConsole. Deselects the text field. */
 	public void deselect ();
 }

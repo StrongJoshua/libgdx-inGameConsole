@@ -428,6 +428,10 @@ public class GUIConsole extends AbstractConsole {
 			scroll.setScrollPercentY(1);
 		}
 
+		public void select() {
+			stage.setKeyboardFocus(input);
+		}
+
 		public void deselect() {
 			stage.setKeyboardFocus(null);
 		}
@@ -546,6 +550,11 @@ public class GUIConsole extends AbstractConsole {
 	 */
 	public void setVisible (boolean visible) {
 		((KeyListener)display.getListeners().get(0)).setHidden(!visible);
+	}
+
+	@Override
+	public void select() {
+		display.select();
 	}
 
 	@Override
