@@ -3,7 +3,7 @@ apply plugin: 'maven'
 apply plugin: 'signing'
 
 group = 'com.strongjoshua'
-version = '0.7.0'
+version = '0.7.1'
 
 description = """LibGdx In-Game Console"""
 
