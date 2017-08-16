@@ -34,14 +34,19 @@ public class StageTest extends ApplicationAdapter {
 
 		stage.addListener(new InputListener() {
 			@Override
-			public boolean keyUp(InputEvent event, int keycode) {
+			public boolean keyDown(InputEvent event, int keycode) {
 				if (keycode == Input.Keys.F) {
 					blink();
 					return true;
 				} else if (keycode == Input.Keys.TAB) {
 					console.select();
+					return true;
+				} else if(keycode == Input.Keys.D) {
+					System.out.println("toggle disabled");
+					console.setDisabled(!console.isDisabled());
+					return true;
 				}
-				return super.keyUp(event, keycode);
+				return false;
 			}
 		});
 

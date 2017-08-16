@@ -113,6 +113,7 @@ public class GUIConsole extends AbstractConsole {
 		consoleWindow.addActor(display);
 		consoleWindow.setTouchable(Touchable.disabled);
 
+		stage.addListener(new DisplayListener());
 		stage.addActor(consoleWindow);
 		stage.setKeyboardFocus(display);
 
@@ -321,8 +322,8 @@ public class GUIConsole extends AbstractConsole {
 	 */
 	@Override
 	public void setDisabled (boolean disabled) {
-		if (disabled && !hidden) {
-			((KeyListener)display.getListeners().get(0)).keyDown(null, keyID);
+		if (disabled) {
+			display.setHidden(true);
 		}
 		this.disabled = disabled;
 	}
@@ -431,12 +432,11 @@ public class GUIConsole extends AbstractConsole {
 		private void setHidden (boolean h) {
 			hidden = h;
 			if (hidden) {
-				input.setText("");
-				stage.setKeyboardFocus(null);
+				deselect();
 				consoleWindow.setTouchable(Touchable.disabled);
 			} else {
-				stage.setKeyboardFocus(input);
-				stage.setScrollFocus(scroll);
+				input.setText("");
+				select();
 				consoleWindow.setTouchable(Touchable.childrenOnly);
 			}
 		}
@@ -473,9 +473,8 @@ public class GUIConsole extends AbstractConsole {
 
 		@Override
 		public boolean keyDown (InputEvent event, int keycode) {
-			if (disabled) {
+			if (disabled)
 				return false;
-			}
 
 			// reset command completer because input string may have changed
 			if (keycode != Keys.TAB) {
@@ -484,7 +483,7 @@ public class GUIConsole extends AbstractConsole {
 
 			if (keycode == Keys.ENTER && !hidden) {
 				String s = input.getText();
-				if (s.length() == 0 || s.equals("") || s.split(" ").length == 0) {
+				if (s.length() == 0 || s.split(" ").length == 0) {
 					return false;
 				}
 				if (exec != null) {
@@ -515,7 +514,17 @@ public class GUIConsole extends AbstractConsole {
 				input.setText(commandCompleter.next());
 				input.setCursorPosition(input.getText().length());
 				return true;
-			} else if (keycode == keyID) {
+			}
+			return false;
+		}
+	}
+
+	private class DisplayListener extends InputListener {
+		@Override
+		public boolean keyDown(InputEvent event, int keycode) {
+			if(disabled)
+				return false;
+			if(keycode == keyID) {
 				display.setHidden(!hidden);
 				return true;
 			}
