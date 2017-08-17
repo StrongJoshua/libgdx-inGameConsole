@@ -1,5 +1,5 @@
 # libGDX In-Game Console
-This is a libGDX library that allows a developer to add a console (similar to how it is featured in Source games) to their game. Check out the changelog at my [website](http://strongjoshua.net/projects/games/in-game_console)!
+This is a libGDX library that allows a developer to add a console (similar to how it is featured in Source games) to their game. Check out the changelog at my [website](https://www.strongjoshua.net/projects/games/libgdx-ingame-console)!
 
 ### How it works
 Essentially what the console allows you to do is specify commands that you will be able to access from within the game, using the console. The console also enables live logging from within the application.
