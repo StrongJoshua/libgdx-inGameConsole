@@ -82,6 +82,21 @@ public interface Console {
 	 * @see Console#log(String, LogLevel) */
 	public void log (String msg);
 
+	/**
+	 * Logs a new entry to the console using {@link LogLevel#ERROR}.
+	 *
+	 * @param exception The exception to be logged
+	 */
+	public void log (Exception exception);
+
+	/**
+	 * Logs a new entry to the console using {@link LogLevel}.
+	 *
+	 * @param exception The exception to be logged
+	 * @param level The {@link LogLevel} of the log entry.
+	 */
+	public void log (Exception exception, LogLevel level);
+
 	/** Prints all log entries to the given file. Log entries include logs in the code and commands made from within in the console
 	 * while the program is running.<br>
 	 *

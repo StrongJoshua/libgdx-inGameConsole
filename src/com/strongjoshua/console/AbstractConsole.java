@@ -15,8 +15,6 @@ import com.badlogic.gdx.utils.reflect.Method;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
 import com.strongjoshua.console.annotation.ConsoleDoc;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -80,6 +78,27 @@ public abstract class AbstractConsole implements Console, Disposable {
 	public void log(String msg) {
 		this.log(msg, LogLevel.DEFAULT);
 	}
+
+    /**
+     * Logs a new entry to the console using {@link LogLevel}.
+     *
+     * @param exception The exception to be logged
+     * @param level The {@link LogLevel} of the log entry.
+     */
+    @Override
+    public void log(Exception exception, LogLevel level) {
+        this.log(ConsoleUtils.exceptionToString(exception), level);
+    }
+
+    /**
+     * Logs a new entry to the console using {@link LogLevel#ERROR}.
+     *
+     * @param exception The exception to be logged
+     */
+    @Override
+    public void log(Exception exception) {
+        this.log(exception, LogLevel.ERROR);
+    }
 
 	/*
 	 * (non-Javadoc)
@@ -235,9 +254,7 @@ public abstract class AbstractConsole implements Console, Disposable {
 					}
 					log(msg, LogLevel.ERROR);
 					if (consoleTrace) {
-						StringWriter sw = new StringWriter();
-						e.printStackTrace(new PrintWriter(sw));
-						log(sw.toString(), LogLevel.ERROR);
+						log(e, LogLevel.ERROR);
 					}
 					return;
 				}
