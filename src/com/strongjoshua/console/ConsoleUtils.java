@@ -19,4 +19,28 @@ public final class ConsoleUtils {
 		  return console.isDisplayHiddenCommandsEnabled() || !method.isAnnotationPresent(HiddenCommand.class);
 	 }
 
+	public static String exceptionToString(final Throwable throwable) {
+		StringBuilder result = new StringBuilder();
+		Throwable cause = throwable;
+
+		while (cause != null) {
+			if (result.length() == 0) {
+				result.append("\nException in thread \"")
+						.append(Thread.currentThread().getName())
+						.append("\" ");
+			} else {
+				result.append("\nCaused by: ");
+			}
+			result.append(cause.getClass().getCanonicalName())
+					.append(": ")
+					.append(cause.getMessage());
+
+			for (final StackTraceElement traceElement : cause.getStackTrace()) {
+				result.append("\n\tat ")
+						.append(traceElement.toString());
+			}
+			cause = cause.getCause();
+		}
+		return result.toString();
+	}
 }
