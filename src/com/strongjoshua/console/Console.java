@@ -1,4 +1,3 @@
-
 package com.strongjoshua.console;
 
 import com.badlogic.gdx.Files;
@@ -7,10 +6,12 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.files.FileHandle;
 import com.strongjoshua.console.annotation.HiddenCommand;
 
-/** A simple console that allows live logging, and live execution of methods, from within an application. Please see the
+/**
+ * A simple console that allows live logging, and live execution of methods, from within an application. Please see the
  * <a href="https://github.com/StrongJoshua/libgdx-inGameConsole">GitHub Repository</a> for more information.
  *
- * @author StrongJoshua */
+ * @author StrongJoshua
+ */
 public interface Console {
 
 	/** Use to set the amount of entries to be stored to unlimited. */

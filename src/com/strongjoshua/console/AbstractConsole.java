@@ -22,46 +22,44 @@ import java.util.Collections;
  * @author Eric
  */
 public abstract class AbstractConsole implements Console, Disposable {
-	protected final Log log;
-	protected CommandExecutor exec;
-	protected boolean logToSystem;
+	 protected final Log log;
+	 protected CommandExecutor exec;
+	 protected boolean logToSystem;
 
-	protected boolean disabled;
+	 protected boolean disabled;
 
-	protected boolean executeHiddenCommands = true;
-	protected boolean displayHiddenCommands = false;
-	protected boolean consoleTrace = false;
+	 protected boolean executeHiddenCommands = true;
+	 protected boolean displayHiddenCommands = false;
+	 protected boolean consoleTrace = false;
 
-	public AbstractConsole() {
-		log = new Log();
-	}
+	 public AbstractConsole () {
+		  log = new Log();
+	 }
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.strongjoshua.console.Console#setLoggingToSystem(java.lang
-	 * .Boolean)
-	 */
-	@Override
-	public void setLoggingToSystem(Boolean log) {
-		this.logToSystem = log;
-	}
+	 /*
+	  * (non-Javadoc)
+	  *
+	  * @see com.strongjoshua.console.Console#setLoggingToSystem(java.lang
+	  * .Boolean)
+	  */
+	 @Override public void setLoggingToSystem (Boolean log) {
+		  this.logToSystem = log;
+	 }
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.strongjoshua.console.Console#log(java.lang.String, com
-	 * .strongjoshua.console.GUIConsole.LogLevel)
-	 */
-	@Override
-	public void log(String msg, LogLevel level) {
-		log.addEntry(msg, level);
+	 /*
+	  * (non-Javadoc)
+	  *
+	  * @see com.strongjoshua.console.Console#log(java.lang.String, com
+	  * .strongjoshua.console.GUIConsole.LogLevel)
+	  */
+	 @Override public void log (String msg, LogLevel level) {
+		  log.addEntry(msg, level);
 
-		if (logToSystem) {
-			switch (level) {
+		  if (logToSystem) {
+				switch (level) {
 				case ERROR:
-					System.err.println("> " + msg);
-					break;
+					 System.err.println("> " + msg);
+					 break;
 				default:
 					System.out.println("> " + msg);
 					break;
@@ -258,196 +256,245 @@ public abstract class AbstractConsole implements Console, Disposable {
 					}
 					return;
 				}
-			}
-		}
+		  }
 
-		log("Bad parameters. Check your code.", LogLevel.ERROR);
-	}
+		  Class<? extends CommandExecutor> clazz = exec.getClass();
+		  Method[] methods = ClassReflection.getMethods(clazz);
+		  Array<Integer> possible = new Array<Integer>();
+		  for (int i = 0; i < methods.length; i++) {
+				Method method = methods[i];
+				if (method.getName().equalsIgnoreCase(methodName) && ConsoleUtils.canExecuteCommand(this, method)) {
+					 possible.add(i);
+				}
+		  }
 
-	private ArrayList<Method> getAllMethods() {
-		ArrayList<Method> methods = new ArrayList<Method>();
-		Class c = exec.getClass();
-		while(c != Object.class) {
-			Collections.addAll(methods, ClassReflection.getDeclaredMethods(c));
-			c = c.getSuperclass();
-		}
-		return methods;
-	}
+		  if (possible.size <= 0) {
+				log("No such method found.", LogLevel.ERROR);
+				return;
+		  }
 
-	@Override
-	public void printCommands() {
-		for (Method m : getAllMethods()) {
-			if (m.isPublic() && ConsoleUtils.canDisplayCommand(this, m)) {
-				String s = "";
-				s += m.getName();
-				s += " : ";
-
+		  int size = possible.size;
+		  int numArgs = sArgs == null ? 0 : sArgs.length;
+		  for (int i = 0; i < size; i++) {
+				Method m = methods[possible.get(i)];
 				Class<?>[] params = m.getParameterTypes();
-				for (int i = 0; i < params.length; i++) {
-					s += params[i].getSimpleName();
-					if (i < params.length - 1) {
-						s += ", ";
-					}
+				if (numArgs == params.length) {
+					 try {
+						  Object[] args = null;
+
+						  try {
+								if (sArgs != null) {
+									 args = new Object[numArgs];
+
+									 for (int j = 0; j < params.length; j++) {
+										  Class<?> param = params[j];
+										  final String value = sArgs[j];
+
+										  if (param.equals(String.class)) {
+												args[j] = value;
+										  } else if (param.equals(Boolean.class) || param.equals(boolean.class)) {
+												args[j] = Boolean.parseBoolean(value);
+										  } else if (param.equals(Byte.class) || param.equals(byte.class)) {
+												args[j] = Byte.parseByte(value);
+										  } else if (param.equals(Short.class) || param.equals(short.class)) {
+												args[j] = Short.parseShort(value);
+										  } else if (param.equals(Integer.class) || param.equals(int.class)) {
+												args[j] = Integer.parseInt(value);
+										  } else if (param.equals(Long.class) || param.equals(long.class)) {
+												args[j] = Long.parseLong(value);
+										  } else if (param.equals(Float.class) || param.equals(float.class)) {
+												args[j] = Float.parseFloat(value);
+										  } else if (param.equals(Double.class) || param.equals(double.class)) {
+												args[j] = Double.parseDouble(value);
+										  }
+									 }
+								}
+						  } catch (Exception e) {
+								// Error occurred trying to parse parameter, continue
+								// to next function
+								continue;
+						  }
+
+						  m.setAccessible(true);
+						  m.invoke(exec, args);
+						  return;
+					 } catch (ReflectionException e) {
+						  String msg = e.getMessage();
+						  if (msg == null || msg.length() <= 0 || msg.equals("")) {
+								msg = "Unknown Error";
+								e.printStackTrace();
+						  }
+						  log(msg, LogLevel.ERROR);
+						  if (consoleTrace) {
+								StringWriter sw = new StringWriter();
+								e.printStackTrace(new PrintWriter(sw));
+								log(sw.toString(), LogLevel.ERROR);
+						  }
+						  return;
+					 }
 				}
+		  }
 
-				log(s);
-			}
-		}
-	}
+		  log("Bad parameters. Check your code.", LogLevel.ERROR);
+	 }
 
-	@Override
-	public void printHelp(String command) {
-		boolean found = false;
-		for (Method m : getAllMethods()) {
-			if (m.getName().equals(command)) {
-				found = true;
-				StringBuilder sb = new StringBuilder();
-				sb.append(m.getName()).append(": ");
-				Annotation annotation = m.getDeclaredAnnotation(ConsoleDoc
-						.class);
-				if (annotation != null) {
-					ConsoleDoc doc = annotation.getAnnotation(ConsoleDoc
-							.class);
-					sb.append(doc.description());
-					Class<?>[] params = m.getParameterTypes();
-					for (int i = 0; i < params.length; i++) {
-						sb.append("\n");
-						for (int j = 0; j < m.getName().length() + 2; j++)
-							// using spaces this way works with monotype fonts
-							sb.append(" ");
-						sb.append(params[i].getSimpleName()).append(": ");
-						if (i < doc.paramDescriptions().length)
-							sb.append(doc.paramDescriptions()[i]);
-					}
-				} else {
-					Class<?>[] params = m.getParameterTypes();
-					for (int i = 0; i < params.length; i++) {
-						sb.append(params[i].getSimpleName());
-						if (i < params.length - 1) {
-							sb.append(", ");
-						}
-					}
+	 private ArrayList<Method> getAllMethods () {
+		  ArrayList<Method> methods = new ArrayList<Method>();
+		  Class c = exec.getClass();
+		  while (c != Object.class) {
+				Collections.addAll(methods, ClassReflection.getDeclaredMethods(c));
+				c = c.getSuperclass();
+		  }
+		  return methods;
+	 }
+
+	 @Override public void printCommands () {
+		  for (Method m : getAllMethods()) {
+				if (m.isPublic() && ConsoleUtils.canDisplayCommand(this, m)) {
+					 String s = "";
+					 s += m.getName();
+					 s += " : ";
+
+					 Class<?>[] params = m.getParameterTypes();
+					 for (int i = 0; i < params.length; i++) {
+						  s += params[i].getSimpleName();
+						  if (i < params.length - 1) {
+								s += ", ";
+						  }
+					 }
+
+					 log(s);
 				}
+		  }
+	 }
 
-				log(sb.toString());
-			}
-		}
+	 @Override public void printHelp (String command) {
+		  boolean found = false;
+		  for (Method m : getAllMethods()) {
+				if (m.getName().equals(command)) {
+					 found = true;
+					 StringBuilder sb = new StringBuilder();
+					 sb.append(m.getName()).append(": ");
+					 Annotation annotation = m.getDeclaredAnnotation(ConsoleDoc.class);
+					 if (annotation != null) {
+						  ConsoleDoc doc = annotation.getAnnotation(ConsoleDoc.class);
+						  sb.append(doc.description());
+						  Class<?>[] params = m.getParameterTypes();
+						  for (int i = 0; i < params.length; i++) {
+								sb.append("\n");
+								for (int j = 0; j < m.getName().length() + 2; j++)
+									 // using spaces this way works with monotype fonts
+									 sb.append(" ");
+								sb.append(params[i].getSimpleName()).append(": ");
+								if (i < doc.paramDescriptions().length)
+									 sb.append(doc.paramDescriptions()[i]);
+						  }
+					 } else {
+						  Class<?>[] params = m.getParameterTypes();
+						  for (int i = 0; i < params.length; i++) {
+								sb.append(params[i].getSimpleName());
+								if (i < params.length - 1) {
+									 sb.append(", ");
+								}
+						  }
+					 }
 
-		if (!found) log("Command does not exist.");
-	}
+					 log(sb.toString());
+				}
+		  }
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.strongjoshua.console.Console#setExecuteHiddenCommands(boolean)
-	 */
-	@Override
-	public void setExecuteHiddenCommands(boolean enabled) {
-		executeHiddenCommands = enabled;
-	}
+		  if (!found)
+				log("Command does not exist.");
+	 }
 
-	@Override
-	public boolean isExecuteHiddenCommandsEnabled() {
-		return executeHiddenCommands;
-	}
+	 /*
+	  * (non-Javadoc)
+	  *
+	  * @see com.strongjoshua.console.Console#setExecuteHiddenCommands(boolean)
+	  */
+	 @Override public void setExecuteHiddenCommands (boolean enabled) {
+		  executeHiddenCommands = enabled;
+	 }
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.strongjoshua.console.Console#setDisplayHiddenCommands(boolean)
-	 */
-	@Override
-	public void setDisplayHiddenCommands(boolean enabled) {
-		displayHiddenCommands = enabled;
-	}
+	 @Override public boolean isExecuteHiddenCommandsEnabled () {
+		  return executeHiddenCommands;
+	 }
 
-	@Override
-	public boolean isDisplayHiddenCommandsEnabled() {
-		return displayHiddenCommands;
-	}
+	 /*
+	  * (non-Javadoc)
+	  *
+	  * @see com.strongjoshua.console.Console#setDisplayHiddenCommands(boolean)
+	  */
+	 @Override public void setDisplayHiddenCommands (boolean enabled) {
+		  displayHiddenCommands = enabled;
+	 }
 
-	@Override
-	public void setConsoleStackTrace(boolean enabled) {
-		this.consoleTrace = enabled;
-	}
+	 @Override public boolean isDisplayHiddenCommandsEnabled () {
+		  return displayHiddenCommands;
+	 }
 
-	@Override
-	public void setMaxEntries(int numEntries) {
-	}
+	 @Override public void setConsoleStackTrace (boolean enabled) {
+		  this.consoleTrace = enabled;
+	 }
 
-	@Override
-	public void clear() {
-	}
+	 @Override public void setMaxEntries (int numEntries) {
+	 }
 
-	@Override
-	public void setSize(int width, int height) {
-	}
+	 @Override public void clear () {
+	 }
 
-	@Override
-	public void setSizePercent(float wPct, float hPct) {
-	}
+	 @Override public void setSize (int width, int height) {
+	 }
 
-	@Override
-	public void setPosition(int x, int y) {
-	}
+	 @Override public void setSizePercent (float wPct, float hPct) {
+	 }
 
-	@Override
-	public void setPositionPercent(float xPosPct, float yPosPct) {
-	}
+	 @Override public void setPosition (int x, int y) {
+	 }
 
-	@Override
-	public void resetInputProcessing() {
-	}
+	 @Override public void setPositionPercent (float xPosPct, float yPosPct) {
+	 }
 
-	@Override
-	public InputProcessor getInputProcessor() {
-		return null;
-	}
+	 @Override public void resetInputProcessing () {
+	 }
 
-	@Override
-	public void draw() {
-	}
+	 @Override public InputProcessor getInputProcessor () {
+		  return null;
+	 }
 
-	@Override
-	public void refresh() {
-	}
+	 @Override public void draw () {
+	 }
 
-	@Override
-	public void refresh(boolean retain) {
-	}
+	 @Override public void refresh () {
+	 }
 
-	@Override
-	public int getDisplayKeyID() {
-		return 0;
-	}
+	 @Override public void refresh (boolean retain) {
+	 }
 
-	@Override
-	public void setDisplayKeyID(int code) {
-	}
+	 @Override public int getDisplayKeyID () {
+		  return 0;
+	 }
 
-	@Override
-	public boolean hitsConsole(float screenX, float screenY) {
-		return false;
-	}
+	 @Override public void setDisplayKeyID (int code) {
+	 }
 
-	@Override
-	public void dispose() {
-	}
+	 @Override public boolean hitsConsole (float screenX, float screenY) {
+		  return false;
+	 }
 
-	@Override
-	public boolean isVisible() {
-		return false;
-	}
+	 @Override public void dispose () {
+	 }
 
-	@Override
-	public void setVisible(boolean visible) {
-	}
+	 @Override public boolean isVisible () {
+		  return false;
+	 }
 
-	@Override
-	public void select() {
-	}
+	 @Override public void setVisible (boolean visible) {
+	 }
 
-	@Override
-	public void deselect() {
-	}
+	 @Override public void select () {
+	 }
+
+	 @Override public void deselect () {
+	 }
 }
