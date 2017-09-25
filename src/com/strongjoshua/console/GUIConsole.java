@@ -377,6 +377,7 @@ public class GUIConsole extends AbstractConsole {
 		  private Skin skin;
 		  private Array<Label> labels;
 		  private String fontName;
+		  private boolean selected = true;
 
 		  protected ConsoleDisplay (Skin skin) {
 				this.setFillParent(false);
@@ -436,21 +437,28 @@ public class GUIConsole extends AbstractConsole {
 		  private void setHidden (boolean h) {
 				hidden = h;
 				if (hidden) {
-					 deselect();
 					 consoleWindow.setTouchable(Touchable.disabled);
+					 stage.setKeyboardFocus(null);
+					 stage.setScrollFocus(null);
 				} else {
 					 input.setText("");
-					 select();
 					 consoleWindow.setTouchable(Touchable.childrenOnly);
+					if (selected) {
+						 select();
+					}
 				}
 		  }
 
 		  public void select () {
+			selected = true;
+			if (!hidden) {
 				stage.setKeyboardFocus(input);
 				stage.setScrollFocus(scroll);
+			}
 		  }
 
 		  public void deselect () {
+		  		selected = false;
 				stage.setKeyboardFocus(null);
 				stage.setScrollFocus(null);
 		  }
