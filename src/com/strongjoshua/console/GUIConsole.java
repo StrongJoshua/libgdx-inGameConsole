@@ -102,8 +102,8 @@ public class GUIConsole extends AbstractConsole {
             resetInputProcessing();
         }
 
-        display.pad(4);
-        display.padTop(22);
+//        display.pad(4);
+//        display.padTop(22);
         display.setFillParent(true);
 
         consoleWindow = new Window("Console", skin);
