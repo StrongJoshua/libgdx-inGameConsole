@@ -21,7 +21,7 @@ public interface Console {
 
 	/** Clears all log entries. */
 	public void clear ();
-
+	
 	/** Set size of the console in pixels
 	 *
 	 * @param width width of the console in pixels
@@ -142,6 +142,9 @@ public interface Console {
 	 *
 	 * @param commandExec The {@link CommandExecutor} to use. */
 	public void setCommandExecutor (CommandExecutor commandExec);
+	
+	/** @return Returns the {@link CommandExecutor} used. */
+	public CommandExecutor getCommandExecutor ();
 
 	/** Executes the specified command via the set {@link CommandExecutor}.
 	 *
@@ -166,6 +169,15 @@ public interface Console {
 	 * @param visible If the console should be visible. */
 	public void setVisible (boolean visible);
 
+	/** @return If console is visible */
+	public boolean hasFocus();
+	
+	/* Set the focus of the console. If focus is true then user inputs will be processed otherwise ignored.
+	 * Regardless of focus state the console window can be still visible.
+	 * 
+	 * @param focus If the console is focused. */
+	public void setFocus (boolean focus);
+	
 	/** Sets the executeHiddenCommands field
 	 *
 	 * @param enabled - if true, commands annotated with {@link HiddenCommand} can be executed */
@@ -186,7 +198,7 @@ public interface Console {
 	public void setConsoleStackTrace (boolean enabled);
 
 	/** Works only for GUIConsole. Selects the text field. */
-	void select ();
+	public void select ();
 
 	/** Works only for a GUIConsole. Deselects the text field. */
 	public void deselect ();

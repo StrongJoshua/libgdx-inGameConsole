@@ -27,7 +27,7 @@ public enum LogLevel {
 		identifier = identity;
 	}
 
-	Color getColor () {
+	public Color getColor () {
 		return color;
 	}
 

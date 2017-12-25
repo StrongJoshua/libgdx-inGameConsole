@@ -4,6 +4,9 @@
 
 package com.strongjoshua.console;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.files.FileHandle;
@@ -14,9 +17,6 @@ import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.reflect.Method;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
 import com.strongjoshua.console.annotation.ConsoleDoc;
-
-import java.util.ArrayList;
-import java.util.Collections;
 
 /** @author Eric */
 public abstract class AbstractConsole implements Console, Disposable {
@@ -146,6 +146,11 @@ public abstract class AbstractConsole implements Console, Disposable {
 		exec = commandExec;
 		exec.setConsole(this);
 	}
+	
+	@Override
+	public CommandExecutor getCommandExecutor () {
+		return exec;
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -248,7 +253,7 @@ public abstract class AbstractConsole implements Console, Disposable {
 
 	private ArrayList<Method> getAllMethods () {
 		ArrayList<Method> methods = new ArrayList<Method>();
-		Class c = exec.getClass();
+		Class<?> c = exec.getClass();
 		while (c != Object.class) {
 			Collections.addAll(methods, ClassReflection.getDeclaredMethods(c));
 			c = c.getSuperclass();
@@ -420,6 +425,15 @@ public abstract class AbstractConsole implements Console, Disposable {
 
 	@Override
 	public void setVisible (boolean visible) {
+	}
+	
+	@Override
+	public boolean hasFocus () {
+		return false;
+	}
+	
+	@Override
+	public void setFocus (boolean focus) {
 	}
 
 	@Override

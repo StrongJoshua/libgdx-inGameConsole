@@ -13,13 +13,13 @@
 
 package com.strongjoshua.console;
 
-import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.utils.Array;
-
 import java.io.IOException;
 import java.io.Writer;
 
-class Log {
+import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.utils.Array;
+
+public class Log {
 	private Array<LogEntry> logEntries;
 
 	protected Log () {
@@ -39,7 +39,7 @@ class Log {
 		}
 	}
 
-	protected Array<LogEntry> getLogEntries () {
+	public Array<LogEntry> getLogEntries () {
 		return logEntries;
 	}
 
