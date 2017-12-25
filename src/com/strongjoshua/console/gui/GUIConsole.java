@@ -23,6 +23,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.utils.Array;
@@ -140,18 +141,20 @@ public class GUIConsole extends AbstractConsole {
 			resetInputProcessing();
 		}
 
-		display.pad(4);
-		display.padTop(22);
+		//display.pad(4);
+		//display.padTop(22);
 		display.setFillParent(true);
 
-		consoleWindow = new Window("Console", skin);
+		consoleWindow = new Dialog("Console", skin);
+		consoleWindow.setModal(false);
 		consoleWindow.setMovable(true);
 		consoleWindow.setResizable(true);
 		consoleWindow.setKeepWithinStage(true);
 		consoleWindow.addActor(display);
 		consoleWindow.setTouchable(Touchable.disabled);
+		consoleWindow.setDebug(true, true);
 		stage.addListener(new InputListener() {
-
+			
 			@Override
 			public boolean mouseMoved (InputEvent event, float x, float y) {
 				float x1 = consoleWindow.getX();
@@ -173,8 +176,6 @@ public class GUIConsole extends AbstractConsole {
 				
 				return false;
 			}
-			
-			
 		});
 
 		stage.addListener(new DisplayListener(this));
