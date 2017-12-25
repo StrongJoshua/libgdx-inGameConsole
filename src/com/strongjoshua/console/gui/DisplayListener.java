@@ -36,7 +36,7 @@ class DisplayListener extends InputListener {
 					}
 					return true;
 				}
-				else {
+				else if(console.hasFocus()) {
 					console.setFocus(false);
 				}
 			}
