@@ -45,6 +45,7 @@ public class CommandCompleter {
 	}
 
 	public String next () {
+		if(iterator == null) return null;
 		if (!iterator.hasNext) {
 			iterator.reset();
 			return setString;
