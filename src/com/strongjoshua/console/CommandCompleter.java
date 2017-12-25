@@ -7,7 +7,7 @@ import com.badlogic.gdx.utils.ObjectSet.ObjectSetIterator;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.reflect.Method;
 
-class CommandCompleter {
+public class CommandCompleter {
 	private ObjectSet<String> possibleCommands;
 	private ObjectSetIterator<String> iterator;
 	private String setString;

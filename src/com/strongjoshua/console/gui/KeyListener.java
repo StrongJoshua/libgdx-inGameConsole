@@ -4,6 +4,7 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.strongjoshua.console.CommandCompleter;
 import com.strongjoshua.console.CommandHistory;
 import com.strongjoshua.console.Console;
 import com.strongjoshua.console.LogLevel;
