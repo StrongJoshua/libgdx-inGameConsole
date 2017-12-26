@@ -26,6 +26,7 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
 import com.strongjoshua.console.AbstractConsole;
 import com.strongjoshua.console.Console;
@@ -166,6 +167,8 @@ public class GUIConsole extends AbstractConsole {
 						captured = true;
 						updateTransparency();
 					}
+					
+					display.updateLabelBackground(stage, x, y);
 				}
 				else {
 					if(captured) {
@@ -515,5 +518,9 @@ public class GUIConsole extends AbstractConsole {
 			color.a = backgroundTransparency;
 		}
 		consoleWindow.setColor(color);
+	}
+
+	public void setLabelHoverDrawble (Drawable backgroundDrawable) {
+		display.setLabelHoverDrawble(backgroundDrawable);
 	}
 }

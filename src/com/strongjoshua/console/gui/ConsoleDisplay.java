@@ -1,13 +1,16 @@
 package com.strongjoshua.console.gui;
 
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldStyle;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
 import com.strongjoshua.console.Console;
 import com.strongjoshua.console.Log;
@@ -25,6 +28,7 @@ class ConsoleDisplay extends Table {
 	private String fontName;
 	private ScrollPane scroll;
 	private boolean selected = true;
+	private Drawable backgroundDrawable;
 
 	protected ConsoleDisplay(Console console, Log log, Stage stage, Skin skin) {
 		this.setFillParent(false);
@@ -44,7 +48,6 @@ class ConsoleDisplay extends Table {
 		labels = new Array<Label>();
 
 		logEntries = new Table(skin);
-
 		input = new TextField("", tfs);
 		input.setTextFieldListener(new FieldListener(console));
 
@@ -57,7 +60,11 @@ class ConsoleDisplay extends Table {
 		this.add(input).expandX().fillX().pad(4);
 		this.addListener(new KeyListener(console, input));
 	}
-
+	
+	public void setLabelHoverDrawble(Drawable backgroundDrawable) {
+		this.backgroundDrawable = backgroundDrawable;
+	}
+	
 	protected void refresh() {
 		Array<LogEntry> entries = log.getLogEntries();
 		logEntries.clear();
@@ -77,7 +84,11 @@ class ConsoleDisplay extends Table {
 				labels.add(l);
 			}
 			l.setText(le.toConsoleString());
-			l.setColor(le.getColor());
+			
+			LabelStyle lb = new LabelStyle();
+			lb.font = skin.getFont(fontName);
+			lb.fontColor = le.getColor();
+			l.setStyle(lb);
 			logEntries.add(l).expandX().fillX().top().left().padLeft(4).row();
 		}
 		scroll.validate();
@@ -108,5 +119,39 @@ class ConsoleDisplay extends Table {
 		selected = false;
 		stage.setKeyboardFocus(null);
 		stage.setScrollFocus(null);
+	}
+
+	public void updateLabelBackground (Stage stage, float x, float y) {
+		if(backgroundDrawable == null) return;
+		boolean found = false;
+		for(Label l : labels) {
+			
+			if(!found) {
+				Vector2 localToStage = l.localToStageCoordinates(new Vector2());
+				
+				float x1 = localToStage.x;
+				float x2 = x1 + l.getWidth();
+				float y1 = localToStage.y;
+				float y2 = y1 + l.getHeight();
+				
+				LabelStyle ls = l.getStyle();
+				if(ls == null) ls = new LabelStyle();
+				if(x >= x1 && x <= x2 && y >= y1 && y <= y2) {
+					ls.background = backgroundDrawable;
+					found = true;
+				}
+				else {
+					if(ls.background != null)
+						ls.background = null;
+				}
+
+			}
+			else {
+				LabelStyle ls = l.getStyle(); 
+				if(ls.background != null) {
+					ls.background = null;
+				}
+			}
+		}
 	}
 }
