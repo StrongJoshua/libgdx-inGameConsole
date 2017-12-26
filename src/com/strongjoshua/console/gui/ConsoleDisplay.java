@@ -1,7 +1,9 @@
 package com.strongjoshua.console.gui;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
@@ -28,7 +30,9 @@ class ConsoleDisplay extends Table {
 	private String fontName;
 	private ScrollPane scroll;
 	private boolean selected = true;
-	private Drawable backgroundDrawable;
+	private Drawable mouseHoverDrawable;
+	private Drawable selectedDrawable;
+	private Array<LogEntry> selections = new Array<LogEntry>();
 
 	protected ConsoleDisplay(Console console, Log log, Stage stage, Skin skin) {
 		this.setFillParent(false);
@@ -61,8 +65,16 @@ class ConsoleDisplay extends Table {
 		this.addListener(new KeyListener(console, input));
 	}
 	
-	public void setLabelHoverDrawble(Drawable backgroundDrawable) {
-		this.backgroundDrawable = backgroundDrawable;
+	public void setMouseHoverDrawble(Drawable mouseHoverDrawable) {
+		this.mouseHoverDrawable = mouseHoverDrawable;
+	}
+	
+	public void setSelectedDrawable (Drawable selectedDrawable) {
+		this.selectedDrawable = selectedDrawable;
+	}
+	
+	public Drawable getSelectDrawable () {
+		return this.selectedDrawable;
 	}
 	
 	protected void refresh() {
@@ -84,6 +96,7 @@ class ConsoleDisplay extends Table {
 				labels.add(l);
 			}
 			l.setText(le.toConsoleString());
+			l.setUserObject(le);
 			
 			LabelStyle lb = new LabelStyle();
 			lb.font = skin.getFont(fontName);
@@ -120,38 +133,68 @@ class ConsoleDisplay extends Table {
 		stage.setKeyboardFocus(null);
 		stage.setScrollFocus(null);
 	}
-
-	public void updateLabelBackground (Stage stage, float x, float y) {
-		if(backgroundDrawable == null) return;
-		boolean found = false;
+	
+	public LogEntry getHoveredLogEntry() {
+		Vector3 stageCoords = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0f);
+		stage.getCamera().unproject(stageCoords);
+		
+		float x = stageCoords.x;
+		float y = stageCoords.y;
+		
 		for(Label l : labels) {
+			Vector2 localToStage = l.localToStageCoordinates(new Vector2());
 			
-			if(!found) {
-				Vector2 localToStage = l.localToStageCoordinates(new Vector2());
-				
-				float x1 = localToStage.x;
-				float x2 = x1 + l.getWidth();
-				float y1 = localToStage.y;
-				float y2 = y1 + l.getHeight();
-				
-				LabelStyle ls = l.getStyle();
-				if(ls == null) ls = new LabelStyle();
-				if(x >= x1 && x <= x2 && y >= y1 && y <= y2) {
-					ls.background = backgroundDrawable;
-					found = true;
+			float x1 = localToStage.x;
+			float x2 = x1 + l.getWidth();
+			float y1 = localToStage.y;
+			float y2 = y1 + l.getHeight();
+			
+			LabelStyle ls = l.getStyle();
+			if(ls == null) ls = new LabelStyle();
+			if(x >= x1 && x <= x2 && y >= y1 && y <= y2) {
+				if(l.getUserObject() != null && l.getUserObject() instanceof LogEntry) {
+					return (LogEntry)l.getUserObject();
 				}
-				else {
-					if(ls.background != null)
-						ls.background = null;
-				}
+				return null;
+			}
+		}
+		return null;
+	}
 
+	public void updateLabelBackground () {
+		if(mouseHoverDrawable == null && selectedDrawable == null) return;
+		LogEntry logEntry = getHoveredLogEntry();
+		for(Label l : labels) {
+			LabelStyle ls = l.getStyle();
+			if(l.getUserObject() == null || !(l.getUserObject() instanceof LogEntry)) continue;
+			LogEntry le = (LogEntry) l.getUserObject();
+			if(selections.contains(le, true)) {
+				if(ls.background != selectedDrawable) {
+					ls.background = selectedDrawable;
+				}
+			}
+			else if(logEntry == le) {
+				if(ls.background != mouseHoverDrawable) {
+					ls.background = mouseHoverDrawable;
+				}
 			}
 			else {
-				LabelStyle ls = l.getStyle(); 
 				if(ls.background != null) {
 					ls.background = null;
 				}
 			}
 		}
+	}
+
+	public Console getConsole () {
+		return console;
+	}
+
+	public Array<LogEntry> getSelections () {
+		return selections;
+	}
+
+	public Array<LogEntry> getLogEntries () {
+		return log.getLogEntries();
 	}
 }

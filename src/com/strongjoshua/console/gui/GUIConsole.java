@@ -18,6 +18,7 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -158,8 +159,10 @@ public class GUIConsole extends AbstractConsole {
 			
 			@Override
 			public boolean mouseMoved (InputEvent event, float x, float y) {
-				float x1 = consoleWindow.getX();
-				float y1 = consoleWindow.getY();
+				Vector2 consoleWindowStageCoords = new Vector2();
+				consoleWindow.localToStageCoordinates(consoleWindowStageCoords);
+				float x1 = consoleWindowStageCoords.x;
+				float y1 = consoleWindowStageCoords.y;
 				float x2 = x1 + consoleWindow.getWidth();
 				float y2 = y1 + consoleWindow.getHeight();
 				if(x >= x1 && x <= x2 && y >= y1 && y <= y2) {
@@ -168,7 +171,7 @@ public class GUIConsole extends AbstractConsole {
 						updateTransparency();
 					}
 					
-					display.updateLabelBackground(stage, x, y);
+					display.updateLabelBackground();
 				}
 				else {
 					if(captured) {
@@ -181,12 +184,13 @@ public class GUIConsole extends AbstractConsole {
 			}
 		});
 
-		stage.addListener(new DisplayListener(this));
+		stage.addListener(new DisplayListener(display));
 		stage.addActor(consoleWindow);
 		stage.setKeyboardFocus(display);
 
 		setSizePercent(50, 50);
 		setPositionPercent(50, 50);
+		updateTransparency();
 	}
 
 	/*
@@ -424,8 +428,6 @@ public class GUIConsole extends AbstractConsole {
 		keyID = code;
 	}
 
-	private Vector3 stageCoords = new Vector3();
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -436,8 +438,16 @@ public class GUIConsole extends AbstractConsole {
 		if (disabled || !visibile) {
 			return false;
 		}
-		stage.getCamera().unproject(stageCoords.set(screenX, screenY, 0));
-		return stage.hit(stageCoords.x, stageCoords.y, true) != null;
+
+		Vector3 stageCoords = stage.getCamera().unproject(new Vector3(screenX, screenY, 0));
+		float x = stageCoords.x;
+		float y = stageCoords.y;
+		
+		float x1 = consoleWindow.getX();
+		float y1 = consoleWindow.getY();
+		float x2 = x1 + consoleWindow.getWidth();
+		float y2 = y1 + consoleWindow.getHeight();
+		return (x >= x1 && x <= x2 && y >= y1 && y <= y2);
 	}
 
 	/*
@@ -472,6 +482,9 @@ public class GUIConsole extends AbstractConsole {
 	
 	@Override
 	public boolean hasFocus () {
+		if(!handleFocus) {
+			return visibile;
+		}
 		return focus;
 	}
 
@@ -520,7 +533,12 @@ public class GUIConsole extends AbstractConsole {
 		consoleWindow.setColor(color);
 	}
 
-	public void setLabelHoverDrawble (Drawable backgroundDrawable) {
-		display.setLabelHoverDrawble(backgroundDrawable);
+	public void setMouseHoverDrawble (Drawable mouseHoverDrawable) {
+		display.setMouseHoverDrawble(mouseHoverDrawable);
+	}
+
+	public void setSelectedDrawble (Drawable selectedDrawable) {
+		display.setSelectedDrawable(selectedDrawable);
+		
 	}
 }
