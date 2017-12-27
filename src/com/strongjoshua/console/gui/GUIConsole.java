@@ -154,7 +154,6 @@ public class GUIConsole extends AbstractConsole {
 		consoleWindow.setKeepWithinStage(true);
 		consoleWindow.addActor(display);
 		consoleWindow.setTouchable(Touchable.disabled);
-		consoleWindow.setDebug(true, true);
 		stage.addListener(new InputListener() {
 			
 			@Override
@@ -539,6 +538,9 @@ public class GUIConsole extends AbstractConsole {
 
 	public void setSelectedDrawble (Drawable selectedDrawable) {
 		display.setSelectedDrawable(selectedDrawable);
-		
+	}
+	
+	public void setDebug(boolean enabled, boolean recursively) {
+		consoleWindow.setDebug(enabled, recursively);
 	}
 }
