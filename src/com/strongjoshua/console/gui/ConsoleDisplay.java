@@ -15,9 +15,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
 import com.strongjoshua.console.Console;
-import com.strongjoshua.console.Log;
-import com.strongjoshua.console.LogEntry;
-import com.strongjoshua.console.LogLevel;
+import com.strongjoshua.console.log.Log;
+import com.strongjoshua.console.log.LogEntry;
+import com.strongjoshua.console.log.LogLevel;
 
 class ConsoleDisplay extends Table {
 	private Console console;

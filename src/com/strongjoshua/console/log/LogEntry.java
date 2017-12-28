@@ -11,7 +11,7 @@
  * and limitations under the License.
  */
 
-package com.strongjoshua.console;
+package com.strongjoshua.console.log;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.TimeUtils;

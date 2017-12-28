@@ -6,7 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.utils.Array;
 import com.strongjoshua.console.Console;
-import com.strongjoshua.console.LogEntry;
+import com.strongjoshua.console.log.LogEntry;
 
 public class DisplayListener extends InputListener {
 	private final Console console;

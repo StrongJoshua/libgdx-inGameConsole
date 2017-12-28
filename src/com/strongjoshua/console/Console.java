@@ -6,6 +6,8 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.files.FileHandle;
 import com.strongjoshua.console.annotation.HiddenCommand;
+import com.strongjoshua.console.log.LogConverter;
+import com.strongjoshua.console.log.LogLevel;
 
 /** A simple console that allows live logging, and live execution of methods, from within an application. Please see the <a
  * href="https://github.com/StrongJoshua/libgdx-inGameConsole">GitHub Repository</a> for more information.
@@ -202,4 +204,7 @@ public interface Console {
 
 	/** Works only for a GUIConsole. Deselects the text field. */
 	public void deselect ();
+	
+	/** @param Adds a LogConverter implementation to manipulate log messages */
+	public void addLogConverter (LogConverter converter);
 }

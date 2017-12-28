@@ -7,7 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.strongjoshua.console.CommandCompleter;
 import com.strongjoshua.console.CommandHistory;
 import com.strongjoshua.console.Console;
-import com.strongjoshua.console.LogLevel;
+import com.strongjoshua.console.log.LogLevel;
 
 public class KeyListener extends InputListener {
 	private Console console;

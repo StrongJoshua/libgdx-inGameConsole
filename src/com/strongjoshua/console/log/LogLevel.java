@@ -1,7 +1,8 @@
 
-package com.strongjoshua.console;
+package com.strongjoshua.console.log;
 
 import com.badlogic.gdx.graphics.Color;
+import com.strongjoshua.console.Console;
 
 /** Specifies the 'level' of a log entry. The level affects the color of the entry in the console and is also displayed next to the
  * entry when the log entries are printed to a file with {@link Console#printLogToFile(String)}.

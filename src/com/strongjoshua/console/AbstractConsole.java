@@ -17,6 +17,9 @@ import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.reflect.Method;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
 import com.strongjoshua.console.annotation.ConsoleDoc;
+import com.strongjoshua.console.log.Log;
+import com.strongjoshua.console.log.LogConverter;
+import com.strongjoshua.console.log.LogLevel;
 
 /** @author Eric */
 public abstract class AbstractConsole implements Console, Disposable {
@@ -29,6 +32,7 @@ public abstract class AbstractConsole implements Console, Disposable {
 	protected boolean executeHiddenCommands = true;
 	protected boolean displayHiddenCommands = false;
 	protected boolean consoleTrace = false;
+	protected Array<LogConverter> logConverters;
 
 	public AbstractConsole () {
 		log = new Log();
@@ -51,6 +55,11 @@ public abstract class AbstractConsole implements Console, Disposable {
 	 */
 	@Override
 	public void log (String msg, LogLevel level) {
+		if (logConverters != null && logConverters.size > 0) {
+			for (LogConverter lc : logConverters) {
+				msg = lc.convert(msg);
+			}
+		}
 		log.addEntry(msg, level);
 
 		if (logToSystem) {
@@ -442,5 +451,11 @@ public abstract class AbstractConsole implements Console, Disposable {
 
 	@Override
 	public void deselect () {
+	}
+	
+	@Override 
+	public void addLogConverter (LogConverter converter) {
+		if(logConverters == null) logConverters = new Array<LogConverter>();
+		logConverters.add(converter);
 	}
 }
