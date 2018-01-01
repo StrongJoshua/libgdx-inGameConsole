@@ -33,7 +33,7 @@ public class KeyListener extends InputListener {
 			commandCompleter.reset();
 		}
 
-		if (keycode == Keys.ENTER && !console.isVisible()) {
+		if (keycode == Keys.ENTER && console.isVisible()) {
 			String s = input.getText();
 			if (s.length() == 0 || s.split(" ").length == 0) {
 				return false;

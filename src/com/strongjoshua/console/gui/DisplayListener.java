@@ -21,11 +21,13 @@ public class DisplayListener extends InputListener {
 	@Override
 	public boolean keyDown(InputEvent event, int keycode) {
 		if (console.isDisabled()) return false;
-		if (!console.hasFocus()) return false;
 		if (keycode == console.getDisplayKeyID()) {
 			console.setVisible(!console.isVisible());
 			return true;
 		}
+		
+		if (!console.hasFocus()) return false;
+
 		else if(Gdx.input.isKeyPressed(Keys.CONTROL_LEFT) && Gdx.input.isKeyPressed(Keys.A)) {
 			// [L-CTRL] + [A] -> select all
 			Array<LogEntry> selections = display.getSelections();
