@@ -4,6 +4,7 @@ package tests;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.graphics.GL20;
@@ -17,8 +18,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.strongjoshua.console.CommandExecutor;
-import com.strongjoshua.console.GUIConsole;
 import com.strongjoshua.console.annotation.ConsoleDoc;
+import com.strongjoshua.console.gui.GUIConsole;
 
 public class StageTest extends ApplicationAdapter {
 	private Stage stage;
@@ -33,7 +34,7 @@ public class StageTest extends ApplicationAdapter {
 		Gdx.input.setInputProcessor(stage);
 
 		Skin skin = new Skin(Gdx.files.classpath("tests/test_skin/uiskin.json"));
-		console = new GUIConsole(skin);
+		console = new GUIConsole(skin, true, Keys.NUMPAD_0);
 		console.setCommandExecutor(new MyCommandExecutor());
 		console.setSizePercent(100, 50);
 
@@ -113,6 +114,11 @@ public class StageTest extends ApplicationAdapter {
 		public void setDisplayHiddenCommands (boolean enabled) {
 			console.setDisplayHiddenCommands(enabled);
 			console.log("DisplayHiddenCommands was set to " + enabled);
+		}
+		
+		@ConsoleDoc(description = "Thread pool which spams the log system for a spcific time to test thread safety.")
+		public void logTest(long delta) {
+			LogThreadSafeTest.create(console, delta * 1000);
 		}
 	}
 

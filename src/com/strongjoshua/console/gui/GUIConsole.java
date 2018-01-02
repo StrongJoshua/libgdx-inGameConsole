@@ -13,7 +13,6 @@
 
 package com.strongjoshua.console.gui;
 
-import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -60,8 +59,6 @@ public class GUIConsole extends AbstractConsole {
 	private Stage stage;
 	private Window consoleWindow;
 	private final ReadWriteLock rwl = new ReentrantReadWriteLock();
-	private final Lock r = rwl.readLock();
-	private final Lock w = rwl.writeLock();
 	private boolean refreshFlag = true;
 	
 	private float defaultTransparency = 1f;
@@ -222,13 +219,13 @@ public class GUIConsole extends AbstractConsole {
 	 */
 	@Override
 	public void clear() {
-		w.lock();
+		rwl.writeLock().lock();
 		try {
 			log.getLogEntries().clear();
 			refreshFlag = true;
 		}
 		finally {
-			w.unlock();
+			rwl.writeLock().unlock();
 		}
 	}
 
@@ -358,12 +355,12 @@ public class GUIConsole extends AbstractConsole {
 			return;
 		}
 		if(refreshFlag) {
-			if(w.tryLock()) {
+			if(rwl.writeLock().tryLock()) {
 				try {
 					display.refresh();
 					refreshFlag = false;
 				} finally {
-					w.unlock();
+					rwl.writeLock().unlock();
 				}
 			}
 		}
@@ -410,12 +407,12 @@ public class GUIConsole extends AbstractConsole {
 	 */
 	@Override
 	public void log(String msg, LogLevel level) {
-		w.lock();
+		rwl.writeLock().lock();
 		try {
 			super.log(msg, level);
 			refreshFlag = true;
 		} finally {
-			w.unlock();
+			rwl.writeLock().unlock();
 		}
 	}
 

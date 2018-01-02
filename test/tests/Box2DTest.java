@@ -1,32 +1,47 @@
 
 package tests;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.math.collision.Ray;
-import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.Box2D;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.strongjoshua.console.CommandExecutor;
-import com.strongjoshua.console.Console;
-import com.strongjoshua.console.GUIConsole;
-import com.strongjoshua.console.LogLevel;
 import com.strongjoshua.console.annotation.ConsoleDoc;
 import com.strongjoshua.console.annotation.HiddenCommand;
+import com.strongjoshua.console.gui.GUIConsole;
+import com.strongjoshua.console.log.LogConverter;
+import com.strongjoshua.console.log.LogLevel;
 
 /** Extension of the <a href=
  * 'https://github.com/StrongJoshua/libgdx-utils/blob/master/src/com/strongjoshua/libgdx_utils/tests/Box2DTest.java'>Simple Box2D
@@ -42,8 +57,21 @@ public class Box2DTest extends ApplicationAdapter {
 	Body[] bodies;
 	final int WIDTH = 100, HEIGHT = 100;
 	float mX, mY, ratio;
-	Console console;
+	GUIConsole console;
 	MyCommandExecutor cExec;
+	
+	private static void setConsoleDrawables(GUIConsole console) {
+		{
+			Pixmap px = new Pixmap(1, 1, Format.RGBA8888);
+			px.drawPixel(0, 0, Color.rgba8888(0f, 1f, 0f, 0.5f));
+			console.setMouseHoverDrawble(new TextureRegionDrawable(new TextureRegion(new Texture(px))));
+		}
+		{
+			Pixmap px = new Pixmap(1, 1, Format.RGBA8888);
+			px.drawPixel(0, 0, Color.rgba8888(0f, 0f, 0.5f, 0.5f));
+			console.setSelectedDrawble(new TextureRegionDrawable(new TextureRegion(new Texture(px))));
+		}
+	}
 
 	@Override
 	public void create () {
@@ -143,6 +171,18 @@ public class Box2DTest extends ApplicationAdapter {
 		debugRenderer = new Box2DDebugRenderer();
 
 		console = new GUIConsole(new Skin(Gdx.files.classpath("tests/test_skin/uiskin.json")), false);
+		console.setTransparency(0.8f, 0.4f);
+		console.setHandleFocus(true);
+		console.addLogConverter(new LogConverter() {
+			private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+
+			@Override
+			public String convert (String msg) {
+				return String.format("%s: ", dateFormat.format(Calendar.getInstance().getTime())) + msg;
+			}
+		});
+		setConsoleDrawables(console);
+		
 		cExec = new MyCommandExecutor();
 		console.setCommandExecutor(cExec);
 		// set to 'Z' to demonstrate that it works with binds other than the
@@ -273,6 +313,11 @@ public class Box2DTest extends ApplicationAdapter {
 
 		public void failFunction () {
 			throw new RuntimeException("This function was designed to fail.");
+		}
+		
+		@ConsoleDoc(description = "Thread pool which spams the log system for a spcific time to test thread safety.")
+		public void logTest(long delta) {
+			LogThreadSafeTest.create(console, delta * 1000);
 		}
 	}
 
