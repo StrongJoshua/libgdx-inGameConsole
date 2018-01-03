@@ -20,7 +20,6 @@ public class DisplayListener extends InputListener {
 
 	@Override
 	public boolean keyDown(InputEvent event, int keycode) {
-		System.out.println("keycode "+ keycode);
 		if (console.isDisabled()) return false;
 		if (keycode == console.getDisplayKeyID()) {
 			console.setVisible(!console.isVisible());
