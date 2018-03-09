@@ -17,6 +17,17 @@ public class DisplayListener extends InputListener {
 		this.console = display.getConsole();
 		this.display = display;
 	}
+	
+	@Override
+	public boolean keyTyped (InputEvent event, char character) {
+		if (console.isDisabled()) return false;
+		
+		if (character == '^') {
+			console.setVisible(!console.isVisible());
+			return true;
+		}
+		return super.keyTyped(event, character);
+	}
 
 	@Override
 	public boolean keyDown(InputEvent event, int keycode) {

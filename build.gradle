@@ -15,7 +15,7 @@ repositories {
 }
 
 dependencies {
-    compile group: 'com.badlogicgames.gdx', name: 'gdx', version:'1.9.6'
+    compile group: 'com.badlogicgames.gdx', name: 'gdx', version:'1.9.8'
     testCompile group: 'com.badlogicgames.gdx', name: 'gdx-backend-lwjgl', version:'1.9.6'
     testCompile group: 'com.badlogicgames.gdx', name: 'gdx-platform', version:'1.9.6', classifier:'natives-desktop'
     testCompile group: 'com.badlogicgames.gdx', name: 'gdx-box2d', version:'1.9.6'
