@@ -1,4 +1,4 @@
-package tests;
+package com.strongjoshua.console.tests;
 
 import java.util.Calendar;
 import java.util.concurrent.Callable;

@@ -1,5 +1,5 @@
 
-package tests;
+package com.strongjoshua.console.tests;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
