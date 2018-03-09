@@ -78,12 +78,11 @@ uploadArchives {
                 packaging 'jar'
                 // optionally artifactId can be defined here
                 description 'libGdx In-Game Console'
-                url 'https://www.strongjoshua.net/projects/games/libgdx-ingame-console'
-
+                
                 scm {
-                    connection 'scm:git:git@github.com:StrongJoshua/libgdx-inGameConsole.git'
-                    developerConnection 'scm:git:git@github.com:StrongJoshua/libgdx-inGameConsole.git'
-                    url 'https://github.com/StrongJoshua/libgdx-inGameConsole'
+                    connection 'scm:git:git@github.com:playmyskay/libgdx-inGameConsole.git'
+                    developerConnection 'scm:git:git@github.com:playmyskay/libgdx-inGameConsole.git'
+                    url 'https://github.com/playmyskay/libgdx-inGameConsole'
                 }
 
                 licenses {
