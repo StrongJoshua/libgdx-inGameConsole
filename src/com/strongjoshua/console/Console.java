@@ -205,6 +205,6 @@ public interface Console {
 	/** Works only for a GUIConsole. Deselects the text field. */
 	public void deselect ();
 	
-	/** @param Adds a LogConverter implementation to manipulate log messages */
+	/** @param converter Adds a LogConverter implementation to manipulate log messages */
 	public void addLogConverter (LogConverter converter);
 }
