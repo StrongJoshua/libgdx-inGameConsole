@@ -170,7 +170,7 @@ public class Box2DTest extends ApplicationAdapter {
 
 		debugRenderer = new Box2DDebugRenderer();
 
-		console = new GUIConsole(new Skin(Gdx.files.classpath("tests/test_skin/uiskin.json")), false);
+		console = new GUIConsole(new Skin(Gdx.files.classpath("com/strongjoshua/console/tests/test_skin/uiskin.json")), false);
 		console.setTransparency(0.8f, 0.4f);
 		console.setHandleFocus(true);
 		console.addLogConverter(new LogConverter() {
