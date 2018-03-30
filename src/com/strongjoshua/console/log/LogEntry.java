@@ -11,12 +11,12 @@
  * and limitations under the License.
  */
 
-package com.strongjoshua.console;
+package com.strongjoshua.console.log;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.TimeUtils;
 
-class LogEntry {
+public class LogEntry {
 	private String text;
 	private LogLevel level;
 	private long timeStamp;
@@ -31,7 +31,7 @@ class LogEntry {
 		return level.getColor();
 	}
 
-	protected String toConsoleString () {
+	public String toConsoleString () {
 		String r = "";
 		if (level.equals(LogLevel.COMMAND)) {
 			r += level.getIdentifier();

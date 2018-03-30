@@ -15,7 +15,7 @@ repositories {
 }
 
 dependencies {
-    compile group: 'com.badlogicgames.gdx', name: 'gdx', version:'1.9.6'
+    compile group: 'com.badlogicgames.gdx', name: 'gdx', version:'1.9.8'
     testCompile group: 'com.badlogicgames.gdx', name: 'gdx-backend-lwjgl', version:'1.9.6'
     testCompile group: 'com.badlogicgames.gdx', name: 'gdx-platform', version:'1.9.6', classifier:'natives-desktop'
     testCompile group: 'com.badlogicgames.gdx', name: 'gdx-box2d', version:'1.9.6'
@@ -56,14 +56,16 @@ artifacts {
     archives javadocJar, sourcesJar
 }
 
+/*
 signing {
     sign configurations.archives
 }
+*/
 
 uploadArchives {
     repositories {
         mavenDeployer {
-            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+            /*beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }*/
 
             repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
                 authentication(userName: ossrhUsername, password: ossrhPassword)
@@ -78,12 +80,11 @@ uploadArchives {
                 packaging 'jar'
                 // optionally artifactId can be defined here
                 description 'libGdx In-Game Console'
-                url 'https://www.strongjoshua.net/projects/games/libgdx-ingame-console'
-
+                
                 scm {
-                    connection 'scm:git:git@github.com:StrongJoshua/libgdx-inGameConsole.git'
-                    developerConnection 'scm:git:git@github.com:StrongJoshua/libgdx-inGameConsole.git'
-                    url 'https://github.com/StrongJoshua/libgdx-inGameConsole'
+                    connection 'scm:git:git@github.com:playmyskay/libgdx-inGameConsole.git'
+                    developerConnection 'scm:git:git@github.com:playmyskay/libgdx-inGameConsole.git'
+                    url 'https://github.com/playmyskay/libgdx-inGameConsole'
                 }
 
                 licenses {

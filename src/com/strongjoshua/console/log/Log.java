@@ -11,18 +11,19 @@
  * and limitations under the License.
  */
 
-package com.strongjoshua.console;
-
-import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.utils.Array;
+package com.strongjoshua.console.log;
 
 import java.io.IOException;
 import java.io.Writer;
 
-class Log {
+import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.utils.Array;
+import com.strongjoshua.console.Console;
+
+public class Log {
 	private Array<LogEntry> logEntries;
 
-	protected Log () {
+	public Log () {
 		logEntries = new Array<LogEntry>();
 	}
 
@@ -32,14 +33,14 @@ class Log {
 		this.numEntries = numEntries;
 	}
 
-	protected void addEntry (String msg, LogLevel level) {
+	public void addEntry (String msg, LogLevel level) {
 		logEntries.add(new LogEntry(msg, level));
 		if (logEntries.size > numEntries && numEntries != Console.UNLIMITED_ENTRIES) {
 			logEntries.removeIndex(0);
 		}
 	}
 
-	protected Array<LogEntry> getLogEntries () {
+	public Array<LogEntry> getLogEntries () {
 		return logEntries;
 	}
 

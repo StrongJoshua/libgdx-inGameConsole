@@ -4,6 +4,9 @@
 
 package com.strongjoshua.console;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.files.FileHandle;
@@ -14,9 +17,9 @@ import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.reflect.Method;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
 import com.strongjoshua.console.annotation.ConsoleDoc;
-
-import java.util.ArrayList;
-import java.util.Collections;
+import com.strongjoshua.console.log.Log;
+import com.strongjoshua.console.log.LogConverter;
+import com.strongjoshua.console.log.LogLevel;
 
 /** @author Eric */
 public abstract class AbstractConsole implements Console, Disposable {
@@ -29,6 +32,7 @@ public abstract class AbstractConsole implements Console, Disposable {
 	protected boolean executeHiddenCommands = true;
 	protected boolean displayHiddenCommands = false;
 	protected boolean consoleTrace = false;
+	protected Array<LogConverter> logConverters;
 
 	public AbstractConsole () {
 		log = new Log();
@@ -51,6 +55,11 @@ public abstract class AbstractConsole implements Console, Disposable {
 	 */
 	@Override
 	public void log (String msg, LogLevel level) {
+		if (logConverters != null && logConverters.size > 0) {
+			for (LogConverter lc : logConverters) {
+				msg = lc.convert(msg);
+			}
+		}
 		log.addEntry(msg, level);
 
 		if (logToSystem) {
@@ -145,6 +154,11 @@ public abstract class AbstractConsole implements Console, Disposable {
 	public void setCommandExecutor (CommandExecutor commandExec) {
 		exec = commandExec;
 		exec.setConsole(this);
+	}
+	
+	@Override
+	public CommandExecutor getCommandExecutor () {
+		return exec;
 	}
 
 	/*
@@ -248,7 +262,7 @@ public abstract class AbstractConsole implements Console, Disposable {
 
 	private ArrayList<Method> getAllMethods () {
 		ArrayList<Method> methods = new ArrayList<Method>();
-		Class c = exec.getClass();
+		Class<?> c = exec.getClass();
 		while (c != Object.class) {
 			Collections.addAll(methods, ClassReflection.getDeclaredMethods(c));
 			c = c.getSuperclass();
@@ -421,6 +435,15 @@ public abstract class AbstractConsole implements Console, Disposable {
 	@Override
 	public void setVisible (boolean visible) {
 	}
+	
+	@Override
+	public boolean hasFocus () {
+		return false;
+	}
+	
+	@Override
+	public void setFocus (boolean focus) {
+	}
 
 	@Override
 	public void select () {
@@ -428,5 +451,11 @@ public abstract class AbstractConsole implements Console, Disposable {
 
 	@Override
 	public void deselect () {
+	}
+	
+	@Override 
+	public void addLogConverter (LogConverter converter) {
+		if(logConverters == null) logConverters = new Array<LogConverter>();
+		logConverters.add(converter);
 	}
 }
