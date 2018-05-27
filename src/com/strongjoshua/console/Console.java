@@ -5,6 +5,7 @@ import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
 import com.strongjoshua.console.annotation.HiddenCommand;
 
 /** A simple console that allows live logging, and live execution of methods, from within an application. Please see the <a
@@ -194,4 +195,20 @@ public interface Console {
 	/** Works only for GUIConsole.
 	 * @param title - The title for the console window.*/
 	void setTitle (String title);
+
+	 /** Works only for GUIConsole. Sets the transparency for when the mouse is over the console window.
+	  * @param alpha The transparency (scale from 0 to 1).*/
+	void setHoverAlpha (float alpha);
+
+	 /** Works only for GUIConsole. Sets the transparency for when the mouse is not over the console window.
+	  * @param alpha The transparency (scale from 0 to 1).*/
+	 void setNoHoverAlpha (float alpha);
+
+	 /** Works only for GUIConsole. Sets the color for when the mouse is over the console window. (Resets previous alpha changes).
+	  * @param color The color.*/
+	 void setHoverColor (Color color);
+
+	 /** Works only for GUIConsole. Sets the color for when the mouse is not over the console window. (Resets previous alpha changes).
+	  * @param color The color.*/
+	 void setNoHoverColor (Color color);
 }

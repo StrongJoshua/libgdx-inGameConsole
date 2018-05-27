@@ -7,6 +7,7 @@ package com.strongjoshua.console;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.reflect.Annotation;
@@ -431,6 +432,22 @@ public abstract class AbstractConsole implements Console, Disposable {
 	}
 
 	@Override
-	public void setTitle(String title) {
+	public void setTitle (String title) {
 	}
+
+	 @Override
+	 public void setHoverAlpha (float alpha) {
+	 }
+
+	 @Override
+	 public void setNoHoverAlpha (float alpha) {
+	 }
+
+	 @Override
+	 public void setHoverColor (Color color) {
+	 }
+
+	 @Override
+	 public void setNoHoverColor (Color color) {
+	 }
 }

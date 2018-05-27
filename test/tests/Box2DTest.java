@@ -7,6 +7,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -151,6 +152,10 @@ public class Box2DTest extends ApplicationAdapter {
 		console.setVisible(true);
 		console.setConsoleStackTrace(true);
 		console.setTitle("Test Console");
+		console.setHoverColor(Color.WHITE);
+		console.setNoHoverColor(Color.BLUE);
+		console.setHoverAlpha(.9f);
+		console.setNoHoverAlpha(.6f);
 
 		// test multiple resets with nested multiplexers
 		InputMultiplexer im1 = new InputMultiplexer();

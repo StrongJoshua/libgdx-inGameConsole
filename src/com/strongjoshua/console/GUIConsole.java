@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 StrongJoshua (strongjoshua@hotmail.com)
+ * Copyright 2018 StrongJoshua (strongjoshua@hotmail.com)
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may
  * obtain a copy of the License at
@@ -17,12 +17,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldListener;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldStyle;
@@ -44,6 +42,8 @@ public class GUIConsole extends AbstractConsole {
 	private CommandHistory commandHistory;
 	private CommandCompleter commandCompleter;
 	private Window consoleWindow;
+	private boolean hasHover;
+	private Color hoverColor, noHoverColor;
 
 	/** Creates the console using the default skin.<br>
 	 * <b>***IMPORTANT***</b> Call {@link Console#dispose()} to make your {@link InputProcessor} the default processor again (this
@@ -116,6 +116,9 @@ public class GUIConsole extends AbstractConsole {
 		consoleWindow.setKeepWithinStage(true);
 		consoleWindow.addActor(display);
 		consoleWindow.setTouchable(Touchable.disabled);
+
+		hoverColor = new Color(1, 1, 1, 1);
+		noHoverColor = new Color(1, 1, 1, 1);
 
 		stage.addListener(new DisplayListener());
 		stage.addActor(consoleWindow);
@@ -443,7 +446,7 @@ public class GUIConsole extends AbstractConsole {
 				stage.setScrollFocus(null);
 			} else {
 				input.setText("");
-				consoleWindow.setTouchable(Touchable.childrenOnly);
+				consoleWindow.setTouchable(Touchable.enabled);
 				if (selected) {
 					select();
 				}
@@ -541,6 +544,16 @@ public class GUIConsole extends AbstractConsole {
 			}
 			return false;
 		}
+
+		 @Override public void enter (InputEvent event, float x, float y, int pointer, Actor fromActor) {
+			 hasHover = true;
+			 refreshWindowColor();
+		 }
+
+		 @Override public void exit (InputEvent event, float x, float y, int pointer, Actor toActor) {
+			 hasHover = false;
+			 refreshWindowColor();
+		 }
 	}
 
 	/*
@@ -589,4 +602,32 @@ public class GUIConsole extends AbstractConsole {
 	public void setTitle (String title) {
 		consoleWindow.getTitleLabel().setText(title);
 	}
+
+	private void refreshWindowColor() {
+		 consoleWindow.setColor(hasHover ? hoverColor : noHoverColor);
+	}
+
+	@Override
+	public void setHoverAlpha (float alpha) {
+		hoverColor.a = alpha;
+		refreshWindowColor();
+	}
+
+	 @Override
+	 public void setNoHoverAlpha (float alpha) {
+		 noHoverColor.a = alpha;
+		 refreshWindowColor();
+	 }
+
+	 @Override
+	 public void setHoverColor (Color color) {
+		  hoverColor = color;
+		  refreshWindowColor();
+	 }
+
+	 @Override
+	 public void setNoHoverColor (Color color) {
+		  noHoverColor = color;
+		  refreshWindowColor();
+	 }
 }
