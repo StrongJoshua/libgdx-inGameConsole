@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 StrongJoshua (strongjoshua@hotmail.com)
+ * Copyright 2018 StrongJoshua (strongjoshua@hotmail.com)
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may
  * obtain a copy of the License at
@@ -21,12 +21,11 @@ import java.io.Writer;
 
 class Log {
 	private Array<LogEntry> logEntries;
+	private int numEntries = Console.UNLIMITED_ENTRIES;
 
 	protected Log () {
 		logEntries = new Array<LogEntry>();
 	}
-
-	private int numEntries = Console.UNLIMITED_ENTRIES;
 
 	public void setMaxEntries (int numEntries) {
 		this.numEntries = numEntries;

@@ -7,17 +7,19 @@ package com.strongjoshua.console;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
-/** @author Eric */
+/**
+ * @author Eric
+ */
 public class ConsoleTest {
 
 	private Console headlessConsole;
 	private CommandExecutor commandExec;
 	private boolean commandFound;
 
-	@Before
-	public void setup () {
+	@Before public void setup () {
 		commandFound = false;
 		headlessConsole = new HeadlessConsole();
 		commandExec = new CommandExecutor() {
@@ -87,64 +89,55 @@ public class ConsoleTest {
 		headlessConsole.setCommandExecutor(commandExec);
 	}
 
-	@Test
-	public void test_StringArgument () {
+	@Test public void test_StringArgument () {
 		headlessConsole.execCommand("testString STRING");
 
 		assertTrue(commandFound);
 	}
 
-	@Test
-	public void test_BooleanArgument () {
+	@Test public void test_BooleanArgument () {
 		headlessConsole.execCommand("testBoolean true false");
 
 		assertTrue(commandFound);
 	}
 
-	@Test
-	public void test_ByteArgument () {
+	@Test public void test_ByteArgument () {
 		headlessConsole.execCommand("testByte " + Byte.MAX_VALUE + " " + Byte.MIN_VALUE);
 
 		assertTrue(commandFound);
 	}
 
-	@Test
-	public void test_ShortArgument () {
+	@Test public void test_ShortArgument () {
 		headlessConsole.execCommand("testShort " + Short.MAX_VALUE + " " + Short.MIN_VALUE);
 
 		assertTrue(commandFound);
 	}
 
-	@Test
-	public void test_IntegerArgument () {
+	@Test public void test_IntegerArgument () {
 		headlessConsole.execCommand("testInteger " + Integer.MAX_VALUE + " " + Integer.MIN_VALUE);
 
 		assertTrue(commandFound);
 	}
 
-	@Test
-	public void test_LongArgument () {
+	@Test public void test_LongArgument () {
 		headlessConsole.execCommand("testLong " + Long.MAX_VALUE + " " + Long.MIN_VALUE);
 
 		assertTrue(commandFound);
 	}
 
-	@Test
-	public void test_FloatArgument () {
+	@Test public void test_FloatArgument () {
 		headlessConsole.execCommand("testFloat " + Float.MAX_VALUE + " " + Float.MIN_VALUE);
 
 		assertTrue(commandFound);
 	}
 
-	@Test
-	public void test_DoubleArgument () {
+	@Test public void test_DoubleArgument () {
 		headlessConsole.execCommand("testDouble " + Double.MAX_VALUE + " " + Double.MIN_VALUE);
 
 		assertTrue(commandFound);
 	}
 
-	@Test
-	public void test_ObjectArgument () {
+	@Test public void test_ObjectArgument () {
 		headlessConsole.execCommand("testObject test test");
 
 		assertFalse(commandFound);

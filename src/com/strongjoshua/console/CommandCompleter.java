@@ -1,4 +1,3 @@
-
 package com.strongjoshua.console;
 
 import com.badlogic.gdx.utils.Array;

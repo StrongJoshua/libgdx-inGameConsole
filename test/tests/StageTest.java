@@ -1,4 +1,3 @@
-
 package tests;
 
 import com.badlogic.gdx.ApplicationAdapter;
@@ -27,8 +26,12 @@ public class StageTest extends ApplicationAdapter {
 	private Label selectLabel;
 	private Label deselectLabel;
 
-	@Override
-	public void create () {
+	public static void main (String[] args) {
+		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+		new LwjglApplication(new StageTest(), config);
+	}
+
+	@Override public void create () {
 		stage = new Stage();
 		Gdx.input.setInputProcessor(stage);
 
@@ -38,8 +41,7 @@ public class StageTest extends ApplicationAdapter {
 		console.setSizePercent(100, 50);
 
 		stage.addListener(new InputListener() {
-			@Override
-			public boolean keyDown (InputEvent event, int keycode) {
+			@Override public boolean keyDown (InputEvent event, int keycode) {
 				if (keycode == Input.Keys.F) {
 					blink();
 					return true;
@@ -69,8 +71,7 @@ public class StageTest extends ApplicationAdapter {
 		deselectLabel.setPosition(Gdx.graphics.getWidth() - deselectLabel.getWidth() - padding, deselectLabel.getHeight());
 	}
 
-	@Override
-	public void render () {
+	@Override public void render () {
 		if (Gdx.input.justTouched()) {
 			Actor actor = stage.hit(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY(), true);
 			if (actor == selectLabel) {
@@ -92,16 +93,14 @@ public class StageTest extends ApplicationAdapter {
 		image.addAction(Actions.sequence(Actions.fadeOut(1), Actions.fadeIn(1)));
 	}
 
-	@Override
-	public void dispose () {
+	@Override public void dispose () {
 		console.dispose();
 		stage.dispose();
 		super.dispose();
 	}
 
 	private class MyCommandExecutor extends CommandExecutor {
-		@ConsoleDoc(description = "Makes the badlogic image fade out and back " + "" + "" + "in.")
-		public void blink () {
+		@ConsoleDoc(description = "Makes the badlogic image fade out and back " + "" + "" + "in.") public void blink () {
 			StageTest.this.blink();
 		}
 
@@ -114,10 +113,5 @@ public class StageTest extends ApplicationAdapter {
 			console.setDisplayHiddenCommands(enabled);
 			console.log("DisplayHiddenCommands was set to " + enabled);
 		}
-	}
-
-	public static void main (String[] args) {
-		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		new LwjglApplication(new StageTest(), config);
 	}
 }

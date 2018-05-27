@@ -1,4 +1,3 @@
-
 package tests;
 
 import com.badlogic.gdx.ApplicationAdapter;
@@ -29,25 +28,31 @@ import com.strongjoshua.console.LogLevel;
 import com.strongjoshua.console.annotation.ConsoleDoc;
 import com.strongjoshua.console.annotation.HiddenCommand;
 
-/** Extension of the <a href=
+/**
+ * Extension of the <a href=
  * 'https://github.com/StrongJoshua/libgdx-utils/blob/master/src/com/strongjoshua/libgdx_utils/tests/Box2DTest.java'>Simple Box2D
  * test</a> to incorporate the console.
  *
- * @author StrongJoshua */
+ * @author StrongJoshua
+ */
 public class Box2DTest extends ApplicationAdapter {
+	final int WIDTH = 100, HEIGHT = 100;
 	SpriteBatch batch;
 	Sprite[] sprites;
 	World world;
 	OrthographicCamera c;
 	Box2DDebugRenderer debugRenderer;
 	Body[] bodies;
-	final int WIDTH = 100, HEIGHT = 100;
 	float mX, mY, ratio;
 	Console console;
 	MyCommandExecutor cExec;
 
-	@Override
-	public void create () {
+	public static void main (String[] args) {
+		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+		new LwjglApplication(new Box2DTest(), config);
+	}
+
+	@Override public void create () {
 		float w = Gdx.graphics.getWidth();
 		w *= 2;
 		float h = Gdx.graphics.getHeight();
@@ -176,8 +181,7 @@ public class Box2DTest extends ApplicationAdapter {
 		console.setPositionPercent(0, 67);
 	}
 
-	@Override
-	public void render () {
+	@Override public void render () {
 		if (Gdx.input.isTouched()) {
 			float x = Gdx.input.getX();
 			float y = Gdx.input.getY();
@@ -187,11 +191,13 @@ public class Box2DTest extends ApplicationAdapter {
 
 				createExplosion(worldVector.x, worldVector.y, 2000);
 
-				console.log(String.format("Created touch explosion at %.2f, %.2f!", worldVector.x, worldVector.y), LogLevel.SUCCESS);
+				console
+					.log(String.format("Created touch explosion at %.2f, %.2f!", worldVector.x, worldVector.y), LogLevel.SUCCESS);
 			}
 		}
 
-		if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) Gdx.app.exit();
+		if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE))
+			Gdx.app.exit();
 		world.step(1 / 60f, 6, 2);
 
 		Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -211,9 +217,11 @@ public class Box2DTest extends ApplicationAdapter {
 		console.draw();
 	}
 
-	/** Creates an explosion that applies forces to the bodies relative to their position and the given x and y values.
+	/**
+	 * Creates an explosion that applies forces to the bodies relative to their position and the given x and y values.
 	 *
-	 * @param maxForce The maximum force to be applied to the bodies (diminishes as distance from touch increases). */
+	 * @param maxForce The maximum force to be applied to the bodies (diminishes as distance from touch increases).
+	 */
 	private void createExplosion (float x, float y, float maxForce) {
 		float force;
 		Vector2 touch = new Vector2(x, y);
@@ -244,15 +252,13 @@ public class Box2DTest extends ApplicationAdapter {
 		}
 	}
 
-	@Override
-	public void dispose () {
+	@Override public void dispose () {
 		console.dispose();
 		super.dispose();
 	}
 
 	public class MyCommandExecutor extends CommandExecutor {
-		@HiddenCommand
-		public void superExplode () {
+		@HiddenCommand public void superExplode () {
 			explode(0, 0, 1000000);
 		}
 
@@ -267,8 +273,7 @@ public class Box2DTest extends ApplicationAdapter {
 		}
 
 		@ConsoleDoc(description = "Creates an explosion.", paramDescriptions = {"The x coordinate", "The y coordinate",
-			"The amount of force"})
-		public void explode (float x, float y, float maxForce) {
+			"The amount of force"}) public void explode (float x, float y, float maxForce) {
 			createExplosion(x, y, maxForce);
 			console.log("Created console explosion!", LogLevel.SUCCESS);
 		}
@@ -280,10 +285,5 @@ public class Box2DTest extends ApplicationAdapter {
 		public void failFunction () {
 			throw new RuntimeException("This function was designed to fail.");
 		}
-	}
-
-	public static void main (String[] args) {
-		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		new LwjglApplication(new Box2DTest(), config);
 	}
 }
