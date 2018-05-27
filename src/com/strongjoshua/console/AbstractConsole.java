@@ -429,4 +429,8 @@ public abstract class AbstractConsole implements Console, Disposable {
 	@Override
 	public void deselect () {
 	}
+
+	@Override
+	public void setTitle(String title) {
+	}
 }

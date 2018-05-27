@@ -33,7 +33,6 @@ import com.badlogic.gdx.utils.Array;
  *
  * @author StrongJoshua */
 public class GUIConsole extends AbstractConsole {
-
 	private int keyID;
 
 	private ConsoleDisplay display;
@@ -584,5 +583,10 @@ public class GUIConsole extends AbstractConsole {
 	@Override
 	public void deselect () {
 		display.deselect();
+	}
+
+	@Override
+	public void setTitle (String title) {
+		consoleWindow.getTitleLabel().setText(title);
 	}
 }

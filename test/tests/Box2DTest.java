@@ -150,6 +150,7 @@ public class Box2DTest extends ApplicationAdapter {
 		console.setDisplayKeyID(Input.Keys.Z);
 		console.setVisible(true);
 		console.setConsoleStackTrace(true);
+		console.setTitle("Test Console");
 
 		// test multiple resets with nested multiplexers
 		InputMultiplexer im1 = new InputMultiplexer();
