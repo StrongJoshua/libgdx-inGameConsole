@@ -19,11 +19,15 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldListener;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldStyle;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.DragScrollListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
 
 /**
@@ -146,11 +150,6 @@ public class GUIConsole extends AbstractConsole {
 		setPositionPercent(50, 50);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.strongjoshua.console.Console#setMaxEntries(int)
-	 */
 	@Override public void setMaxEntries (int numEntries) {
 		if (numEntries > 0 || numEntries == UNLIMITED_ENTRIES) {
 			log.setMaxEntries(numEntries);
@@ -159,21 +158,11 @@ public class GUIConsole extends AbstractConsole {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.strongjoshua.console.Console#clear()
-	 */
 	@Override public void clear () {
 		log.getLogEntries().clear();
 		display.refresh();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.strongjoshua.console.Console#setSize(int, int)
-	 */
 	@Override public void setSize (int width, int height) {
 		if (width <= 0 || height <= 0) {
 			throw new IllegalArgumentException("Pixel size must be greater than 0.");
@@ -181,11 +170,6 @@ public class GUIConsole extends AbstractConsole {
 		consoleWindow.setSize(width, height);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.strongjoshua.console.Console#setSizePercent(float, float)
-	 */
 	@Override public void setSizePercent (float wPct, float hPct) {
 		if (wPct <= 0 || hPct <= 0) {
 			throw new IllegalArgumentException("Size percentage must be greater than 0.");
@@ -197,20 +181,10 @@ public class GUIConsole extends AbstractConsole {
 		consoleWindow.setSize(w * wPct / 100.0f, h * hPct / 100.0f);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.strongjoshua.console.Console#setPosition(int, int)
-	 */
 	@Override public void setPosition (int x, int y) {
 		consoleWindow.setPosition(x, y);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.strongjoshua.console.Console#setPositionPercent(float, float)
-	 */
 	@Override public void setPositionPercent (float xPosPct, float yPosPct) {
 		if (xPosPct > 100 || yPosPct > 100) {
 			throw new IllegalArgumentException("Error: The console would be drawn outside of the screen.");
@@ -219,11 +193,6 @@ public class GUIConsole extends AbstractConsole {
 		consoleWindow.setPosition(w * xPosPct / 100.0f, h * yPosPct / 100.0f);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.strongjoshua.console.Console#resetInputProcessing()
-	 */
 	@Override public void resetInputProcessing () {
 		usesMultiplexer = true;
 		appInput = Gdx.input.getInputProcessor();
@@ -263,20 +232,10 @@ public class GUIConsole extends AbstractConsole {
 		return false;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.strongjoshua.console.Console#getInputProcessor()
-	 */
 	@Override public InputProcessor getInputProcessor () {
 		return stage;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.strongjoshua.console.Console#draw()
-	 */
 	@Override public void draw () {
 		if (disabled) {
 			return;
@@ -289,20 +248,10 @@ public class GUIConsole extends AbstractConsole {
 		stage.draw();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.strongjoshua.console.Console#refresh()
-	 */
 	@Override public void refresh () {
 		this.refresh(true);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.strongjoshua.console.Console#refresh(boolean)
-	 */
 	@Override public void refresh (boolean retain) {
 		float oldWPct = 0, oldHPct = 0, oldXPosPct = 0, oldYPosPct = 0;
 		if (retain) {
@@ -320,22 +269,11 @@ public class GUIConsole extends AbstractConsole {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.strongjoshua.console.Console#log(java.lang.String, com.strongjoshua.console.GUIConsole.LogLevel)
-	 */
 	@Override public void log (String msg, LogLevel level) {
 		super.log(msg, level);
-
 		display.refresh();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.strongjoshua.console.Console#setDisabled(boolean)
-	 */
 	@Override public void setDisabled (boolean disabled) {
 		if (disabled) {
 			display.setHidden(true);
@@ -343,20 +281,10 @@ public class GUIConsole extends AbstractConsole {
 		this.disabled = disabled;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.strongjoshua.console.Console#getKeyID()
-	 */
 	@Override public int getDisplayKeyID () {
 		return keyID;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.strongjoshua.console.Console#setKeyID(int)
-	 */
 	@Override public void setDisplayKeyID (int code) {
 		if (code == Keys.ENTER) {
 			return;
@@ -364,11 +292,6 @@ public class GUIConsole extends AbstractConsole {
 		keyID = code;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.strongjoshua.console.Console#hitsConsole(float, float)
-	 */
 	@Override public boolean hitsConsole (float screenX, float screenY) {
 		if (disabled || hidden) {
 			return false;
@@ -377,11 +300,6 @@ public class GUIConsole extends AbstractConsole {
 		return stage.hit(stageCoords.x, stageCoords.y, true) != null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.strongjoshua.console.Console#dispose()
-	 */
 	@Override public void dispose () {
 		if (usesMultiplexer && appInput != null) {
 			Gdx.input.setInputProcessor(appInput);
@@ -389,20 +307,10 @@ public class GUIConsole extends AbstractConsole {
 		stage.dispose();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.strongjoshua.console.Console#isHidden()
-	 */
 	@Override public boolean isVisible () {
 		return !hidden;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.strongjoshua.console.Console#setHidden()
-	 */
 	public void setVisible (boolean visible) {
 		display.setHidden(!visible);
 	}
@@ -450,10 +358,12 @@ public class GUIConsole extends AbstractConsole {
 		private Array<Label> labels;
 		private String fontName;
 		private boolean selected = true;
+		private ConsoleContext context;
 
-		protected ConsoleDisplay (Skin skin) {
+		ConsoleDisplay (Skin skin) {
 			this.setFillParent(false);
 			this.skin = skin;
+			context = new ConsoleContext(skin);
 
 			if (skin.has("console-font", BitmapFont.class))
 				fontName = "console-font";
@@ -474,13 +384,19 @@ public class GUIConsole extends AbstractConsole {
 			scroll.setFadeScrollBars(false);
 			scroll.setScrollbarsOnTop(false);
 			scroll.setOverscroll(false, false);
+			scroll.addListener(new DragScrollListener(scroll) {
+				@Override public boolean scrolled (InputEvent event, float x, float y, int amount) {
+					closeContext();
+					return super.scrolled(event, x, y, amount);
+				}
+			});
 
 			this.add(scroll).expand().fill().pad(4).row();
 			this.add(input).expandX().fillX().pad(4);
 			this.addListener(new KeyListener(input));
 		}
 
-		protected void refresh () {
+		void refresh () {
 			Array<LogEntry> entries = log.getLogEntries();
 			logEntries.clear();
 
@@ -497,6 +413,7 @@ public class GUIConsole extends AbstractConsole {
 					l = new Label("", skin, fontName, LogLevel.DEFAULT.getColor());
 					l.setWrap(true);
 					labels.add(l);
+					l.addListener(new LogListener(l, skin.getDrawable("default-rect")));
 				}
 				l.setText(le.toConsoleString());
 				l.setColor(le.getColor());
@@ -521,7 +438,7 @@ public class GUIConsole extends AbstractConsole {
 			}
 		}
 
-		public void select () {
+		void select () {
 			selected = true;
 			if (!hidden) {
 				stage.setKeyboardFocus(input);
@@ -529,10 +446,20 @@ public class GUIConsole extends AbstractConsole {
 			}
 		}
 
-		public void deselect () {
+		void deselect () {
 			selected = false;
 			stage.setKeyboardFocus(null);
 			stage.setScrollFocus(null);
+		}
+
+		void openContext (Label label, float x, float y) {
+			context.setLabel(label);
+			context.setPosition(x, y);
+			stage.addActor(context);
+		}
+
+		void closeContext () {
+			context.remove();
 		}
 	}
 
@@ -570,8 +497,8 @@ public class GUIConsole extends AbstractConsole {
 					commandHistory.store(s);
 					execCommand(s);
 				} else {
-					log("No command executor has been set. Please call setCommandExecutor for this console in your code and restart.",
-						LogLevel.ERROR);
+					log("No command executor has been set. "
+						+ "Please call setCommandExecutor for this console in your code and restart.", LogLevel.ERROR);
 				}
 				input.setText("");
 				return true;
@@ -622,6 +549,33 @@ public class GUIConsole extends AbstractConsole {
 				return;
 			hasHover = false;
 			refreshWindowColor();
+		}
+	}
+
+	private class LogListener extends ClickListener {
+		private Label self;
+		private Drawable highlighted;
+
+		LogListener (Label label, Drawable highlighted) {
+			self = label;
+			this.highlighted = highlighted;
+		}
+
+		@Override public void clicked (InputEvent event, float x, float y) {
+			Vector2 pos = self.localToStageCoordinates(new Vector2(x, y));
+			display.openContext(self, pos.x, pos.y);
+		}
+
+		@Override public void enter (InputEvent event, float x, float y, int pointer, Actor fromActor) {
+			if (pointer != -1)
+				return;
+			self.getStyle().background = highlighted;
+		}
+
+		@Override public void exit (InputEvent event, float x, float y, int pointer, Actor toActor) {
+			if (pointer != -1)
+				return;
+			self.getStyle().background = null;
 		}
 	}
 }
