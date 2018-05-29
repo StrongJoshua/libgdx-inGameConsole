@@ -53,6 +53,7 @@ public class GUIConsole extends AbstractConsole {
 	 * Creates the console using the default skin.<br>
 	 * <b>***IMPORTANT***</b> Call {@link Console#dispose()} to make your {@link InputProcessor} the default processor again (this
 	 * console uses a multiplexer to circumvent it).
+	 * <br>Default key toggle is apostrophe: '
 	 *
 	 * @see Console#dispose()
 	 */
@@ -64,6 +65,7 @@ public class GUIConsole extends AbstractConsole {
 	 * Creates the console.<br>
 	 * <b>***IMPORTANT***</b> Call {@link Console#dispose()} to make your {@link InputProcessor} the default processor again (this
 	 * console uses a multiplexer to circumvent it).
+	 * <br>Default key toggle is apostrophe: '
 	 *
 	 * @param skin Uses skins for Label, TextField, and Table. Skin <b>must</b> contain a font called 'default-font'.
 	 * @see Console#dispose()
@@ -76,6 +78,7 @@ public class GUIConsole extends AbstractConsole {
 	 * Creates the console.<br>
 	 * <b>***IMPORTANT***</b> Call {@link Console#dispose()} to make your {@link InputProcessor} the default processor again (this
 	 * console uses a multiplexer to circumvent it).
+	 * <br>Default key toggle is apostrophe: '
 	 *
 	 * @param useMultiplexer If internal multiplexer should be used
 	 * @see Console#dispose()
@@ -88,6 +91,7 @@ public class GUIConsole extends AbstractConsole {
 	 * Creates the console.<br>
 	 * <b>***IMPORTANT***</b> Call {@link Console#dispose()} to make your {@link InputProcessor} the default processor again (this
 	 * console uses a multiplexer to circumvent it).
+	 * <br>Default key toggle is apostrophe: '
 	 *
 	 * @param skin           Uses skins for Label, TextField, and Table. Skin <b>must</b> contain a font called 'default-font'.
 	 * @param useMultiplexer If internal multiplexer should be used
@@ -104,7 +108,7 @@ public class GUIConsole extends AbstractConsole {
 	 *
 	 * @param skin           Uses skins for Label, TextField, and Table. Skin <b>must</b> contain a font called 'default-font'.
 	 * @param useMultiplexer If internal multiplexer should be used
-	 * @param keyID          Sets the key used to open/close the console
+	 * @param keyID          Sets the key used to open/close the console (default is apostrophe: ')
 	 * @see Console#dispose()
 	 */
 	public GUIConsole (Skin skin, boolean useMultiplexer, int keyID) {
@@ -459,7 +463,7 @@ public class GUIConsole extends AbstractConsole {
 			TextFieldStyle tfs = skin.get(TextFieldStyle.class);
 			tfs.font = skin.getFont(fontName);
 
-			labels = new Array<Label>();
+			labels = new Array<>();
 
 			logEntries = new Table(skin);
 
@@ -607,11 +611,15 @@ public class GUIConsole extends AbstractConsole {
 		}
 
 		@Override public void enter (InputEvent event, float x, float y, int pointer, Actor fromActor) {
+			if (pointer != -1)
+				return;
 			hasHover = true;
 			refreshWindowColor();
 		}
 
 		@Override public void exit (InputEvent event, float x, float y, int pointer, Actor toActor) {
+			if (pointer != -1)
+				return;
 			hasHover = false;
 			refreshWindowColor();
 		}

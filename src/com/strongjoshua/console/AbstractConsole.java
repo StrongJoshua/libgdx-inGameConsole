@@ -1,5 +1,14 @@
 /**
- *
+ * Copyright 2018 StrongJoshua (strongjoshua@hotmail.com)
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions
+ * and limitations under the License.
  */
 
 package com.strongjoshua.console;
@@ -37,20 +46,10 @@ public abstract class AbstractConsole implements Console, Disposable {
 		log = new Log();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.strongjoshua.console.Console#setLoggingToSystem(java.lang .Boolean)
-	 */
 	@Override public void setLoggingToSystem (Boolean log) {
 		this.logToSystem = log;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.strongjoshua.console.Console#log(java.lang.String, com .strongjoshua.console.GUIConsole.LogLevel)
-	 */
 	@Override public void log (String msg, LogLevel level) {
 		log.addEntry(msg, level);
 
@@ -66,48 +65,22 @@ public abstract class AbstractConsole implements Console, Disposable {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.strongjoshua.console.Console#log(java.lang.String)
-	 */
 	@Override public void log (String msg) {
 		this.log(msg, LogLevel.DEFAULT);
 	}
 
-	/**
-	 * Logs a new entry to the console using {@link LogLevel}.
-	 *
-	 * @param exception The exception to be logged
-	 * @param level     The {@link LogLevel} of the log entry.
-	 */
 	@Override public void log (Exception exception, LogLevel level) {
 		this.log(ConsoleUtils.exceptionToString(exception), level);
 	}
 
-	/**
-	 * Logs a new entry to the console using {@link LogLevel#ERROR}.
-	 *
-	 * @param exception The exception to be logged
-	 */
 	@Override public void log (Exception exception) {
 		this.log(exception, LogLevel.ERROR);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.strongjoshua.console.Console#printLogToFile(java.lang.String)
-	 */
 	@Override public void printLogToFile (String file) {
 		this.printLogToFile(Gdx.files.local(file));
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.strongjoshua.console.Console#printLogToFile(com.badlogic.gdx .files.FileHandle)
-	 */
 	@Override public void printLogToFile (FileHandle fh) {
 		if (log.printToFile(fh)) {
 			log("Successfully wrote logs to file.", LogLevel.SUCCESS);
@@ -116,39 +89,19 @@ public abstract class AbstractConsole implements Console, Disposable {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.strongjoshua.console.Console#isDisabled()
-	 */
 	@Override public boolean isDisabled () {
 		return disabled;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.strongjoshua.console.Console#setDisabled(boolean)
-	 */
 	@Override public void setDisabled (boolean disabled) {
 		this.disabled = disabled;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.strongjoshua.console.Console#setCommandExecutor(com .strongjoshua.console.CommandExecutor)
-	 */
 	@Override public void setCommandExecutor (CommandExecutor commandExec) {
 		exec = commandExec;
 		exec.setConsole(this);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.strongjoshua.console.Console#execCommand(java.lang.String)
-	 */
 	@Override public void execCommand (String command) {
 		if (disabled)
 			return;
@@ -227,7 +180,7 @@ public abstract class AbstractConsole implements Console, Disposable {
 					return;
 				} catch (ReflectionException e) {
 					String msg = e.getMessage();
-					if (msg == null || msg.length() <= 0 || msg.equals("")) {
+					if (msg == null || msg.length() <= 0) {
 						msg = "Unknown Error";
 						e.printStackTrace();
 					}
@@ -312,11 +265,6 @@ public abstract class AbstractConsole implements Console, Disposable {
 			log("Command does not exist.");
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.strongjoshua.console.Console#setExecuteHiddenCommands(boolean)
-	 */
 	@Override public void setExecuteHiddenCommands (boolean enabled) {
 		executeHiddenCommands = enabled;
 	}
@@ -325,11 +273,6 @@ public abstract class AbstractConsole implements Console, Disposable {
 		return executeHiddenCommands;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.strongjoshua.console.Console#setDisplayHiddenCommands(boolean)
-	 */
 	@Override public void setDisplayHiddenCommands (boolean enabled) {
 		displayHiddenCommands = enabled;
 	}

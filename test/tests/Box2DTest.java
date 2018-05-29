@@ -160,7 +160,7 @@ public class Box2DTest extends ApplicationAdapter {
 		console.setHoverColor(Color.WHITE);
 		console.setNoHoverColor(Color.BLUE);
 		console.setHoverAlpha(.9f);
-		console.setNoHoverAlpha(.6f);
+		console.setNoHoverAlpha(.4f);
 
 		// test multiple resets with nested multiplexers
 		InputMultiplexer im1 = new InputMultiplexer();

@@ -49,7 +49,7 @@ public class StageTest extends ApplicationAdapter {
 					console.select();
 					return true;
 				} else if (keycode == Input.Keys.D) {
-					System.out.println("toggle disabled");
+					System.out.println("Console " + (console.isDisabled() ? "enabled" : "disabled"));
 					console.setDisabled(!console.isDisabled());
 					return true;
 				}

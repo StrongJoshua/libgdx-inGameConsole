@@ -3,7 +3,8 @@ apply plugin: 'maven'
 apply plugin: 'signing'
 
 group = 'com.strongjoshua'
-version = '0.7.1'
+version = '0.8.0'
+gdxVersion = '1.9.8'
 
 description = """LibGdx In-Game Console"""
 
@@ -15,11 +16,11 @@ repositories {
 }
 
 dependencies {
-    compile group: 'com.badlogicgames.gdx', name: 'gdx', version:'1.9.6'
-    testCompile group: 'com.badlogicgames.gdx', name: 'gdx-backend-lwjgl', version:'1.9.6'
-    testCompile group: 'com.badlogicgames.gdx', name: 'gdx-platform', version:'1.9.6', classifier:'natives-desktop'
-    testCompile group: 'com.badlogicgames.gdx', name: 'gdx-box2d', version:'1.9.6'
-    testCompile group: 'com.badlogicgames.gdx', name: 'gdx-box2d-platform', version:'1.9.6', classifier:'natives-desktop'
+    compile group: 'com.badlogicgames.gdx', name: 'gdx', version:gdxVersion // make this a variable
+    testCompile group: 'com.badlogicgames.gdx', name: 'gdx-backend-lwjgl', version:gdxVersion
+    testCompile group: 'com.badlogicgames.gdx', name: 'gdx-platform', version:gdxVersion, classifier:'natives-desktop'
+    testCompile group: 'com.badlogicgames.gdx', name: 'gdx-box2d', version:gdxVersion
+    testCompile group: 'com.badlogicgames.gdx', name: 'gdx-box2d-platform', version:gdxVersion, classifier:'natives-desktop'
     testCompile group: 'junit', name: 'junit', version:'4.12'
 }
 
