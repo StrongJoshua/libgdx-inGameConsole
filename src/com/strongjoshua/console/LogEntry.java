@@ -16,7 +16,7 @@ package com.strongjoshua.console;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.TimeUtils;
 
-class LogEntry {
+public class LogEntry {
 	private String text;
 	private LogLevel level;
 	private long timeStamp;
