@@ -9,7 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
-class ConsoleContext extends Table {
+public class ConsoleContext extends Table {
 	private Label label, copy;
 	private InputListener stageListener;
 
