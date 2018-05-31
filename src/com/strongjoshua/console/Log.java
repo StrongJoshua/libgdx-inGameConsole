@@ -19,7 +19,7 @@ import com.badlogic.gdx.utils.Array;
 import java.io.IOException;
 import java.io.Writer;
 
-class Log {
+public class Log {
 	private Array<LogEntry> logEntries;
 	private int numEntries = Console.UNLIMITED_ENTRIES;
 
