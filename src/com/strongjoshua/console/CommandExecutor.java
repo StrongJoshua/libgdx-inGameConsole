@@ -33,7 +33,7 @@ import com.strongjoshua.console.annotation.ConsoleDoc;
  *
  * @author StrongJoshua
  */
-public abstract class CommandExecutor {
+public class CommandExecutor {
 	protected Console console;
 
 	protected void setConsole (Console c) {
