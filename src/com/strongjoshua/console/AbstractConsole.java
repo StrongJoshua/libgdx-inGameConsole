@@ -69,11 +69,11 @@ public abstract class AbstractConsole implements Console, Disposable {
 		this.log(msg, LogLevel.DEFAULT);
 	}
 
-	@Override public void log (Exception exception, LogLevel level) {
+	@Override public void log (Throwable exception, LogLevel level) {
 		this.log(ConsoleUtils.exceptionToString(exception), level);
 	}
 
-	@Override public void log (Exception exception) {
+	@Override public void log (Throwable exception) {
 		this.log(exception, LogLevel.ERROR);
 	}
 
