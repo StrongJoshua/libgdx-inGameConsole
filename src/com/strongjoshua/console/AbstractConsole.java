@@ -360,4 +360,10 @@ public abstract class AbstractConsole implements Console, Disposable {
 
 	@Override public void setNoHoverColor (Color color) {
 	}
+
+	@Override public void enableSubmitButton (boolean enable) {
+	}
+
+	@Override public void setSubmitText (String text) {
+	}
 }

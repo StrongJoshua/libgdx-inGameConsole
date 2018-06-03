@@ -316,4 +316,18 @@ public interface Console {
 	 * @param color The color.
 	 */
 	void setNoHoverColor (Color color);
+
+	/**
+	 * Works only for GUIConsole. Adds a 'Submit' button next to the input field.
+	 *
+	 * @param enable Whether to show the submit button.
+	 */
+	void enableSubmitButton (boolean enable);
+
+	/**
+	 * Sets the text the submit button should show.
+	 *
+	 * @param text The text.
+	 */
+	void setSubmitText (String text);
 }

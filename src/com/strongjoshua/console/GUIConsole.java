@@ -131,6 +131,7 @@ public class GUIConsole extends AbstractConsole {
 		display.pad(4);
 		display.padTop(22);
 		display.setFillParent(true);
+		display.showSubmit(false);
 
 		consoleWindow = new Window("Console", skin);
 		consoleWindow.setMovable(true);
@@ -311,7 +312,7 @@ public class GUIConsole extends AbstractConsole {
 		return !hidden;
 	}
 
-	public void setVisible (boolean visible) {
+	@Override public void setVisible (boolean visible) {
 		display.setHidden(!visible);
 	}
 
@@ -351,14 +352,24 @@ public class GUIConsole extends AbstractConsole {
 		refreshWindowColor();
 	}
 
+	@Override public void enableSubmitButton (boolean enable) {
+		display.showSubmit(enable);
+	}
+
+	@Override public void setSubmitText (String text) {
+		display.setSubmitText(text);
+	}
+
 	private class ConsoleDisplay extends Table {
 		private Table logEntries;
 		private TextField input;
+		private Button submit;
 		private Skin skin;
 		private Array<Label> labels;
 		private String fontName;
 		private boolean selected = true;
 		private ConsoleContext context;
+		private Cell<Button> submitCell;
 
 		ConsoleDisplay (Skin skin) {
 			this.setFillParent(false);
@@ -373,12 +384,19 @@ public class GUIConsole extends AbstractConsole {
 			TextFieldStyle tfs = skin.get(TextFieldStyle.class);
 			tfs.font = skin.getFont(fontName);
 
-			labels = new Array<>();
+			labels = new Array<Label>();
 
 			logEntries = new Table(skin);
 
 			input = new TextField("", tfs);
 			input.setTextFieldListener(new FieldListener());
+
+			submit = new Button(new Label("Submit", skin), skin);
+			submit.addListener(new ClickListener() {
+				@Override public void clicked (InputEvent event, float x, float y) {
+					submit();
+				}
+			});
 
 			scroll = new ScrollPane(logEntries, skin);
 			scroll.setFadeScrollBars(false);
@@ -391,8 +409,9 @@ public class GUIConsole extends AbstractConsole {
 				}
 			});
 
-			this.add(scroll).expand().fill().pad(4).row();
+			this.add(scroll).colspan(2).expand().fill().pad(4).row();
 			this.add(input).expandX().fillX().pad(4);
+			submitCell = this.add(submit);
 			this.addListener(new KeyListener(input));
 		}
 
@@ -461,6 +480,32 @@ public class GUIConsole extends AbstractConsole {
 		void closeContext () {
 			context.remove();
 		}
+
+		boolean submit () {
+			String s = input.getText();
+			if (s.length() == 0 || s.split(" ").length == 0) {
+				return false;
+			}
+			if (exec != null) {
+				commandHistory.store(s);
+				execCommand(s);
+			} else {
+				log("No command executor has been set. "
+					+ "Please call setCommandExecutor for this console in your code and restart.", LogLevel.ERROR);
+			}
+			input.setText("");
+			return true;
+		}
+
+		void showSubmit (boolean show) {
+			submit.setVisible(show);
+			submitCell.size(show ? submit.getPrefWidth() : 0, show ? submit.getPrefHeight() : 0);
+		}
+
+		void setSubmitText (String text) {
+			((Label)submit.getChildren().get(0)).setText(text);
+			showSubmit(submit.isVisible());
+		}
 	}
 
 	private class FieldListener implements TextFieldListener {
@@ -489,19 +534,7 @@ public class GUIConsole extends AbstractConsole {
 			}
 
 			if (keycode == Keys.ENTER && !hidden) {
-				String s = input.getText();
-				if (s.length() == 0 || s.split(" ").length == 0) {
-					return false;
-				}
-				if (exec != null) {
-					commandHistory.store(s);
-					execCommand(s);
-				} else {
-					log("No command executor has been set. "
-						+ "Please call setCommandExecutor for this console in your code and restart.", LogLevel.ERROR);
-				}
-				input.setText("");
-				return true;
+				return display.submit();
 			} else if (keycode == Keys.UP && !hidden) {
 				input.setText(commandHistory.getPreviousCommand());
 				input.setCursorPosition(input.getText().length());

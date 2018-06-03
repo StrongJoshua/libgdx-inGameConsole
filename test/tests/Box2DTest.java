@@ -179,6 +179,9 @@ public class Box2DTest extends ApplicationAdapter {
 
 		console.setSizePercent(100, 33);
 		console.setPositionPercent(0, 67);
+
+		console.enableSubmitButton(true);
+		console.setSubmitText("Fire!");
 	}
 
 	@Override public void render () {
@@ -284,6 +287,12 @@ public class Box2DTest extends ApplicationAdapter {
 
 		public void failFunction () {
 			throw new RuntimeException("This function was designed to fail.");
+		}
+
+		boolean last = true;
+		public void toggleSubmit () {
+			last = !last;
+			console.enableSubmitButton(last);
 		}
 	}
 }
