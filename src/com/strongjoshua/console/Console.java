@@ -132,7 +132,7 @@ public interface Console {
 	 *
 	 * @param exception The exception to be logged
 	 */
-	void log (Exception exception);
+	void log (Throwable exception);
 
 	/**
 	 * Logs a new entry to the console using {@link LogLevel}.
@@ -140,7 +140,7 @@ public interface Console {
 	 * @param exception The exception to be logged
 	 * @param level     The {@link LogLevel} of the log entry.
 	 */
-	void log (Exception exception, LogLevel level);
+	void log (Throwable exception, LogLevel level);
 
 	/**
 	 * Prints all log entries to the given file. Log entries include logs in the code and commands made from within in the console
