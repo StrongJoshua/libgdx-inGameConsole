@@ -15,7 +15,7 @@ package com.strongjoshua.console;
 
 import com.badlogic.gdx.utils.Array;
 
-class CommandHistory {
+public class CommandHistory {
 	private final Array<String> commands = new Array<>(true, 20);
 	private int index;
 
