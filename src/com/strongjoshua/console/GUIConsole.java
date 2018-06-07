@@ -359,6 +359,10 @@ public class GUIConsole extends AbstractConsole {
 	@Override public void setSubmitText (String text) {
 		display.setSubmitText(text);
 	}
+	
+	public Window getWindow () {
+		return this.consoleWindow;
+	}
 
 	private class ConsoleDisplay extends Table {
 		private Table logEntries;
