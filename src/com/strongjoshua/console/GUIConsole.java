@@ -156,7 +156,7 @@ public class GUIConsole extends AbstractConsole {
 		try {
 			consoleWindow = windowClass.getConstructor(String.class, Skin.class).newInstance("Console", skin);
 		} catch (Exception e) {
-			throw new RuntimeException("Given class does not support (<String>, <Skin>) constructor.");
+			throw new RuntimeException("Window class does not support (<String>, <Skin>) constructor.");
 		}
 		consoleWindow.setMovable(true);
 		consoleWindow.setResizable(true);
@@ -431,7 +431,7 @@ public class GUIConsole extends AbstractConsole {
 			try {
 				submitLabel = labelClass.getConstructor(CharSequence.class, Skin.class).newInstance("Submit", skin);
 			} catch (Exception e) {
-				throw new RuntimeException("Label class does not support (<String>, <Skin>) constructor.");
+				throw new RuntimeException("Label class does not support (<CharSequence>, <Skin>) constructor.");
 			}
 			try {
 				submit = buttonClass.getConstructor(Actor.class, Skin.class).newInstance(submitLabel, skin);
