@@ -360,8 +360,8 @@ public class GUIConsole extends AbstractConsole {
 		display.setSubmitText(text);
 	}
 	
-	public Window getWindow () {
-		return this.consoleWindow;
+	public void toFront () {
+		return this.consoleWindow.toFront();
 	}
 
 	private class ConsoleDisplay extends Table {
