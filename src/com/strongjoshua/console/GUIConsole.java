@@ -383,6 +383,10 @@ public class GUIConsole extends AbstractConsole {
 	@Override public void setSubmitText (String text) {
 		display.setSubmitText(text);
 	}
+	
+	public void toFront () {
+		return this.consoleWindow.toFront();
+	}
 
 	private class ConsoleDisplay {
 		private Table root, logEntries;
