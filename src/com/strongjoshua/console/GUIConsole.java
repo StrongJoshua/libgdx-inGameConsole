@@ -53,6 +53,12 @@ public class GUIConsole extends AbstractConsole {
 	private Vector3 stageCoords = new Vector3();
 	private ScrollPane scroll;
 
+	private Class<? extends Table> tableClass;
+	private Class<? extends TextField> textFieldClass;
+	private Class<? extends Button> buttonClass;
+	private Class<? extends Label> labelClass;
+	private Class<? extends ScrollPane> scrollPaneClass;
+
 	/**
 	 * Creates the console using the default skin.<br>
 	 * <b>***IMPORTANT***</b> Call {@link Console#dispose()} to make your {@link InputProcessor} the default processor again (this
@@ -116,6 +122,20 @@ public class GUIConsole extends AbstractConsole {
 	 * @see Console#dispose()
 	 */
 	public GUIConsole (Skin skin, boolean useMultiplexer, int keyID) {
+		this(skin, useMultiplexer, keyID, Window.class, Table.class, TextField.class, Button.class, Label.class,
+			ScrollPane.class);
+	}
+
+	public GUIConsole (Skin skin, boolean useMultiplexer, int keyID, Class<? extends Window> windowClass,
+		Class<? extends Table> tableClass, Class<? extends TextField> textFieldClass, Class<? extends Button> buttonClass,
+		Class<? extends Label> labelClass, Class<? extends ScrollPane> scrollPaneClass) {
+
+		this.tableClass = tableClass;
+		this.textFieldClass = textFieldClass;
+		this.buttonClass = buttonClass;
+		this.labelClass = labelClass;
+		this.scrollPaneClass = scrollPaneClass;
+
 		this.keyID = keyID;
 		stage = new Stage();
 		display = new ConsoleDisplay(skin);
@@ -128,16 +148,20 @@ public class GUIConsole extends AbstractConsole {
 			resetInputProcessing();
 		}
 
-		display.pad(4);
-		display.padTop(22);
-		display.setFillParent(true);
+		display.root.pad(4);
+		display.root.padTop(22);
+		display.root.setFillParent(true);
 		display.showSubmit(false);
 
-		consoleWindow = new Window("Console", skin);
+		try {
+			consoleWindow = windowClass.getConstructor(String.class, Skin.class).newInstance("Console", skin);
+		} catch (Exception e) {
+			throw new RuntimeException("Given class does not support (<String>, <Skin>) constructor.");
+		}
 		consoleWindow.setMovable(true);
 		consoleWindow.setResizable(true);
 		consoleWindow.setKeepWithinStage(true);
-		consoleWindow.addActor(display);
+		consoleWindow.addActor(display.root);
 		consoleWindow.setTouchable(Touchable.disabled);
 
 		hoverColor = new Color(1, 1, 1, 1);
@@ -145,7 +169,7 @@ public class GUIConsole extends AbstractConsole {
 
 		stage.addListener(new DisplayListener());
 		stage.addActor(consoleWindow);
-		stage.setKeyboardFocus(display);
+		stage.setKeyboardFocus(display.root);
 
 		setSizePercent(50, 50);
 		setPositionPercent(50, 50);
@@ -360,8 +384,8 @@ public class GUIConsole extends AbstractConsole {
 		display.setSubmitText(text);
 	}
 
-	private class ConsoleDisplay extends Table {
-		private Table logEntries;
+	private class ConsoleDisplay {
+		private Table root, logEntries;
 		private TextField input;
 		private Button submit;
 		private Skin skin;
@@ -372,9 +396,13 @@ public class GUIConsole extends AbstractConsole {
 		private Cell<Button> submitCell;
 
 		ConsoleDisplay (Skin skin) {
-			this.setFillParent(false);
+			try {
+				root = tableClass.newInstance();
+			} catch (Exception e) {
+				throw new RuntimeException("Table class does not support empty constructor.");
+			}
 			this.skin = skin;
-			context = new ConsoleContext(skin);
+			context = new ConsoleContext(tableClass, skin);
 
 			if (skin.has("console-font", BitmapFont.class))
 				fontName = "console-font";
@@ -386,19 +414,41 @@ public class GUIConsole extends AbstractConsole {
 
 			labels = new Array<Label>();
 
-			logEntries = new Table(skin);
+			try {
+				logEntries = tableClass.getConstructor(Skin.class).newInstance(skin);
+			} catch (Exception e) {
+				throw new RuntimeException("Table class does not support (<Skin>) constructor.");
+			}
 
-			input = new TextField("", tfs);
+			try {
+				input = textFieldClass.getConstructor(String.class, TextFieldStyle.class).newInstance("", tfs);
+			} catch (Exception e) {
+				throw new RuntimeException("TextField class does not support (<String>, <Skin>) constructor.");
+			}
 			input.setTextFieldListener(new FieldListener());
 
-			submit = new Button(new Label("Submit", skin), skin);
+			Label submitLabel;
+			try {
+				submitLabel = labelClass.getConstructor(CharSequence.class, Skin.class).newInstance("Submit", skin);
+			} catch (Exception e) {
+				throw new RuntimeException("Label class does not support (<String>, <Skin>) constructor.");
+			}
+			try {
+				submit = buttonClass.getConstructor(Actor.class, Skin.class).newInstance(submitLabel, skin);
+			} catch (Exception e) {
+				throw new RuntimeException("Button class does not support (Actor, <Skin>) constructor.");
+			}
 			submit.addListener(new ClickListener() {
 				@Override public void clicked (InputEvent event, float x, float y) {
 					submit();
 				}
 			});
 
-			scroll = new ScrollPane(logEntries, skin);
+			try {
+				scroll = scrollPaneClass.getConstructor(Actor.class, Skin.class).newInstance(logEntries, skin);
+			} catch (Exception e) {
+				throw new RuntimeException("ScrollPane class does not support (Actor, <Skin>) constructor.");
+			}
 			scroll.setFadeScrollBars(false);
 			scroll.setScrollbarsOnTop(false);
 			scroll.setOverscroll(false, false);
@@ -409,10 +459,10 @@ public class GUIConsole extends AbstractConsole {
 				}
 			});
 
-			this.add(scroll).colspan(2).expand().fill().pad(4).row();
-			this.add(input).expandX().fillX().pad(4);
-			submitCell = this.add(submit);
-			this.addListener(new KeyListener(input));
+			root.add(scroll).colspan(2).expand().fill().pad(4).row();
+			root.add(input).expandX().fillX().pad(4);
+			submitCell = root.add(submit);
+			root.addListener(new KeyListener(input));
 		}
 
 		void refresh () {
@@ -429,7 +479,13 @@ public class GUIConsole extends AbstractConsole {
 				if (labels.size > i) {
 					l = labels.get(i);
 				} else {
-					l = new Label("", skin, fontName, LogLevel.DEFAULT.getColor());
+					try {
+						l = labelClass.getConstructor(CharSequence.class, Skin.class, String.class, Color.class)
+							.newInstance("", skin, fontName, LogLevel.DEFAULT.getColor());
+					} catch (Exception e) {
+						throw new RuntimeException(
+							"Label class does not support (<String>, <Skin>, <String>, <Color>) constructor.");
+					}
 					l.setWrap(true);
 					labels.add(l);
 					l.addListener(new LogListener(l, skin.getDrawable("default-rect")));
@@ -474,7 +530,7 @@ public class GUIConsole extends AbstractConsole {
 		void openContext (Label label, float x, float y) {
 			context.setLabel(label);
 			context.setPosition(x, y);
-			stage.addActor(context);
+			context.setStage(stage);
 		}
 
 		void closeContext () {

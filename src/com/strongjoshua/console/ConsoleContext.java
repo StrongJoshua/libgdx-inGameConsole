@@ -9,11 +9,17 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
-public class ConsoleContext extends Table {
+public class ConsoleContext {
+	private Table root;
 	private Label label, copy;
 	private InputListener stageListener;
 
-	ConsoleContext (Skin skin) {
+	ConsoleContext (Class<? extends Table> tableClass, Skin skin) {
+		try {
+			root = tableClass.newInstance();
+		} catch (Exception e) {
+			throw new RuntimeException("Table class does not support empty constructor.");
+		}
 		copy = new Label("Copy", skin);
 		copy.addListener(new ClickListener() {
 			@Override public void clicked (InputEvent event, float x, float y) {
@@ -25,14 +31,14 @@ public class ConsoleContext extends Table {
 				ConsoleContext.this.remove();
 			}
 		});
-		this.setBackground(skin.getDrawable("default-rect"));
-		this.add(copy);
-		this.pad(5);
-		this.setSize(this.getPrefWidth(), this.getPrefHeight());
+		root.setBackground(skin.getDrawable("default-rect"));
+		root.add(copy);
+		root.pad(5);
+		root.setSize(root.getPrefWidth(), root.getPrefHeight());
 
 		stageListener = new InputListener() {
 			@Override public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-				if (ConsoleContext.this.hit(x, y, false) == null)
+				if (ConsoleContext.this.root.hit(x, y, false) == null)
 					remove();
 				return true;
 			}
@@ -43,15 +49,20 @@ public class ConsoleContext extends Table {
 		label = l;
 	}
 
-	@Override protected void setStage (Stage stage) {
-		super.setStage(stage);
-		if (stage != null)
+	protected void setStage (Stage stage) {
+		if (stage != null) {
 			stage.addListener(stageListener);
+			stage.addActor(root);
+		}
 	}
 
-	@Override public boolean remove () {
-		if (getStage() != null)
-			getStage().removeListener(stageListener);
-		return super.remove();
+	protected boolean remove () {
+		if (root.getStage() != null)
+			root.getStage().removeListener(stageListener);
+		return root.remove();
+	}
+
+	protected void setPosition (float x, float y) {
+		root.setPosition(x, y);
 	}
 }
