@@ -18,6 +18,7 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.strongjoshua.console.annotation.HiddenCommand;
 
 /**
@@ -330,4 +331,11 @@ public interface Console {
 	 * @param text The text.
 	 */
 	void setSubmitText (String text);
+
+	/**
+	 * Returns the Console's Window object.
+	 *
+	 * @return The window.
+	 */
+	Window getWindow ();
 }
