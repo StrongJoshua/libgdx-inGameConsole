@@ -23,6 +23,7 @@ import com.badlogic.gdx.utils.reflect.Annotation;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.reflect.Method;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
+import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.strongjoshua.console.annotation.ConsoleDoc;
 
 import java.util.ArrayList;
@@ -365,5 +366,9 @@ public abstract class AbstractConsole implements Console, Disposable {
 	}
 
 	@Override public void setSubmitText (String text) {
+	}
+	
+	public Window getWindow () {
+		return null;
 	}
 }
