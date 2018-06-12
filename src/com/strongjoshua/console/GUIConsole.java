@@ -132,6 +132,14 @@ public class GUIConsole extends AbstractConsole {
 	public GUIConsole (Skin skin, boolean useMultiplexer, int keyID, Class<? extends Window> windowClass,
 		Class<? extends Table> tableClass, String tableBackground, Class<? extends TextField> textFieldClass,
 		Class<? extends TextButton> textButtonClass, Class<? extends Label> labelClass,
+		Class<? extends ScrollPane> scrollPaneClass) {
+		this(skin, useMultiplexer, keyID, windowClass, tableClass, tableBackground, textFieldClass, textButtonClass, 
+		    	labelClass, scrollPaneClass, new Stage());	
+	}
+	
+	public GUIConsole (Skin skin, boolean useMultiplexer, int keyID, Class<? extends Window> windowClass,
+		Class<? extends Table> tableClass, String tableBackground, Class<? extends TextField> textFieldClass,
+		Class<? extends TextButton> textButtonClass, Class<? extends Label> labelClass,
 		Class<? extends ScrollPane> scrollPaneClass, Stage stage) {
 
 		this.tableClass = tableClass;
