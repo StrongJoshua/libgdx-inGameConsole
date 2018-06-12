@@ -37,6 +37,7 @@ import com.badlogic.gdx.utils.Array;
  * @author StrongJoshua
  */
 public class GUIConsole extends AbstractConsole {
+	
 	private int keyID;
 
 	private ConsoleDisplay display;
@@ -125,13 +126,13 @@ public class GUIConsole extends AbstractConsole {
 	 */
 	public GUIConsole (Skin skin, boolean useMultiplexer, int keyID) {
 		this(skin, useMultiplexer, keyID, Window.class, Table.class, "default-rect", TextField.class, TextButton.class,
-			Label.class, ScrollPane.class);
+			Label.class, ScrollPane.class, new Stage());
 	}
 
 	public GUIConsole (Skin skin, boolean useMultiplexer, int keyID, Class<? extends Window> windowClass,
 		Class<? extends Table> tableClass, String tableBackground, Class<? extends TextField> textFieldClass,
 		Class<? extends TextButton> textButtonClass, Class<? extends Label> labelClass,
-		Class<? extends ScrollPane> scrollPaneClass) {
+		Class<? extends ScrollPane> scrollPaneClass, Stage stage) {
 
 		this.tableClass = tableClass;
 		this.tableBackground = tableBackground;
@@ -141,7 +142,7 @@ public class GUIConsole extends AbstractConsole {
 		this.scrollPaneClass = scrollPaneClass;
 
 		this.keyID = keyID;
-		stage = new Stage();
+		this.stage = stage;
 		display = new ConsoleDisplay(skin);
 		commandHistory = new CommandHistory();
 		commandCompleter = new CommandCompleter();
@@ -175,9 +176,9 @@ public class GUIConsole extends AbstractConsole {
 		hoverColor = new Color(1, 1, 1, 1);
 		noHoverColor = new Color(1, 1, 1, 1);
 
-		stage.addListener(new DisplayListener());
-		stage.addActor(consoleWindow);
-		stage.setKeyboardFocus(display.root);
+		this.stage.addListener(new DisplayListener());
+		this.stage.addActor(consoleWindow);
+		this.stage.setKeyboardFocus(display.root);
 
 		setSizePercent(50, 50);
 		setPositionPercent(50, 50);
