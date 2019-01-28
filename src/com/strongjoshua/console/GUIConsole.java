@@ -256,7 +256,7 @@ public class GUIConsole extends AbstractConsole {
 			return processor == stage;
 		}
 		InputMultiplexer im = (InputMultiplexer)processor;
-		Array<InputProcessor> ips = im.getProcessors();
+		SnapshotArray<InputProcessor> ips = im.getProcessors();
 		for (InputProcessor ip : ips) {
 			if (hasStage(ip)) {
 				return true;
