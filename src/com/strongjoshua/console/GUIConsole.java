@@ -612,6 +612,7 @@ public class GUIConsole extends AbstractConsole {
 			}
 
 			if (keycode == Keys.ENTER && !hidden) {
+				commandHistory.getNextCommand(); // Makes up arrow key repeat the same command after pressing enter
 				return display.submit();
 			} else if (keycode == Keys.UP && !hidden) {
 				input.setText(commandHistory.getPreviousCommand());
