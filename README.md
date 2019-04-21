@@ -21,10 +21,6 @@ Right-click on your project and choose `Maven->Add Dependency` and search for `s
 #### Eclipse
 First, clone this project to your computer and [add it to Eclipse](http://www.eclipse.org/forums/index.php/t/226301/). Then simply click on your project, and choose `Build Path->Configure Build Path`. Then go to `Projects->Add` and add the cloned project.
 
-### Contributing
-Contributions are always welcome, especially if they fix an **Issue**.  
-If you are in the [contributors](https://github.com/StrongJoshua/libgdx-inGameConsole/graphs/contributors) tab and would like to be credited for your work please edit the [pom.xml](https://github.com/StrongJoshua/libgdx-inGameConsole/blob/master/pom.xml) file and add yourself to the contributors section using the [Apache guidelines](http://maven.apache.org/pom.html#Contributors).
-
 Versions
 ========
 Latest Stable: **0.9.0**  
