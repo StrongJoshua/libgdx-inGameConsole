@@ -29,6 +29,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.DragScrollListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.SnapshotArray;
 
 /**
  * A simple console that allows live logging, and live execution of methods, from within an application. Please see the <a
@@ -41,7 +42,7 @@ public class GUIConsole extends AbstractConsole {
 
 	private ConsoleDisplay display;
 	private boolean hidden = true;
-	private boolean usesMultiplexer = false;
+    private boolean usesMultiplexer;
 	private InputProcessor appInput;
 	private InputMultiplexer multiplexer;
 	private Stage stage;

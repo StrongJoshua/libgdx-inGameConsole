@@ -3,7 +3,7 @@ apply plugin: 'maven'
 apply plugin: 'signing'
 
 group = 'com.strongjoshua'
-version = '1.0.0b-SNAPSHOT'
+version = '1.0.0'
 
 description = """LibGdx In-Game Console"""
 
@@ -15,7 +15,7 @@ repositories {
 }
 
 ext {
-    gdxVersion = '1.9.8'
+    gdxVersion = '1.9.9'
 }
 
 dependencies {
@@ -48,12 +48,12 @@ sourceSets {
 }
 
 task javadocJar(type: Jar) {
-    classifier = 'javadoc'
+    archiveClassifier.set('javadoc')
     from javadoc
 }
 
 task sourcesJar(type: Jar) {
-    classifier = 'sources'
+    archiveClassifier.set('sources')
     from sourceSets.main.allSource
 }
 

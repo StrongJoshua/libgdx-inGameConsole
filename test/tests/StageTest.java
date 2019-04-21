@@ -100,7 +100,8 @@ public class StageTest extends ApplicationAdapter {
 	}
 
 	private class MyCommandExecutor extends CommandExecutor {
-		@ConsoleDoc(description = "Makes the badlogic image fade out and back " + "" + "" + "in.") public void blink () {
+		@ConsoleDoc(description = "Makes the badlogic image fade out and back in.")
+		public void blink() {
 			StageTest.this.blink();
 		}
 
