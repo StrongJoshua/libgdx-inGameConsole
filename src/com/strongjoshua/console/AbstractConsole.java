@@ -26,6 +26,7 @@ import com.badlogic.gdx.utils.reflect.Method;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
 import com.strongjoshua.console.annotation.ConsoleDoc;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -188,6 +189,11 @@ public abstract class AbstractConsole implements Console, Disposable {
 					log(msg, LogLevel.ERROR);
 					if (consoleTrace) {
 						log(e, LogLevel.ERROR);
+					} else if (e.getCause() instanceof InvocationTargetException) {
+						Throwable originalException = e.getCause().getCause();
+						if (originalException != null) {
+							log(originalException.getClass().getName() + ": " + originalException.getMessage(), LogLevel.ERROR);
+						}
 					}
 					return;
 				}
