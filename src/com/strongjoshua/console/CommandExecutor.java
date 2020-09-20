@@ -40,7 +40,17 @@ public class CommandExecutor {
 		console = c;
 	}
 
-	/**
+    /**
+     * Gets called when console becomes visible.  Use for things like pausing the game while the console is active.
+     */
+    protected void onShow(){}
+
+    /**
+     * Gets called when console becomes hidden. Use for things like unpausing and resuming the game.
+     */
+    protected void onHide(){}
+
+    /**
 	 * Prints the log to a local file.
 	 *
 	 * @param path The relative path of the local file to print to.
