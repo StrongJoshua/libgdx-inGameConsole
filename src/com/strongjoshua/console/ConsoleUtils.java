@@ -33,12 +33,10 @@ public final class ConsoleUtils {
 		Throwable cause = throwable;
 
 		while (cause != null) {
-			if (result.length() == 0) {
-				result.append("\nException in thread \"").append(Thread.currentThread().getName()).append("\" ");
-			} else {
-				result.append("\nCaused by: ");
-			}
-			result.append(cause.getClass().getCanonicalName()).append(": ").append(cause.getMessage());
+			result.append("\nCaused by: ")
+					.append(cause.getClass().getCanonicalName())
+					.append(": ")
+					.append(cause.getMessage());
 
 			for (final StackTraceElement traceElement : cause.getStackTrace()) {
 				result.append("\n\tat ").append(traceElement.toString());

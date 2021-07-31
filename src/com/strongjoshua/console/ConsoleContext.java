@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.reflect.ClassReflection;
 
 public class ConsoleContext {
 	private Table root;
@@ -18,15 +19,17 @@ public class ConsoleContext {
 
 	ConsoleContext (Class<? extends Table> tableClass, Class<? extends Label> labelClass, Skin skin, String background) {
 		try {
-			root = tableClass.newInstance();
+			root = ClassReflection.newInstance(tableClass);
 		} catch (Exception e) {
 			throw new RuntimeException("Table class does not support empty constructor.");
 		}
 		try {
-			copy = labelClass.getConstructor(CharSequence.class, Skin.class).newInstance("Copy", skin);
+			copy = (Label) ClassReflection.getConstructor(labelClass, CharSequence.class, Skin.class)
+					.newInstance("Copy", skin);
 		} catch (Exception e) {
 			try {
-				copy = labelClass.getConstructor(CharSequence.class).newInstance("Copy");
+				copy = (Label) ClassReflection.getConstructor(labelClass, CharSequence.class)
+						.newInstance("Copy");
 			} catch (Exception e2) {
 				throw new RuntimeException(
 					"Label class does not support either (<CharSequence>, <Skin>) or (<CharSequence>) constructors.");
