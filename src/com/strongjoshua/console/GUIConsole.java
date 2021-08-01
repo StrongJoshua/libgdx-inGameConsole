@@ -478,9 +478,9 @@ public class GUIConsole extends AbstractConsole {
 			scroll.setScrollbarsOnTop(false);
 			scroll.setOverscroll(false, false);
 			scroll.addListener(new DragScrollListener(scroll) {
-				@Override public boolean scrolled (InputEvent event, float x, float y, float amountX, float amountY) {
+				@Override public boolean scrolled (InputEvent event, float x, float y, int amount) {
 					closeContext();
-					return super.scrolled(event, x, y, amountX, amountY);
+					return super.scrolled(event, x, y, amount);
 				}
 			});
 
