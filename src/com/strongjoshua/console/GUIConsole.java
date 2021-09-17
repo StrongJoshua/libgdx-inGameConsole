@@ -30,6 +30,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.DragScrollListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.SnapshotArray;
+import com.badlogic.gdx.utils.reflect.ClassReflection;
 
 /**
  * A simple console that allows live logging, and live execution of methods, from within an application. Please see the <a
@@ -159,10 +160,12 @@ public class GUIConsole extends AbstractConsole {
 		display.showSubmit(false);
 
 		try {
-			consoleWindow = windowClass.getConstructor(String.class, Skin.class).newInstance("Console", skin);
+			consoleWindow = (Window) ClassReflection.getConstructor(Window.class, String.class, Skin.class)
+					.newInstance("Console", skin);
 		} catch (Exception e) {
 			try {
-				consoleWindow = windowClass.getConstructor(String.class).newInstance("Console");
+				consoleWindow = (Window) ClassReflection.getConstructor(Window.class, String.class)
+						.newInstance("Console");
 			} catch (Exception e2) {
 				throw new RuntimeException("Window class does not support either (<String>, <Skin>) or (<String>) constructors.");
 			}
@@ -410,7 +413,7 @@ public class GUIConsole extends AbstractConsole {
 
 		ConsoleDisplay (Skin skin) {
 			try {
-				root = tableClass.newInstance();
+				root = ClassReflection.newInstance(tableClass);
 			} catch (Exception e) {
 				throw new RuntimeException("Table class does not support empty constructor.");
 			}
@@ -428,23 +431,26 @@ public class GUIConsole extends AbstractConsole {
 			labels = new Array<Label>();
 
 			try {
-				logEntries = tableClass.newInstance();
+				logEntries = ClassReflection.newInstance(tableClass);
 			} catch (Exception e) {
 				throw new RuntimeException("Table class does not support empty constructor.");
 			}
 
 			try {
-				input = textFieldClass.getConstructor(String.class, TextFieldStyle.class).newInstance("", tfs);
+				input = (TextField) ClassReflection.getConstructor(textFieldClass, String.class, TextFieldStyle.class)
+						.newInstance("", tfs);
 			} catch (Exception e) {
 				throw new RuntimeException("TextField class does not support (<String>, <Skin>) constructor.");
 			}
 			input.setTextFieldListener(new FieldListener());
 
 			try {
-				submit = textButtonClass.getConstructor(String.class, Skin.class).newInstance("Submit", skin);
+				submit = (TextButton) ClassReflection.getConstructor(textButtonClass, String.class, Skin.class)
+						.newInstance("Submit", skin);
 			} catch (Exception e) {
 				try {
-					submit = textButtonClass.getConstructor(String.class).newInstance("Submit");
+					submit = (TextButton) ClassReflection.getConstructor(textButtonClass, String.class)
+							.newInstance("Submit");
 				} catch (Exception e2) {
 					throw new RuntimeException(
 						"TextButton class does not support either (<String>, <Skin>) or (<String>) constructors.");
@@ -457,10 +463,12 @@ public class GUIConsole extends AbstractConsole {
 			});
 
 			try {
-				scroll = scrollPaneClass.getConstructor(Actor.class, Skin.class).newInstance(logEntries, skin);
+				scroll = (ScrollPane) ClassReflection.getConstructor(scrollPaneClass, Actor.class, Skin.class)
+						.newInstance(logEntries, skin);
 			} catch (Exception e) {
 				try {
-					scroll = scrollPaneClass.getConstructor(Actor.class).newInstance(logEntries);
+					scroll = (ScrollPane) ClassReflection.getConstructor(scrollPaneClass, Actor.class)
+							.newInstance(logEntries);
 				} catch (Exception e2) {
 					throw new RuntimeException(
 						"ScrollPane class does not support either (<Actor>, <Skin>) or (<Actor>) constructors.");
@@ -497,12 +505,12 @@ public class GUIConsole extends AbstractConsole {
 					l = labels.get(i);
 				} else {
 					try {
-						l = labelClass.getConstructor(CharSequence.class, Skin.class, String.class, Color.class)
-							.newInstance("", skin, fontName, LogLevel.DEFAULT.getColor());
+						l = (Label) ClassReflection.getConstructor(labelClass, CharSequence.class, Skin.class, String.class, Color.class)
+								.newInstance("", skin, fontName, LogLevel.DEFAULT.getColor());
 					} catch (Exception e) {
 						try {
-							l = labelClass.getConstructor(CharSequence.class, String.class, Color.class)
-								.newInstance("", fontName, LogLevel.DEFAULT.getColor());
+							l = (Label) ClassReflection.getConstructor(labelClass, CharSequence.class, String.class, Color.class)
+									.newInstance("", fontName, LogLevel.DEFAULT.getColor());
 						} catch (Exception e2) {
 							throw new RuntimeException(
 								"Label class does not support either (<String>, <Skin>, <String>, <Color>) or (<String>, <String>, <Color>) constructors.");
