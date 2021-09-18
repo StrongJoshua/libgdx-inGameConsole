@@ -532,10 +532,13 @@ public class GUIConsole extends AbstractConsole {
 		private void setHidden (boolean h) {
 			hidden = h;
 			if (hidden) {
+                exec.onHide();
 				consoleWindow.setTouchable(Touchable.disabled);
 				stage.setKeyboardFocus(null);
 				stage.setScrollFocus(null);
+
 			} else {
+			    exec.onShow();
 				input.setText("");
 				consoleWindow.setTouchable(Touchable.enabled);
 				if (selected) {

@@ -11,11 +11,17 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 repositories {
+    mavenLocal()
+    mavenCentral()
+    jcenter()
+    google()
      maven { url "http://repo.maven.apache.org/maven2" }
+     maven { url "https://oss.sonatype.org/content/repositories/releases/" }
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
 }
 
 ext {
-    gdxVersion = '1.9.9'
+    gdxVersion = '1.9.11'
 }
 
 dependencies {
@@ -25,7 +31,7 @@ dependencies {
     testCompile group: 'com.badlogicgames.gdx', name: 'gdx-box2d', version:gdxVersion
     testCompile group: 'com.badlogicgames.gdx', name: 'gdx-box2d-platform', version:gdxVersion, classifier:'natives-desktop'
     testCompile group: 'junit', name: 'junit', version:'4.12'
-    testCompile group: 'com.kotcrab.vis', name: 'vis-ui', version: '1.4.0'
+    testCompile group: 'com.kotcrab.vis', name: 'vis-ui', version: '1.4.6'
 }
 
 sourceSets {
@@ -43,69 +49,6 @@ sourceSets {
         }
         resources {
             srcDirs = ['test']
-        }
-    }
-}
-
-task javadocJar(type: Jar) {
-    archiveClassifier.set('javadoc')
-    from javadoc
-}
-
-task sourcesJar(type: Jar) {
-    archiveClassifier.set('sources')
-    from sourceSets.main.allSource
-}
-
-artifacts {
-    archives javadocJar, sourcesJar
-}
-
-signing {
-    sign configurations.archives
-}
-
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-
-            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                authentication(userName: ossrhUsername, password: ossrhPassword)
-            }
-
-            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-                authentication(userName: ossrhUsername, password: ossrhPassword)
-            }
-
-            pom.project {
-                name 'libGdx In-Game Console'
-                packaging 'jar'
-                // optionally artifactId can be defined here
-                description 'libGdx In-Game Console'
-                url 'https://www.strongjoshua.net/projects/games/libgdx-ingame-console'
-
-                scm {
-                    connection 'scm:git:git@github.com:StrongJoshua/libgdx-inGameConsole.git'
-                    developerConnection 'scm:git:git@github.com:StrongJoshua/libgdx-inGameConsole.git'
-                    url 'https://github.com/StrongJoshua/libgdx-inGameConsole'
-                }
-
-                licenses {
-                    license {
-                        name 'The Apache License, Version 2.0'
-                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                    }
-                }
-
-                developers {
-                    developer {
-                        id 'StrongJoshua'
-                        name 'Jan Risse'
-                        email 'strongjoshua@hotmail.com'
-                    }
-                }
-            }
         }
     }
 }
